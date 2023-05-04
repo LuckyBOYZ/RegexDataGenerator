@@ -9,10 +9,7 @@ import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @SuppressWarnings({"unchecked", "rawtypes"})
 public class RegexDataGenerator {
@@ -34,6 +31,9 @@ public class RegexDataGenerator {
         String str = Files.readString(JAR_START_DIR.resolve(getFileName()));
         Object parsedJson = objectMapper.readValue(str, Object.class);
         if (parsedJson instanceof List<?> list) {
+            if (list.isEmpty()) {
+                return;
+            }
             Map<String, Object> parsedObjectMap = (Map<String, Object>) list.get(0);
             int iterationNumber = getIterationNumberFromParsedObject(parsedObjectMap);
             for (int i = 0; i < iterationNumber; i++) {
@@ -54,6 +54,7 @@ public class RegexDataGenerator {
                 this.result.get(0) : this.result);
         System.out.printf("Result file '%s' was created under path %s", fileName, JAR_START_DIR);
     }
+
     private Map<String, Object> generateObjectBasedOnRegexMap(Map<String, Object> parsedObjectMap, Map<String, Object> regexMap) {
         Map<String, Object> result = new HashMap<>();
         RgxGen rgxGen;
@@ -62,17 +63,20 @@ public class RegexDataGenerator {
                 rgxGen = getRgxGenFromRegexMap(regexMap, entry.getKey(), value);
                 result.put(entry.getKey(), rgxGen.generate());
             } else if (entry.getValue() instanceof List value) {
-                if (!value.isEmpty()) {
-                    Object firstEl = value.get(0);
-                    if (firstEl instanceof String el) {
-                        List<String> arr = generateListOfStringsBasedOnRegexMap(value, regexMap, entry.getKey(), el);
-                        result.put(entry.getKey(), arr);
-                    } else if (firstEl instanceof Map el) {
-                        List<Map<String, Object>> arr = generateListOfObjectsBasedOnRegexMap(regexMap, el, entry.getKey());
-                        result.put(entry.getKey(), arr);
-                    }
+                if (value.isEmpty()) {
+                    result.put(entry.getKey(), Collections.emptyList());
+                    continue;
                 }
-            } else if (entry.getValue() instanceof Map<?,?> value) {
+                Object firstEl = value.get(0);
+                if (firstEl instanceof String el) {
+                    List<String> arr = generateListOfStringsBasedOnRegexMap(value, regexMap, entry.getKey(), el);
+                    result.put(entry.getKey(), arr);
+                } else if (firstEl instanceof Map el) {
+                    List<Map<String, Object>> arr = generateListOfObjectsBasedOnRegexMap(regexMap, el, entry.getKey());
+                    result.put(entry.getKey(), arr);
+                }
+
+            } else if (entry.getValue() instanceof Map<?, ?> value) {
                 Map<String, Object> innerRegexMap = getInnerRegexMapFromRegexMap(regexMap, entry.getKey());
                 result.put(entry.getKey(), generateObjectBasedOnRegexMap((Map<String, Object>) value, innerRegexMap));
             }
@@ -96,8 +100,9 @@ public class RegexDataGenerator {
     }
 
     private int getIterationNumberFromParsedObject(Map<String, Object> objectMap) {
-        return (int) objectMap.get(this.configuration
+        Object value = objectMap.get(this.configuration
                 .getStringValueByPropertyName(ConfigurationPropertiesNames.ITERATION_FIELD_NAME.getPropertyName()));
+        return value == null ? ITERATION_DEFAULT_NUMBER : (int) value;
     }
 
     private List<String> generateListOfStringsBasedOnRegexMap(List<?> list, Map<String, Object> regexMap, String key, String value) {
