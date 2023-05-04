@@ -19,11 +19,11 @@ public class RegexDataGenerator {
 
     private static final Path JAR_START_DIR = FileSystems.getDefault().getPath("").toAbsolutePath();
     private static final int ITERATION_DEFAULT_NUMBER = 10;
-
     private final Configuration configuration;
     private final ObjectMapper objectMapper;
     private final Map<String, Object> mapOfRegExs = new HashMap<>();
     private final List<Map<String, Object>> result = new ArrayList<>();
+    private boolean isObjectPassed = false;
 
     public RegexDataGenerator(Configuration configuration, ObjectMapper objectMapper) {
         this.configuration = configuration;
@@ -32,71 +32,67 @@ public class RegexDataGenerator {
 
     public void generateData() throws IOException {
         String str = Files.readString(JAR_START_DIR.resolve(getFileName()));
-        List<Map<String, Object>> parsedJson = objectMapper.readValue(str, List.class);
-        Map<String, Object> parsedObjectMap = parsedJson.get(0);
-        int iterationNumber = getIterationNumberFromParsedObject(parsedObjectMap);
-        for (int i = 0; i < iterationNumber; i++) {
-            Map<String, Object> generatedValues = generateValuesForObjectInstance(parsedObjectMap, this.mapOfRegExs);
+        Object parsedJson = objectMapper.readValue(str, Object.class);
+        if (parsedJson instanceof List<?> list) {
+            Map<String, Object> parsedObjectMap = (Map<String, Object>) list.get(0);
+            int iterationNumber = getIterationNumberFromParsedObject(parsedObjectMap);
+            for (int i = 0; i < iterationNumber; i++) {
+                Map<String, Object> generatedValues = generateObjectBasedOnRegexMap(parsedObjectMap, this.mapOfRegExs);
+                this.result.add(generatedValues);
+            }
+        } else if (parsedJson instanceof Map<?, ?> map) {
+            this.isObjectPassed = true;
+            Map<String, Object> generatedValues = generateObjectBasedOnRegexMap((Map<String, Object>) map, this.mapOfRegExs);
             this.result.add(generatedValues);
         }
     }
 
-    private Map<String, Object> generateValuesForObjectInstance(Map<String, Object> parsedObjectMap, Map<String, Object> regexMap) {
+    public void createResult() throws IOException {
+        String fileName = getFileName();
+        fileName = fileName.replace(".json", "_result.json");
+        this.objectMapper.writeValue(JAR_START_DIR.resolve(fileName).toFile(), this.isObjectPassed ?
+                this.result.get(0) : this.result);
+        System.out.printf("Result file '%s' was created under path %s", fileName, JAR_START_DIR);
+    }
+    private Map<String, Object> generateObjectBasedOnRegexMap(Map<String, Object> parsedObjectMap, Map<String, Object> regexMap) {
         Map<String, Object> result = new HashMap<>();
         RgxGen rgxGen;
         for (Map.Entry<String, Object> entry : parsedObjectMap.entrySet()) {
             if (entry.getValue() instanceof String value) {
-                rgxGen = (RgxGen) regexMap.get(entry.getKey());
-                if (rgxGen == null) {
-                    rgxGen = new RgxGen(value);
-                    regexMap.put(entry.getKey(), rgxGen);
-                }
+                rgxGen = getRgxGenFromRegexMap(regexMap, entry.getKey(), value);
                 result.put(entry.getKey(), rgxGen.generate());
             } else if (entry.getValue() instanceof List value) {
                 if (!value.isEmpty()) {
                     Object firstEl = value.get(0);
                     if (firstEl instanceof String el) {
-                        List<String> arr = new ArrayList<>();
+                        List<String> arr = generateListOfStringsBasedOnRegexMap(value, regexMap, entry.getKey(), el);
                         result.put(entry.getKey(), arr);
-                        rgxGen = (RgxGen) regexMap.get(entry.getKey());
-                        if (rgxGen == null) {
-                            rgxGen = new RgxGen(el);
-                            regexMap.put(entry.getKey(), rgxGen);
-                        }
-                        int numberOfElements = ITERATION_DEFAULT_NUMBER;
-                        if (value.size() > 1) {
-                            try {
-                                numberOfElements = (int) value.get(1);
-                            } catch (NumberFormatException ignore) {
-                            }
-                        }
-                        for (int j = 0; j < numberOfElements; j++) {
-                            arr.add(rgxGen.generate());
-                        }
                     } else if (firstEl instanceof Map el) {
-                        List< Map<String, Object>> arr = new ArrayList<>();
+                        List<Map<String, Object>> arr = generateListOfObjectsBasedOnRegexMap(regexMap, el, entry.getKey());
                         result.put(entry.getKey(), arr);
-                        Map<String, Object> innerRegexMap = (Map<String, Object>) regexMap.get(entry.getKey());
-                        if (innerRegexMap == null) {
-                            innerRegexMap = new HashMap<>();
-                            regexMap.put(entry.getKey(), innerRegexMap);
-                        }
-                        int iterationNumber = getIterationNumberFromParsedObject(parsedObjectMap);
-                        for (int j = 0; j < iterationNumber; j++) {
-                            arr.add(generateValuesForObjectInstance(el, innerRegexMap));
-                        }
                     }
                 }
-            } else if(entry.getValue() instanceof Map<?, ?> value) {
-                Map<String, Object> innerRegexMap = (Map<String, Object>) regexMap.get(entry.getKey());
-                if (innerRegexMap == null) {
-                    innerRegexMap = new HashMap<>();
-                    regexMap.put(entry.getKey(), innerRegexMap);
-                }
-                result.put(entry.getKey(), generateValuesForObjectInstance((Map<String, Object>) value, innerRegexMap));
+            } else if (entry.getValue() instanceof Map<?,?> value) {
+                Map<String, Object> innerRegexMap = getInnerRegexMapFromRegexMap(regexMap, entry.getKey());
+                result.put(entry.getKey(), generateObjectBasedOnRegexMap((Map<String, Object>) value, innerRegexMap));
             }
         }
         return result;
+    }
+
+    private String getFileName() {
+        return this.configuration.getStringValueByPropertyName(ConfigurationPropertiesNames.JSON_FILE_NAME.getPropertyName());
+    }
+
+    private int getIterationNumberFromParsedList(List<?> list) {
+        int number = ITERATION_DEFAULT_NUMBER;
+        if (list.size() > 1) {
+            try {
+                number = (int) list.get(1);
+            } catch (NumberFormatException ignore) {
+            }
+        }
+        return number;
     }
 
     private int getIterationNumberFromParsedObject(Map<String, Object> objectMap) {
@@ -104,14 +100,41 @@ public class RegexDataGenerator {
                 .getStringValueByPropertyName(ConfigurationPropertiesNames.ITERATION_FIELD_NAME.getPropertyName()));
     }
 
-    public void createResult() throws IOException {
-        String fileName = getFileName();
-        fileName = fileName.replace(".json", "_result.json");
-        this.objectMapper.writeValue(JAR_START_DIR.resolve(fileName).toFile(), this.result);
-        System.out.printf("Result file '%s' was created under path %s", fileName, JAR_START_DIR);
+    private List<String> generateListOfStringsBasedOnRegexMap(List<?> list, Map<String, Object> regexMap, String key, String value) {
+        List<String> arr = new ArrayList<>();
+        RgxGen rgxGen = getRgxGenFromRegexMap(regexMap, key, value);
+        int numberOfElements = getIterationNumberFromParsedList(list);
+        for (int i = 0; i < numberOfElements; i++) {
+            arr.add(rgxGen.generate());
+        }
+        return arr;
     }
 
-    private String getFileName() {
-        return this.configuration.getStringValueByPropertyName(ConfigurationPropertiesNames.JSON_FILE_NAME.getPropertyName());
+    private RgxGen getRgxGenFromRegexMap(Map<String, Object> regexMap, String key, String value) {
+        RgxGen rgxGen = (RgxGen) regexMap.get(key);
+        if (rgxGen == null) {
+            rgxGen = new RgxGen(value);
+            regexMap.put(key, rgxGen);
+        }
+        return rgxGen;
+    }
+
+    private Map<String, Object> getInnerRegexMapFromRegexMap(Map<String, Object> regexMap, String key) {
+        Map<String, Object> innerRegexMap = (Map<String, Object>) regexMap.get(key);
+        if (innerRegexMap == null) {
+            innerRegexMap = new HashMap<>();
+            regexMap.put(key, innerRegexMap);
+        }
+        return innerRegexMap;
+    }
+
+    private List<Map<String, Object>> generateListOfObjectsBasedOnRegexMap(Map<String, Object> regexMap, Map<String, Object> parsedObject, String key) {
+        List<Map<String, Object>> arr = new ArrayList<>();
+        Map<String, Object> innerRegexMap = getInnerRegexMapFromRegexMap(regexMap, key);
+        int iterationNumber = getIterationNumberFromParsedObject(parsedObject);
+        for (int j = 0; j < iterationNumber; j++) {
+            arr.add(generateObjectBasedOnRegexMap(parsedObject, innerRegexMap));
+        }
+        return arr;
     }
 }
