@@ -15,7 +15,6 @@ import java.util.*;
 public class RegexDataGenerator {
 
     private static final Path JAR_START_DIR = FileSystems.getDefault().getPath("").toAbsolutePath();
-    private static final int ITERATION_DEFAULT_NUMBER = 10;
     private final Configuration configuration;
     private final ObjectMapper objectMapper;
     private final Map<String, Object> mapOfRegExs = new HashMap<>();
@@ -89,11 +88,11 @@ public class RegexDataGenerator {
     }
 
     private int getIterationNumberFromParsedList(List<?> list) {
-        int number = ITERATION_DEFAULT_NUMBER;
+        int number = getDefaultIterationNumberFromConfiguration();
         if (list.size() > 1) {
             try {
                 number = (int) list.get(1);
-            } catch (NumberFormatException ignore) {
+            } catch (ClassCastException ignore) {
             }
         }
         return number;
@@ -102,7 +101,15 @@ public class RegexDataGenerator {
     private int getIterationNumberFromParsedObject(Map<String, Object> objectMap) {
         Object value = objectMap.get(this.configuration
                 .getStringValueByPropertyName(ConfigurationPropertiesNames.ITERATION_FIELD_NAME.getPropertyName()));
-        return value == null ? ITERATION_DEFAULT_NUMBER : (int) value;
+        if (value == null) {
+            return getDefaultIterationNumberFromConfiguration();
+        } else {
+            try {
+                return (int) value;
+            } catch (ClassCastException ignore) {
+                return getDefaultIterationNumberFromConfiguration();
+            }
+        }
     }
 
     private List<String> generateListOfStringsBasedOnRegexMap(List<?> list, Map<String, Object> regexMap, String key, String value) {
@@ -141,5 +148,9 @@ public class RegexDataGenerator {
             arr.add(generateObjectBasedOnRegexMap(parsedObject, innerRegexMap));
         }
         return arr;
+    }
+
+    private Integer getDefaultIterationNumberFromConfiguration() {
+        return this.configuration.getIntegerValueByPropertyName(ConfigurationPropertiesNames.DEFAULT_ITERATION_NUMBER.getPropertyName());
     }
 }

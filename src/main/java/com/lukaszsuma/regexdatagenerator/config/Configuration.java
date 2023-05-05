@@ -8,16 +8,40 @@ import java.util.Optional;
 @SuppressWarnings("rawtypes")
 public class Configuration {
 
-    public static final String PROPERTY_SEPARATOR = "=";
+    private static final String PROPERTY_SEPARATOR = "=";
     private final Map<String, Object> configMap;
+    private String prefixValue = ConfigurationPropertiesNames.PREFIX_AND_SUFFIX_FOR_SPECIAL_NAMES.getDefaultValue();
 
     public Configuration(String... appArgs) {
         this.configMap = new HashMap<>(ConfigurationPropertiesNames.values().length);
         for (ConfigurationPropertiesNames property : ConfigurationPropertiesNames.values()) {
-            this.configMap.put(property.getPropertyName(), property.getDefaultValue());
+            Class valueType = property.getTypeOfValue();
+            if (valueType == Integer.class) {
+                this.configMap.put(property.getPropertyName(), Integer.parseInt(property.getDefaultValue()));
+            } else {
+                this.configMap.put(property.getPropertyName(), property.getDefaultValue());
+            }
         }
+        String propName = ConfigurationPropertiesNames.PREFIX_AND_SUFFIX_FOR_SPECIAL_NAMES.getPropertyName();
+        Object[] filteredArgs = Arrays.stream(appArgs)
+                .filter(el -> {
+                    String[] split = el.split(PROPERTY_SEPARATOR);
+                    if (split.length < 2) {
+                        return true;
+                    }
+                    boolean isPrefixSuffixArg = propName.equals(split[0]);
+                    if (isPrefixSuffixArg) {
+                        String newPrefixValue = split[1];
+                        this.prefixValue = newPrefixValue;
+                        this.configMap.computeIfPresent(propName, (k, v) -> newPrefixValue);
+                    }
+                    return !isPrefixSuffixArg;
+                })
+                .filter(el -> ConfigurationPropertiesNames.getPropertyByPropertyName(el.split(PROPERTY_SEPARATOR)[0]).isPresent())
+                .toList().toArray();
+        String[] args = Arrays.copyOf(filteredArgs, filteredArgs.length, String[].class);
 
-        Arrays.stream(appArgs).forEach(arg -> {
+        Arrays.stream(args).forEach(arg -> {
             String[] split = arg.split(PROPERTY_SEPARATOR);
             if (split.length < 2) {
                 return;
@@ -25,21 +49,32 @@ public class Configuration {
             for (Map.Entry<String, Object> entry : this.configMap.entrySet()) {
                 String value = split[1];
                 String propertyName = entry.getKey();
+                Optional<ConfigurationPropertiesNames> prop = ConfigurationPropertiesNames.getPropertyByPropertyName(propertyName);
                 if (propertyName.equals(split[0]) && !value.isBlank()) {
-                    Optional<ConfigurationPropertiesNames> optional = ConfigurationPropertiesNames.getPropertyByPropertyName(propertyName);
-                    if (optional.isPresent()) {
-                        ConfigurationPropertiesNames configProp = optional.get();
-                        Class valueType = configProp.getValueType();
-                        if (valueType == Integer.class) {
+                    ConfigurationPropertiesNames configProp = prop.orElseThrow();
+                    Class valueType = configProp.getTypeOfValue();
+                    if (valueType == Integer.class) {
+                        try {
                             entry.setValue(Integer.valueOf(value));
-                        } else {
-                            entry.setValue(value);
+                        } catch (NumberFormatException ignore) {
                         }
+                    } else {
+                        entry.setValue(value);
                     }
-
                 }
             }
         });
+
+        for (ConfigurationPropertiesNames property : ConfigurationPropertiesNames.values()) {
+            Class valueType = property.getTypeOfValue();
+            if (valueType == Integer.class) {
+                continue;
+            }
+            if (property.isPropertyWithPrefix()) {
+                Object value = this.configMap.get(property.getPropertyName());
+                this.configMap.computeIfPresent(property.getPropertyName(), (k, v) -> this.prefixValue + value + this.prefixValue);
+            }
+        }
     }
 
     private Object getValueByPropertyName(String propertyName) {
@@ -55,8 +90,8 @@ public class Configuration {
         return (String) value;
     }
 
-    public int getIntValueByPropertyName(String propertyName) {
+    public Integer getIntegerValueByPropertyName(String propertyName) {
         Object value = getValueByPropertyName(propertyName);
-        return (int) value;
+        return (Integer) value;
     }
 }
