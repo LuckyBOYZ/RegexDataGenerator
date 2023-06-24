@@ -7,7 +7,8 @@ public enum ConfigurationPropertiesNames {
     ITERATION_FIELD_NAME("iterationFieldName", "iteration", true, String.class),
     DEFAULT_ITERATION_NUMBER("iterationNumber", "10", false, Integer.class),
     JSON_FILE_NAME("jsonFileName", "file.json", false, String.class),
-    PREFIX_AND_SUFFIX_FOR_SPECIAL_NAMES("prefixAndSuffix", "$", false, String.class);
+    PREFIX_AND_SUFFIX_FOR_SPECIAL_NAMES("prefixAndSuffix", "$", false, String.class),
+    SPECIAL_INPUT_DATA_SEPARATOR("specialInputDataSeparator", "|", false, String.class);
 
     private final String propertyName;
     private final String defaultValue;

@@ -1,5 +1,7 @@
 package com.lukaszsuma.regexdatagenerator.config;
 
+import com.lukaszsuma.regexdatagenerator.utils.StringSeparator;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -8,7 +10,6 @@ import java.util.Optional;
 @SuppressWarnings("rawtypes")
 public class Configuration {
 
-    private static final String PROPERTY_SEPARATOR = "=";
     private final Map<String, Object> configMap;
     private String prefixValue = ConfigurationPropertiesNames.PREFIX_AND_SUFFIX_FOR_SPECIAL_NAMES.getDefaultValue();
 
@@ -25,7 +26,7 @@ public class Configuration {
         String propName = ConfigurationPropertiesNames.PREFIX_AND_SUFFIX_FOR_SPECIAL_NAMES.getPropertyName();
         Object[] filteredArgs = Arrays.stream(appArgs)
                 .filter(el -> {
-                    String[] split = el.split(PROPERTY_SEPARATOR);
+                    String[] split = el.split(StringSeparator.EQUALS);
                     if (split.length < 2) {
                         return true;
                     }
@@ -37,12 +38,12 @@ public class Configuration {
                     }
                     return !isPrefixSuffixArg;
                 })
-                .filter(el -> ConfigurationPropertiesNames.getPropertyByPropertyName(el.split(PROPERTY_SEPARATOR)[0]).isPresent())
+                .filter(el -> ConfigurationPropertiesNames.getPropertyByPropertyName(el.split(StringSeparator.EQUALS)[0]).isPresent())
                 .toList().toArray();
         String[] args = Arrays.copyOf(filteredArgs, filteredArgs.length, String[].class);
 
         Arrays.stream(args).forEach(arg -> {
-            String[] split = arg.split(PROPERTY_SEPARATOR);
+            String[] split = arg.split(StringSeparator.EQUALS);
             if (split.length < 2) {
                 return;
             }

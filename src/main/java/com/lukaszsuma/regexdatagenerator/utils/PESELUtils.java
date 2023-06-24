@@ -1,6 +1,7 @@
 package com.lukaszsuma.regexdatagenerator.utils;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -8,7 +9,7 @@ import java.util.Random;
 public class PESELUtils {
 
     private static final Random RANDOM = new Random();
-    private static final Map<Integer, Integer> DAYS_PER_MONTH = new HashMap<>(11);
+    private static final Map<Integer, Integer> DAYS_PER_MONTH = new HashMap<>(12, 1f);
     private static final int[] FEMALE_NUMS = {0, 2, 4, 6, 8};
     private static final int[] MALE_NUMS = {1, 3, 5, 7, 9};
 
