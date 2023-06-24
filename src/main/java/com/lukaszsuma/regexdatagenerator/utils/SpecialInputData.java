@@ -39,7 +39,7 @@ public enum SpecialInputData {
             };
         }
     },
-    IBAN(List.of("country", "bankName"), null) {
+    IBAN(List.of("country", "bankName", "formatted", "withLetters"), null) {
         @Override
         public Function<String, Optional<String>> generateData() {
             return (rawValue) -> {
@@ -51,7 +51,9 @@ public enum SpecialInputData {
                 Map<String, String> mapOfPassedParams = getMapOfParamsFromConditions(conditions, IBAN.conditions);
                 String country = "PL";
                 String bankName = mapOfPassedParams.get("bankName");
-                return Optional.of(BankAccountNumberUtils.generateBankAccountNumber(country, bankName));
+                boolean formatted = Boolean.parseBoolean(mapOfPassedParams.get("formatted"));
+                boolean withLetters = Boolean.parseBoolean(mapOfPassedParams.get("withLetters"));
+                return Optional.of(BankAccountNumberUtils.generateBankAccountNumber(country, bankName, formatted, withLetters));
             };
         }
     };

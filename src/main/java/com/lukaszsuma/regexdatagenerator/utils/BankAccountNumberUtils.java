@@ -7,7 +7,8 @@ public class BankAccountNumberUtils {
     private static final Random RANDOM = new Random();
     private static final StringBuilder SB = new StringBuilder();
 
-    public static String generateBankAccountNumber(String country, String bankName) {
+    public static String generateBankAccountNumber(String country, String bankName, boolean formatted,
+                                                   boolean withLetters) {
         int index = RANDOM.nextInt(0, PolandBankId.values().length);
         String bankId = PolandBankId.values()[index].getId();
         if (bankName != null && !bankName.isBlank()) {
@@ -29,9 +30,11 @@ public class BankAccountNumberUtils {
         }
 
         String defaultCountryLettersValue = CountryLettersToNumber.P.getNumber() + CountryLettersToNumber.L.getNumber();
-        if (country != null && !country.isBlank() && country.length() == 2) {
+        String defaultCountryLetters = CountryLettersToNumber.P.name() + CountryLettersToNumber.L.name();
+        if (isCountryValid(country)) {
             try {
                 defaultCountryLettersValue = convertCountryLettersToNumber(country);
+                defaultCountryLetters = country.toUpperCase();
             } catch (IllegalArgumentException ignore) {
             }
         }
@@ -53,6 +56,18 @@ public class BankAccountNumberUtils {
         String result = SB.toString();
         SB.delete(0, SB.length());
         return result;
+    }
+
+    private static boolean isCountryValid(String countryLetters) {
+        boolean isValid = false;
+        if (countryLetters != null && !countryLetters.isBlank() && countryLetters.length() == 2) {
+            try {
+                AvailableCountries.valueOf(countryLetters.toUpperCase());
+                isValid = true;
+            } catch (IllegalArgumentException ignore) {
+            }
+        }
+        return isValid;
     }
 
     private static String convertCountryLettersToNumber(String letters) {
