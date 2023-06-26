@@ -56,9 +56,14 @@ public enum SpecialInputData {
                 return Optional.of(BankAccountNumberUtils.generateBankAccountNumber(country, bankName, formatted, withLetters));
             };
         }
+    },
+    ID(Collections.emptyList(), null) {
+        @Override
+        public Function<String, Optional<String>> generateData() {
+            return (rawVal) -> Optional.of(StringSeparator.EMPTY_STRING);
+        }
     };
 //    ADDRESS(Collections.emptyList(), 0, null),
-//    ID(Collections.emptyList(), 0, regex);
 
     private final List<String> conditions;
     private final String regex;

@@ -4,12 +4,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.curiousoddman.rgxgen.RgxGen;
 import com.lukaszsuma.regexdatagenerator.config.Configuration;
 import com.lukaszsuma.regexdatagenerator.config.ConfigurationPropertiesNames;
+import com.lukaszsuma.regexdatagenerator.utils.SpecialInputData;
+import com.lukaszsuma.regexdatagenerator.utils.StringSeparator;
 
 import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @SuppressWarnings({"unchecked", "rawtypes"})
 public class RegexDataGenerator {
@@ -35,13 +38,14 @@ public class RegexDataGenerator {
             }
             Map<String, Object> parsedObjectMap = (Map<String, Object>) list.get(0);
             int iterationNumber = getIterationNumberFromParsedObject(parsedObjectMap);
+            AtomicInteger id = new AtomicInteger(1);
             for (int i = 0; i < iterationNumber; i++) {
-                Map<String, Object> generatedValues = generateObjectBasedOnRegexMap(parsedObjectMap, this.mapOfRegExs);
+                Map<String, Object> generatedValues = generateObjectBasedOnRegexMap(parsedObjectMap, this.mapOfRegExs, id);
                 this.result.add(generatedValues);
             }
         } else if (parsedJson instanceof Map<?, ?> map) {
             this.isObjectPassed = true;
-            Map<String, Object> generatedValues = generateObjectBasedOnRegexMap((Map<String, Object>) map, this.mapOfRegExs);
+            Map<String, Object> generatedValues = generateObjectBasedOnRegexMap((Map<String, Object>) map, this.mapOfRegExs, null);
             this.result.add(generatedValues);
         }
     }
@@ -54,13 +58,16 @@ public class RegexDataGenerator {
         System.out.printf("Result file '%s' was created under path %s", fileName, JAR_START_DIR);
     }
 
-    private Map<String, Object> generateObjectBasedOnRegexMap(Map<String, Object> parsedObjectMap, Map<String, Object> regexMap) {
+    private Map<String, Object> generateObjectBasedOnRegexMap(Map<String, Object> parsedObjectMap, Map<String, Object> regexMap, AtomicInteger id) {
         Map<String, Object> result = new HashMap<>();
         RgxGen rgxGen;
         for (Map.Entry<String, Object> entry : parsedObjectMap.entrySet()) {
             if (entry.getValue() instanceof String value) {
-                rgxGen = getRgxGenFromRegexMap(regexMap, entry.getKey(), value);
-                result.put(entry.getKey(), rgxGen.generate());
+                boolean isAdded = handleSpecialInput(entry.getKey(), value, result, id);
+                if (!isAdded) {
+                    rgxGen = getRgxGenFromRegexMap(regexMap, entry.getKey(), value);
+                    result.put(entry.getKey(), rgxGen.generate());
+                }
             } else if (entry.getValue() instanceof List value) {
                 if (value.isEmpty()) {
                     result.put(entry.getKey(), Collections.emptyList());
@@ -77,10 +84,22 @@ public class RegexDataGenerator {
 
             } else if (entry.getValue() instanceof Map<?, ?> value) {
                 Map<String, Object> innerRegexMap = getInnerRegexMapFromRegexMap(regexMap, entry.getKey());
-                result.put(entry.getKey(), generateObjectBasedOnRegexMap((Map<String, Object>) value, innerRegexMap));
+                result.put(entry.getKey(), generateObjectBasedOnRegexMap((Map<String, Object>) value, innerRegexMap, null));
             }
         }
         return result;
+    }
+
+    private boolean isSpecialInputData(String value) {
+        boolean isSpecialInputData = false;
+        List<String> listOfAvailableInputData = getListOfAvailableInputData();
+        for (String element : listOfAvailableInputData) {
+            if (value.startsWith(element)) {
+                isSpecialInputData = true;
+                break;
+            }
+        }
+        return isSpecialInputData;
     }
 
     private String getFileName() {
@@ -144,13 +163,49 @@ public class RegexDataGenerator {
         List<Map<String, Object>> arr = new ArrayList<>();
         Map<String, Object> innerRegexMap = getInnerRegexMapFromRegexMap(regexMap, key);
         int iterationNumber = getIterationNumberFromParsedObject(parsedObject);
+        AtomicInteger id = new AtomicInteger(1);
         for (int j = 0; j < iterationNumber; j++) {
-            arr.add(generateObjectBasedOnRegexMap(parsedObject, innerRegexMap));
+            arr.add(generateObjectBasedOnRegexMap(parsedObject, innerRegexMap, id));
         }
         return arr;
     }
 
     private Integer getDefaultIterationNumberFromConfiguration() {
         return this.configuration.getIntegerValueByPropertyName(ConfigurationPropertiesNames.DEFAULT_ITERATION_NUMBER.getPropertyName());
+    }
+
+    private List<String> getListOfAvailableInputData() {
+        return Arrays.stream(SpecialInputData.values())
+                .map(SpecialInputData::name)
+                .toList();
+    }
+
+    private boolean handleSpecialInput(String key, String rawValue, Map<String, Object> result, AtomicInteger id) {
+        boolean isSpecialInputData = isSpecialInputData(rawValue);
+        if (!isSpecialInputData) {
+            return false;
+        }
+        SpecialInputData specialInputData;
+        try {
+            String specialInputName = rawValue.split(StringSeparator.PIPE)[0].toUpperCase();
+            specialInputData = SpecialInputData.valueOf(specialInputName);
+        } catch (IllegalArgumentException ignore) {
+            return false;
+        }
+        switch (specialInputData) {
+            case NAME, SURNAME, PESEL, IBAN -> {
+                Optional<String> generatedData = specialInputData.generateData().apply(rawValue);
+                if (generatedData.isPresent()) {
+                    String val = generatedData.get();
+                    result.put(key, val);
+                }
+            }
+            case ID -> {
+                if (id != null) {
+                    result.putIfAbsent(key, id.getAndIncrement());
+                }
+            }
+        }
+        return true;
     }
 }
