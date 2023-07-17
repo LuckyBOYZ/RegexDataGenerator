@@ -62,19 +62,37 @@ public enum SpecialInputData {
             return (rawVal) -> Optional.of(StringSeparator.EMPTY_STRING);
         }
     },
-    CITY(List.of("startAt")) {
-        @Override
-        public Function<String, Optional<String>> generateData() {
-            return (rawValue) -> getValueFromAddress(rawValue, CITY);
-        }
-    },
     POSTCODE(Collections.emptyList()) {
         @Override
         public Function<String, Optional<String>> generateData() {
             return (rawValue) -> getValueFromAddress(rawValue, POSTCODE);
         }
     },
-    ADDRESS(Collections.emptyList()) {
+    STREET(Collections.emptyList()) {
+        @Override
+        public Function<String, Optional<String>> generateData() {
+            return (rawValue) -> getValueFromAddress(rawValue, STREET);
+        }
+    },
+    CITY(List.of("startAt")) {
+        @Override
+        public Function<String, Optional<String>> generateData() {
+            return (rawValue) -> getValueFromAddress(rawValue, CITY);
+        }
+    },
+    VOIVODESHIP(Collections.emptyList()) {
+        @Override
+        public Function<String, Optional<String>> generateData() {
+            return (rawValue) -> getValueFromAddress(rawValue, VOIVODESHIP);
+        }
+    },
+    COUNTY(Collections.emptyList()) {
+        @Override
+        public Function<String, Optional<String>> generateData() {
+            return (rawValue) -> getValueFromAddress(rawValue, VOIVODESHIP);
+        }
+    },
+    ADDRESS(Arrays.asList("cityPropName", "streetPropName", "postcodePropName", "voivodeshipPropName", "countyPropName")) {
         @Override
         public Function<String, Optional<String>> generateData() {
             return (rawValue) -> getValueFromAddress(rawValue, ADDRESS);
@@ -98,7 +116,7 @@ public enum SpecialInputData {
             }
             SpecialInputData specialInputData = isName ? NAME : SURNAME;
             Map<String, String> mapOfPassedParams = getMapOfParamsFromConditions(conditions, specialInputData.conditions);
-            String path = isName ? "src/main/resources/names.txt" : "src/main/resources/surnames.txt";
+            String path = getPathBySpecialInputType(specialInputData);
             try (Stream<String> stream = Files.lines(Path.of(path), Charset.forName("WINDOWS-1250"))) {
                 Random random = new Random(System.currentTimeMillis());
                 return Optional.ofNullable(stream
@@ -130,9 +148,7 @@ public enum SpecialInputData {
                 .collect(Collectors.toMap(el -> el[0], el -> el[1]))
                 .entrySet()
                 .stream()
-                .filter(entry -> {
-                    return conditionsList.contains(entry.getKey());
-                })
+                .filter(entry -> conditionsList.contains(entry.getKey()))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
@@ -150,7 +166,8 @@ public enum SpecialInputData {
             return Optional.empty();
         }
         Map<String, String> mapOfPassedParams = getMapOfParamsFromConditions(conditions, specialInputData.conditions);
-        try (Stream<String> stream = Files.lines(Path.of("src/main/resources/addresses.csv"), Charset.forName("WINDOWS-1250"))) {
+        String path = getPathBySpecialInputType(specialInputData);
+        try (Stream<String> stream = Files.lines(Path.of(path))) {
             Random random = new Random(System.currentTimeMillis());
             String randomAddressRow;
             if (specialInputData == CITY) {
@@ -178,7 +195,7 @@ public enum SpecialInputData {
             String[] split = randomAddressRow.split(StringSeparator.SEMICOLON);
             int index = getIndexOfAddressElement(specialInputData);
             if (index < 0) {
-                return Optional.of(randomAddressRow);
+                return Optional.of(generateFullAddressString(randomAddressRow, mapOfPassedParams));
             } else {
                 return Optional.of(split[index]);
             }
@@ -187,11 +204,72 @@ public enum SpecialInputData {
         }
     }
 
+    private static String getPathBySpecialInputType(SpecialInputData specialInputData) {
+        return switch (specialInputData) {
+            case VOIVODESHIP -> "src/main/resources/voivodeships.txt";
+            case COUNTY -> "src/main/resources/counties.txt";
+            case ADDRESS -> "src/main/resources/addresses.txt";
+            case NAME -> "src/main/resources/names.txt";
+            case SURNAME -> "src/main/resources/surnames.txt";
+            default -> throw new RuntimeException("No file for special input data type " + specialInputData.name());
+        };
+    }
+
+    private static String generateFullAddressString(String randomAddressRow, Map<String, String> params) {
+        // POSTCODE 0, STREET 1, CITY 2, VOIVODESHIP 3, COUNTY 4
+        String[] split = randomAddressRow.split(StringSeparator.SEMICOLON);
+        ArrayList<String> valuesForAddressObject = new ArrayList<>(10);
+        ADDRESS.conditions.forEach(cond -> {
+            String propName = params.get(cond);
+            SpecialInputData sid = getSpecialInputDateByNameInProp(cond);
+            String value = split[getIndexOfAddressElement(sid)];
+            valuesForAddressObject.add(propName);
+            valuesForAddressObject.add(value);
+        });
+        return """
+                {
+                    "%s": "%s",
+                    "%s": "%s",
+                    "%s": "%s",
+                    "%s": "%s",
+                    "%s": "%s"
+                }
+                """.formatted(valuesForAddressObject.get(0),
+                valuesForAddressObject.get(1),
+                valuesForAddressObject.get(2),
+                valuesForAddressObject.get(3),
+                valuesForAddressObject.get(4),
+                valuesForAddressObject.get(5),
+                valuesForAddressObject.get(6),
+                valuesForAddressObject.get(7),
+                valuesForAddressObject.get(8),
+                valuesForAddressObject.get(9));
+    }
+
     private static int getIndexOfAddressElement(SpecialInputData specialInputData) {
         return switch (specialInputData) {
             case POSTCODE -> 0;
+            case STREET -> 1;
             case CITY -> 2;
+            case VOIVODESHIP -> 3;
+            case COUNTY -> 4;
             default -> -1;
         };
+    }
+
+    private static SpecialInputData getSpecialInputDateByNameInProp(String propName) {
+        if (propName.startsWith(POSTCODE.name().toLowerCase())) {
+            return POSTCODE;
+        } else if (propName.startsWith(STREET.name().toLowerCase())) {
+            return STREET;
+        } else if (propName.startsWith(CITY.name().toLowerCase())) {
+            return CITY;
+        } else if (propName.startsWith(VOIVODESHIP.name().toLowerCase())) {
+            return VOIVODESHIP;
+        } else if (propName.startsWith(COUNTY.name().toLowerCase())) {
+            return COUNTY;
+        } else {
+            throw new RuntimeException("No special input based on name in prop");
+        }
     }
 }

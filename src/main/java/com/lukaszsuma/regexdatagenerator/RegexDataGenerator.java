@@ -193,7 +193,7 @@ public class RegexDataGenerator {
             return false;
         }
         switch (specialInputData) {
-            case NAME, SURNAME, PESEL, IBAN -> {
+            case NAME, SURNAME, PESEL, IBAN, POSTCODE, STREET, CITY, VOIVODESHIP, COUNTY, ADDRESS -> {
                 Optional<String> generatedData = specialInputData.generateData().apply(rawValue);
                 if (generatedData.isPresent()) {
                     String val = generatedData.get();
