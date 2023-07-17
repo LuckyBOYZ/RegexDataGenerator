@@ -5,4 +5,5 @@ public interface StringSeparator {
     String PIPE = "\\|";
     String COMMA = ",";
     String EMPTY_STRING = "";
+    String SEMICOLON = ";";
 }

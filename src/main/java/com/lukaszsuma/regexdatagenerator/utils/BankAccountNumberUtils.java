@@ -30,11 +30,9 @@ public class BankAccountNumberUtils {
         }
 
         String defaultCountryLettersValue = CountryLettersToNumber.P.getNumber() + CountryLettersToNumber.L.getNumber();
-        String defaultCountryLetters = CountryLettersToNumber.P.name() + CountryLettersToNumber.L.name();
         if (isCountryValid(country)) {
             try {
                 defaultCountryLettersValue = convertCountryLettersToNumber(country);
-                defaultCountryLetters = country.toUpperCase();
             } catch (IllegalArgumentException ignore) {
             }
         }

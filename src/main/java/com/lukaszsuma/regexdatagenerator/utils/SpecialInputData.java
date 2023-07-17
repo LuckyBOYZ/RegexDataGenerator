@@ -10,27 +10,27 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public enum SpecialInputData {
-    NAME(List.of("start", "female"), null) {
+
+    NAME(List.of("startAt", "female")) {
         @Override
         public Function<String, Optional<String>> generateData() {
             return generateNameOrSurname(true);
         }
     },
-    SURNAME(List.of("start", "female"), null) {
+    SURNAME(List.of("startAt", "female")) {
         @Override
         public Function<String, Optional<String>> generateData() {
             return generateNameOrSurname(false);
         }
     },
-    PESEL(List.of("bornAfter2000", "female", "onlyAdults"), null) {
+    PESEL(List.of("bornAfter2000", "female", "onlyAdults")) {
         @Override
         public Function<String, Optional<String>> generateData() {
             return (rawValue) -> {
-                String[] split = rawValue.split(StringSeparator.PIPE);
-                if (split.length < 2) {
+                String[] conditions = getConditionsFromRawValue(rawValue);
+                if (conditions.length == 0) {
                     return Optional.empty();
                 }
-                String[] conditions = split[1].split(StringSeparator.COMMA);
                 Map<String, String> mapOfPassedParams = getMapOfParamsFromConditions(conditions, PESEL.conditions);
                 boolean bornAfter2000 = Boolean.parseBoolean(mapOfPassedParams.get("bornAfter2000"));
                 boolean female = Boolean.parseBoolean(mapOfPassedParams.get("female"));
@@ -39,15 +39,14 @@ public enum SpecialInputData {
             };
         }
     },
-    IBAN(List.of("country", "bankName", "formatted", "withLetters"), null) {
+    IBAN(List.of("country", "bankName", "formatted", "withLetters")) {
         @Override
         public Function<String, Optional<String>> generateData() {
             return (rawValue) -> {
-                String[] split = rawValue.split(StringSeparator.PIPE);
-                if (split.length < 2) {
+                String[] conditions = getConditionsFromRawValue(rawValue);
+                if (conditions.length == 0) {
                     return Optional.empty();
                 }
-                String[] conditions = split[1].split(StringSeparator.COMMA);
                 Map<String, String> mapOfPassedParams = getMapOfParamsFromConditions(conditions, IBAN.conditions);
                 String country = "PL";
                 String bankName = mapOfPassedParams.get("bankName");
@@ -57,31 +56,46 @@ public enum SpecialInputData {
             };
         }
     },
-    ID(Collections.emptyList(), null) {
+    ID(Collections.emptyList()) {
         @Override
         public Function<String, Optional<String>> generateData() {
             return (rawVal) -> Optional.of(StringSeparator.EMPTY_STRING);
         }
+    },
+    CITY(List.of("startAt")) {
+        @Override
+        public Function<String, Optional<String>> generateData() {
+            return (rawValue) -> getValueFromAddress(rawValue, CITY);
+        }
+    },
+    POSTCODE(Collections.emptyList()) {
+        @Override
+        public Function<String, Optional<String>> generateData() {
+            return (rawValue) -> getValueFromAddress(rawValue, POSTCODE);
+        }
+    },
+    ADDRESS(Collections.emptyList()) {
+        @Override
+        public Function<String, Optional<String>> generateData() {
+            return (rawValue) -> getValueFromAddress(rawValue, ADDRESS);
+        }
     };
-//    ADDRESS(Collections.emptyList(), 0, null),
 
+    private static final String[] EMPTY_ARRAY = new String[]{};
     private final List<String> conditions;
-    private final String regex;
 
-    SpecialInputData(List<String> conditions, String regex) {
+    SpecialInputData(List<String> conditions) {
         this.conditions = conditions;
-        this.regex = regex;
     }
 
     public abstract Function<String, Optional<String>> generateData();
 
     private static Function<String, Optional<String>> generateNameOrSurname(boolean isName) {
         return (rawValue) -> {
-            String[] split = rawValue.split(StringSeparator.PIPE);
-            if (split.length < 2) {
+            String[] conditions = getConditionsFromRawValue(rawValue);
+            if (conditions.length == 0) {
                 return Optional.empty();
             }
-            String[] conditions = split[1].split(StringSeparator.COMMA);
             SpecialInputData specialInputData = isName ? NAME : SURNAME;
             Map<String, String> mapOfPassedParams = getMapOfParamsFromConditions(conditions, specialInputData.conditions);
             String path = isName ? "src/main/resources/names.txt" : "src/main/resources/surnames.txt";
@@ -89,7 +103,7 @@ public enum SpecialInputData {
                 Random random = new Random(System.currentTimeMillis());
                 return Optional.ofNullable(stream
                         .filter(el -> {
-                            String start = mapOfPassedParams.get("start");
+                            String start = mapOfPassedParams.get("startAt");
                             return start == null || el.startsWith(start.toUpperCase());
                         })
                         .filter(el -> {
@@ -120,5 +134,64 @@ public enum SpecialInputData {
                     return conditionsList.contains(entry.getKey());
                 })
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+    }
+
+    private static String[] getConditionsFromRawValue(String rawValue) {
+        String[] split = rawValue.split(StringSeparator.PIPE);
+        if (split.length < 2) {
+            return EMPTY_ARRAY;
+        }
+        return split[1].split(StringSeparator.COMMA);
+    }
+
+    private static Optional<String> getValueFromAddress(String rawValue, SpecialInputData specialInputData) {
+        String[] conditions = getConditionsFromRawValue(rawValue);
+        if (conditions.length == 0) {
+            return Optional.empty();
+        }
+        Map<String, String> mapOfPassedParams = getMapOfParamsFromConditions(conditions, specialInputData.conditions);
+        try (Stream<String> stream = Files.lines(Path.of("src/main/resources/addresses.csv"), Charset.forName("WINDOWS-1250"))) {
+            Random random = new Random(System.currentTimeMillis());
+            String randomAddressRow;
+            if (specialInputData == CITY) {
+                randomAddressRow = stream.filter(el -> {
+                            String start = mapOfPassedParams.get("startAt");
+                            return start == null || el.startsWith(start.toUpperCase());
+                        })
+                        .collect(Collectors.collectingAndThen(
+                                Collectors.toCollection(ArrayList::new),
+                                list -> {
+                                    Collections.shuffle(list);
+                                    return list.get(random.nextInt(0, list.size()));
+                                }
+                        ));
+            } else {
+                randomAddressRow = stream
+                        .collect(Collectors.collectingAndThen(
+                                Collectors.toCollection(ArrayList::new),
+                                list -> {
+                                    Collections.shuffle(list);
+                                    return list.get(random.nextInt(0, list.size()));
+                                }
+                        ));
+            }
+            String[] split = randomAddressRow.split(StringSeparator.SEMICOLON);
+            int index = getIndexOfAddressElement(specialInputData);
+            if (index < 0) {
+                return Optional.of(randomAddressRow);
+            } else {
+                return Optional.of(split[index]);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static int getIndexOfAddressElement(SpecialInputData specialInputData) {
+        return switch (specialInputData) {
+            case POSTCODE -> 0;
+            case CITY -> 2;
+            default -> -1;
+        };
     }
 }
