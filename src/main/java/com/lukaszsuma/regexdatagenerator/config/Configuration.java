@@ -95,4 +95,8 @@ public class Configuration {
         Object value = getValueByPropertyName(propertyName);
         return (Integer) value;
     }
+
+    public Map<String, Object> getConfigMap() {
+        return configMap;
+    }
 }
