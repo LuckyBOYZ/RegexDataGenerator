@@ -3,6 +3,7 @@ package com.lukaszsuma.regexdatagenerator.utils;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.Random;
@@ -15,20 +16,16 @@ class BankAccountNumberUtilsTest {
 
     @DisplayName("Only values in PolandBankId.java enum are correct")
     @ParameterizedTest(name = "Current bank name: {0}")
-    @ValueSource(strings = {"NBP", "PKOBP", "CITI", "ING", "SANTANDER_PL", "BGK", "MBANK", "MILLENNIUM", "PKOSA",
-            "POCZTOWY", "BOS", "MERCEDES", "SGB", "PLUS", "SOCIETE", "NEST", "BPS", "AGRICOLE", "BNP", "SANTANDER_CS",
-            "TOYOTA", "DNB", "ALIOR", "FCE", "INBANK", "VOLKSWAGEN", "HSBC", "BFF", "AION", "VELO"
-    })
-    void shouldContainsBankIdWhenCorrectBankNameIsPassed(String bankName) {
+    @EnumSource(PolandBankId.class)
+    void shouldContainsBankIdWhenCorrectBankNameIsPassed(PolandBankId polandBankId) {
         // given
         int index = random.nextInt(0, PolandBankId.values().length);
         // when
-        String accountNumber = BankAccountNumberUtils.generateBankAccountNumber(AvailableCountries.PL.name(), bankName,
-                false, false, index);
-        String bankId = PolandBankId.valueOf(bankName).getId();
+        String accountNumber = BankAccountNumberUtils.generateBankAccountNumber(AvailableCountries.PL.name(),
+                polandBankId.name(), false, false, index);
         // then
         String shouldBeBankId = accountNumber.substring(2, 6);
-        assertEquals(bankId, shouldBeBankId);
+        assertEquals(polandBankId.getId(), shouldBeBankId);
     }
 
     @DisplayName("Testing incorrect values for bank name")
@@ -48,14 +45,14 @@ class BankAccountNumberUtilsTest {
 
     @DisplayName("Only values in AvailableCountries.java enum are correct")
     @ParameterizedTest(name = "Current country letters: {0}")
-    @ValueSource(strings = {"PL"})
-    void shouldContainsTwoLettersAtTheBeginningWhenWithLettersParameterIsTrue(String countryLetters) {
+    @EnumSource(AvailableCountries.class)
+    void shouldContainsTwoLettersAtTheBeginningWhenWithLettersParameterIsTrue(AvailableCountries availableCountries) {
         //when
-        String accountNumber = BankAccountNumberUtils.generateBankAccountNumber(countryLetters,
+        String accountNumber = BankAccountNumberUtils.generateBankAccountNumber(availableCountries.name(),
                 PolandBankId.ING.name(), false, true, 0);
         // then
         String shouldBePL = accountNumber.substring(0, 2);
-        assertEquals(countryLetters, shouldBePL);
+        assertEquals(availableCountries.name(), shouldBePL);
     }
 
     @DisplayName("Testing incorrect values for country letters")

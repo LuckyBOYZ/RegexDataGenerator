@@ -14,7 +14,6 @@ public class BankAccountNumberUtils {
             try {
                 PolandBankId value = PolandBankId.valueOf(bankName.toUpperCase());
                 bankId = value.getId();
-
             } catch (IllegalArgumentException ignore) {
             }
         }

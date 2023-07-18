@@ -1,5 +1,6 @@
 package com.lukaszsuma.regexdatagenerator.config;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.NoSuchElementException;
@@ -9,6 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class ConfigurationTest {
 
     @Test
+    @DisplayName("Testing configuration without any property")
     void shouldCreateDefaultConfigurationWhenNoConfigIsPassed() {
         // given
         Configuration configuration = new Configuration();
@@ -37,6 +39,7 @@ class ConfigurationTest {
     }
 
     @Test
+    @DisplayName("Testing configuration with all valid properties")
     void shouldCreateConfigurationWhenConfigIsPassedWithCustomValues() {
         //given
         String[] customConfig = {"iterationFieldName=it", "iterationNumber=5", "jsonFileName=test.json",
@@ -66,6 +69,7 @@ class ConfigurationTest {
     }
 
     @Test
+    @DisplayName("Testing configuration with not parsed value if property must be number")
     void shouldContainsDefaultIterationNumberValueWhenValueIsNotANumber() {
         //given
         String[] customConfig = {"iterationNumber=abc"};
@@ -77,6 +81,7 @@ class ConfigurationTest {
     }
 
     @Test
+    @DisplayName("Testing configuration with not parsed value if property must be number")
     void shouldContainsDefaultValuesWhenValuesAreNotSeperatedByEqualSign() {
         //given
         String[] customConfig = {"jsonFileName,test.json"};
@@ -88,6 +93,7 @@ class ConfigurationTest {
     }
 
     @Test
+    @DisplayName("Testing configuration with not parsed values but with wrong names")
     void shouldContainsOnlyPropertiesFromConfigurationPropertiesNamesClassWhenAdditionalPropertiesArePassed() {
         //given
         String[] customConfig = {"test=abc", "dummy=dummy"};

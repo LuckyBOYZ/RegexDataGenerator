@@ -1,7 +1,6 @@
 package com.lukaszsuma.regexdatagenerator.utils;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -28,13 +27,13 @@ public class PESELUtils {
     }
 
     public static String generateRandomPESEL(boolean canBeAsBornAfter2000, boolean isFemale, boolean onlyAdults) {
-        int currentYearNum = Integer.parseInt(String.valueOf(LocalDateTime.now().getYear() - (onlyAdults ? 18 : 0)).substring(2));
         StringBuilder sb = new StringBuilder();
 
-        int yearNum = RANDOM.nextInt(100);
-        addComputeValue(yearNum, sb);
+        int yearNum = generateYearByConditions(canBeAsBornAfter2000, onlyAdults);
+        addComputedValue(yearNum, sb);
 
-        int monthNum = RANDOM.nextInt(1, 13);
+        int monthNum = RANDOM.nextInt(canBeAsBornAfter2000 && onlyAdults ?
+                LocalDateTime.now().getMonthValue() : 1, 13);
         int dayRange;
         if (monthNum == 2) {
             int isLeapYear = yearNum % 4;
@@ -46,13 +45,14 @@ public class PESELUtils {
         } else {
             dayRange = DAYS_PER_MONTH.get(monthNum);
         }
-        if (yearNum <= currentYearNum && canBeAsBornAfter2000) {
+        if (canBeAsBornAfter2000) {
             monthNum += 20;
         }
-        addComputeValue(monthNum, sb);
+        addComputedValue(monthNum, sb);
 
-        int dayNum = RANDOM.nextInt(1, dayRange + 1);
-        addComputeValue(dayNum, sb);
+        int dayNum = RANDOM.nextInt(canBeAsBornAfter2000 && onlyAdults ?
+                LocalDateTime.now().getDayOfMonth() : 1, dayRange + 1);
+        addComputedValue(dayNum, sb);
 
         int serialNumberWithoutSex = RANDOM.nextInt(1000);
         if (serialNumberWithoutSex < 10) {
@@ -70,13 +70,25 @@ public class PESELUtils {
             sb.append(MALE_NUMS[index]);
         }
 
-        String[] arrOfNums = sb.toString().split("");
+        String[] arrOfNums = sb.toString().split(StringSeparator.EMPTY_STRING);
         int controlNumber = computeControlNumber(arrOfNums);
         sb.append(controlNumber);
         return sb.toString();
     }
 
-    private static void addComputeValue(int num, StringBuilder sb) {
+    private static int generateYearByConditions(boolean canBeAsBornAfter2000, boolean onlyAdults) {
+        int twoLastDigitsOfCurrentYear = getLastDigitsOfCurrentYear();
+        int startIndex = canBeAsBornAfter2000 && onlyAdults ? twoLastDigitsOfCurrentYear - 18 : 0;
+        int endIndex = canBeAsBornAfter2000 ? twoLastDigitsOfCurrentYear + 1 : 100;
+        return RANDOM.nextInt(startIndex, endIndex);
+    }
+
+    private static int getLastDigitsOfCurrentYear() {
+        int currentYear = LocalDateTime.now().getYear();
+        return Integer.parseInt(String.valueOf(currentYear).substring(2));
+    }
+
+    private static void addComputedValue(int num, StringBuilder sb) {
         if (num < 10) {
             sb.append("0").append(num);
         } else {

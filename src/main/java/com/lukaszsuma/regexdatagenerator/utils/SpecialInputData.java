@@ -101,7 +101,7 @@ public enum SpecialInputData {
         }
     };
 
-    private static final Random RANDOM = new Random(System.currentTimeMillis());
+    private static final Random RANDOM = new Random();
     private static final String[] EMPTY_ARRAY = new String[]{};
     private final List<String> conditions;
 
