@@ -6,4 +6,5 @@ public interface StringSeparator {
     String COMMA = ",";
     String EMPTY_STRING = "";
     String SEMICOLON = ";";
+    String EMPTY_SPACE = " ";
 }

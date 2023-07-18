@@ -2,10 +2,7 @@ package com.lukaszsuma.regexdatagenerator.config;
 
 import com.lukaszsuma.regexdatagenerator.utils.StringSeparator;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @SuppressWarnings("rawtypes")
 public class Configuration {
@@ -82,7 +79,8 @@ public class Configuration {
         return this.configMap.entrySet().stream()
                 .filter(e -> e.getKey().equals(propertyName))
                 .findFirst()
-                .orElseThrow()
+                .orElseThrow(() ->
+                        new NoSuchElementException(String.format("No value present for '%s' property", propertyName)))
                 .getValue();
     }
 
@@ -96,7 +94,4 @@ public class Configuration {
         return (Integer) value;
     }
 
-    public Map<String, Object> getConfigMap() {
-        return configMap;
-    }
 }

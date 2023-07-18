@@ -52,7 +52,9 @@ public enum SpecialInputData {
                 String bankName = mapOfPassedParams.get("bankName");
                 boolean formatted = Boolean.parseBoolean(mapOfPassedParams.get("formatted"));
                 boolean withLetters = Boolean.parseBoolean(mapOfPassedParams.get("withLetters"));
-                return Optional.of(BankAccountNumberUtils.generateBankAccountNumber(country, bankName, formatted, withLetters));
+                int defaultIndexForBankName = RANDOM.nextInt(0, PolandBankId.values().length);
+                return Optional.of(BankAccountNumberUtils.generateBankAccountNumber(country, bankName, formatted,
+                        withLetters, defaultIndexForBankName));
             };
         }
     },
@@ -99,6 +101,7 @@ public enum SpecialInputData {
         }
     };
 
+    private static final Random RANDOM = new Random(System.currentTimeMillis());
     private static final String[] EMPTY_ARRAY = new String[]{};
     private final List<String> conditions;
 
@@ -118,7 +121,6 @@ public enum SpecialInputData {
             Map<String, String> mapOfPassedParams = getMapOfParamsFromConditions(conditions, specialInputData.conditions);
             String path = getPathBySpecialInputType(specialInputData);
             try (Stream<String> stream = Files.lines(Path.of(path), Charset.forName("WINDOWS-1250"))) {
-                Random random = new Random(System.currentTimeMillis());
                 return Optional.ofNullable(stream
                         .filter(el -> {
                             String start = mapOfPassedParams.get("startAt");
@@ -133,7 +135,7 @@ public enum SpecialInputData {
                                 Collectors.toCollection(ArrayList::new),
                                 list -> {
                                     Collections.shuffle(list);
-                                    return list.get(random.nextInt(0, list.size()));
+                                    return list.get(RANDOM.nextInt(0, list.size()));
                                 }
                         )));
             } catch (IOException e) {
@@ -168,7 +170,6 @@ public enum SpecialInputData {
         Map<String, String> mapOfPassedParams = getMapOfParamsFromConditions(conditions, specialInputData.conditions);
         String path = getPathBySpecialInputType(specialInputData);
         try (Stream<String> stream = Files.lines(Path.of(path))) {
-            Random random = new Random(System.currentTimeMillis());
             String randomAddressRow;
             if (specialInputData == CITY) {
                 randomAddressRow = stream.filter(el -> {
@@ -179,7 +180,7 @@ public enum SpecialInputData {
                                 Collectors.toCollection(ArrayList::new),
                                 list -> {
                                     Collections.shuffle(list);
-                                    return list.get(random.nextInt(0, list.size()));
+                                    return list.get(RANDOM.nextInt(0, list.size()));
                                 }
                         ));
             } else {
@@ -188,7 +189,7 @@ public enum SpecialInputData {
                                 Collectors.toCollection(ArrayList::new),
                                 list -> {
                                     Collections.shuffle(list);
-                                    return list.get(random.nextInt(0, list.size()));
+                                    return list.get(RANDOM.nextInt(0, list.size()));
                                 }
                         ));
             }

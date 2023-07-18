@@ -2,6 +2,8 @@ package com.lukaszsuma.regexdatagenerator.config;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.NoSuchElementException;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class ConfigurationTest {
@@ -91,8 +93,12 @@ class ConfigurationTest {
         String[] customConfig = {"test=abc", "dummy=dummy"};
         Configuration configuration = new Configuration(customConfig);
         //then
-        int shouldBeFive = configuration.getConfigMap().size();
-        assertEquals(5, shouldBeFive);
+        NoSuchElementException ex = assertThrows(NoSuchElementException.class, () ->
+                configuration.getStringValueByPropertyName("test"));
+        assertEquals("No value present for 'test' property", ex.getMessage());
+        ex = assertThrows(NoSuchElementException.class, () ->
+                configuration.getStringValueByPropertyName("dummy"));
+        assertEquals("No value present for 'dummy' property", ex.getMessage());
     }
 
 }
