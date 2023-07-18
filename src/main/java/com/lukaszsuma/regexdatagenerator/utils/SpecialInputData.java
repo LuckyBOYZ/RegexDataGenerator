@@ -119,18 +119,15 @@ public enum SpecialInputData {
             }
             SpecialInputData specialInputData = isName ? NAME : SURNAME;
             Map<String, String> mapOfPassedParams = getMapOfParamsFromConditions(conditions, specialInputData.conditions);
-            String path = getPathBySpecialInputType(specialInputData);
+            boolean isFemale = Boolean.parseBoolean(mapOfPassedParams.get("female"));
+            String path = getPathForSurnameSpecialInputData(isFemale);
             try (Stream<String> stream = Files.lines(Path.of(path), Charset.forName("WINDOWS-1250"))) {
-                return Optional.ofNullable(stream
+                return Optional.of(stream
                         .filter(el -> {
                             String start = mapOfPassedParams.get("startAt");
                             return start == null || el.startsWith(start.toUpperCase());
                         })
-                        .filter(el -> {
-                            String female = mapOfPassedParams.get("female");
-                            boolean isFemale = Boolean.parseBoolean(female);
-                            return !isFemale || el.endsWith("a");
-                        })
+                        .filter(el -> !isFemale || el.endsWith("a"))
                         .collect(Collectors.collectingAndThen(
                                 Collectors.toCollection(ArrayList::new),
                                 list -> {
@@ -211,9 +208,13 @@ public enum SpecialInputData {
             case COUNTY -> "src/main/resources/counties.txt";
             case ADDRESS -> "src/main/resources/addresses.txt";
             case NAME -> "src/main/resources/names.txt";
-            case SURNAME -> "src/main/resources/surnames.txt";
-            default -> throw new RuntimeException("No file for special input data type " + specialInputData.name());
+            default -> throw new RuntimeException(String.format("No file for '%s' special input",
+                    specialInputData.name()));
         };
+    }
+
+    private static String getPathForSurnameSpecialInputData(boolean isFemale) {
+        return isFemale ? "src/main/resources/womenSurnames.csv" : "src/main/resources/menSurnames.csv";
     }
 
     private static String generateFullAddressString(String randomAddressRow, Map<String, String> params) {
@@ -222,7 +223,7 @@ public enum SpecialInputData {
         ArrayList<String> valuesForAddressObject = new ArrayList<>(10);
         ADDRESS.conditions.forEach(cond -> {
             String propName = params.get(cond);
-            SpecialInputData sid = getSpecialInputDateByNameInProp(cond);
+            SpecialInputData sid = getSpecialInputDataForAddressByNameInProp(cond);
             String value = split[getIndexOfAddressElement(sid)];
             valuesForAddressObject.add(propName);
             valuesForAddressObject.add(value);
@@ -258,7 +259,7 @@ public enum SpecialInputData {
         };
     }
 
-    private static SpecialInputData getSpecialInputDateByNameInProp(String propName) {
+    private static SpecialInputData getSpecialInputDataForAddressByNameInProp(String propName) {
         if (propName.startsWith(POSTCODE.name().toLowerCase())) {
             return POSTCODE;
         } else if (propName.startsWith(STREET.name().toLowerCase())) {
@@ -270,7 +271,7 @@ public enum SpecialInputData {
         } else if (propName.startsWith(COUNTY.name().toLowerCase())) {
             return COUNTY;
         } else {
-            throw new RuntimeException("No special input based on name in prop");
+            throw new RuntimeException(String.format("No special input for '%s' property", propName));
         }
     }
 }
