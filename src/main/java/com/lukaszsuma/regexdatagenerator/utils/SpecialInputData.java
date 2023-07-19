@@ -103,6 +103,10 @@ public enum SpecialInputData {
 
     private static final Random RANDOM = new Random();
     private static final String[] EMPTY_ARRAY = new String[]{};
+    private static final String DEFAULT_MAN_NAME = "Jan";
+    private static final String DEFAULT_WOMAN_NAME = "Janina";
+    private static final String DEFAULT_MAN_SURNAME = "Kowalski";
+    private static final String DEFAULT_WOMAN_SURNAME = "Kowalska";
     private final List<String> conditions;
 
     SpecialInputData(List<String> conditions) {
@@ -120,17 +124,20 @@ public enum SpecialInputData {
             SpecialInputData specialInputData = isName ? NAME : SURNAME;
             Map<String, String> mapOfPassedParams = getMapOfParamsFromConditions(conditions, specialInputData.conditions);
             boolean isFemale = Boolean.parseBoolean(mapOfPassedParams.get("female"));
-            String path = getPathForSurnameSpecialInputData(isFemale);
+            String path = isName ? getPathBySpecialInputType(NAME) : getPathForSurnameSpecialInputData(isFemale);
             try (Stream<String> stream = Files.lines(Path.of(path), Charset.forName("WINDOWS-1250"))) {
                 return Optional.of(stream
                         .filter(el -> {
                             String start = mapOfPassedParams.get("startAt");
                             return start == null || el.startsWith(start.toUpperCase());
                         })
-                        .filter(el -> !isFemale || el.endsWith("a"))
+                        .filter(el -> !isName || isFemale == el.endsWith("a"))
                         .collect(Collectors.collectingAndThen(
                                 Collectors.toCollection(ArrayList::new),
                                 list -> {
+                                    if(list.isEmpty()) {
+                                        return getDefaultNameOrSurnameByParams(isName, isFemale);
+                                    }
                                     Collections.shuffle(list);
                                     return list.get(RANDOM.nextInt(0, list.size()));
                                 }
@@ -144,7 +151,7 @@ public enum SpecialInputData {
     private static Map<String, String> getMapOfParamsFromConditions(String[] conditionsFromUser, List<String> conditionsList) {
         return Stream.of(conditionsFromUser)
                 .map(el -> el.split(StringSeparator.EQUALS))
-                .collect(Collectors.toMap(el -> el[0], el -> el[1]))
+                .collect(Collectors.toMap(el -> el[0], el -> el[1], (oldOne, newOne) -> oldOne))
                 .entrySet()
                 .stream()
                 .filter(entry -> conditionsList.contains(entry.getKey()))
@@ -153,10 +160,16 @@ public enum SpecialInputData {
 
     private static String[] getConditionsFromRawValue(String rawValue) {
         String[] split = rawValue.split(StringSeparator.PIPE);
-        if (split.length < 2) {
+        if (split.length != 2) {
             return EMPTY_ARRAY;
         }
-        return split[1].split(StringSeparator.COMMA);
+        String[] result = split[1].split(StringSeparator.COMMA);
+        for (String el : result) {
+            if(!el.contains(StringSeparator.EQUALS) || el.endsWith(StringSeparator.EQUALS)) {
+                return EMPTY_ARRAY;
+            }
+        }
+        return result;
     }
 
     private static Optional<String> getValueFromAddress(String rawValue, SpecialInputData specialInputData) {
@@ -205,9 +218,9 @@ public enum SpecialInputData {
     private static String getPathBySpecialInputType(SpecialInputData specialInputData) {
         return switch (specialInputData) {
             case VOIVODESHIP -> "src/main/resources/voivodeships.txt";
-            case COUNTY -> "src/main/resources/counties.txt";
+            case COUNTY -> "src/main/resources/counties.csv";
             case ADDRESS -> "src/main/resources/addresses.txt";
-            case NAME -> "src/main/resources/names.txt";
+            case NAME -> "src/main/resources/names.csv";
             default -> throw new RuntimeException(String.format("No file for '%s' special input",
                     specialInputData.name()));
         };
@@ -272,6 +285,14 @@ public enum SpecialInputData {
             return COUNTY;
         } else {
             throw new RuntimeException(String.format("No special input for '%s' property", propName));
+        }
+    }
+
+    private static String getDefaultNameOrSurnameByParams(boolean isName, boolean isFemale) {
+        if (isName) {
+            return isFemale ? DEFAULT_WOMAN_NAME : DEFAULT_MAN_NAME;
+        } else {
+            return isFemale ? DEFAULT_WOMAN_SURNAME : DEFAULT_MAN_SURNAME;
         }
     }
 }
