@@ -37,4 +37,11 @@ public enum CountryLettersToNumber {
     public String getNumber() {
         return number;
     }
+
+    public static String convertCountryLettersToNumber(String letters) {
+        String[] arr = letters.toUpperCase().split(StringSeparator.EMPTY_STRING);
+        String first = CountryLettersToNumber.valueOf(arr[0]).getNumber();
+        String second = CountryLettersToNumber.valueOf(arr[1]).getNumber();
+        return first + second;
+    }
 }

@@ -125,7 +125,7 @@ public enum SpecialInputData {
             Map<String, String> mapOfPassedParams = getMapOfParamsFromConditions(conditions, specialInputData.conditions);
             boolean isFemale = Boolean.parseBoolean(mapOfPassedParams.get("female"));
             String path = isName ? getPathBySpecialInputType(NAME) : getPathForSurnameSpecialInputData(isFemale);
-            try (Stream<String> stream = Files.lines(Path.of(path), Charset.forName("WINDOWS-1250"))) {
+            try (Stream<String> stream = Files.lines(Path.of(path))) {
                 return Optional.of(stream
                         .filter(el -> {
                             String start = mapOfPassedParams.get("startAt");

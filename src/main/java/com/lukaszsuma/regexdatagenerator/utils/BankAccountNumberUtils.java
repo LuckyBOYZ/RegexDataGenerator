@@ -31,18 +31,9 @@ public class BankAccountNumberUtils {
         String defaultCountryLettersValue = CountryLettersToNumber.P.getNumber() + CountryLettersToNumber.L.getNumber();
         if (isCountryValid(country)) {
             countryLetters = country;
-            defaultCountryLettersValue = convertCountryLettersToNumber(country);
+            defaultCountryLettersValue = CountryLettersToNumber.convertCountryLettersToNumber(country);
         }
-
-        String currVal = SB.toString().concat(defaultCountryLettersValue).concat("00");
-        String substring = currVal.substring(0, currVal.length() / 2);
-        String substring1 = currVal.substring(currVal.length() / 2);
-        long firstPart = Long.parseLong(substring);
-        long mod = firstPart % 97;
-        String restOfNumber = mod + substring1;
-        long rest = Long.parseLong(restOfNumber);
-        long num = rest % 97;
-        int IBANControlNumber = 98 - (int) num;
+        int IBANControlNumber = IBANValidator.getIbanControlNumber(SB, defaultCountryLettersValue);
         if (IBANControlNumber < 10) {
             SB.insert(0, IBANControlNumber).insert(0, 0);
         } else {
@@ -85,13 +76,6 @@ public class BankAccountNumberUtils {
             }
         }
         return isValid;
-    }
-
-    private static String convertCountryLettersToNumber(String letters) {
-        String[] arr = letters.toUpperCase().split(StringSeparator.EMPTY_STRING);
-        String first = CountryLettersToNumber.valueOf(arr[0]).getNumber();
-        String second = CountryLettersToNumber.valueOf(arr[1]).getNumber();
-        return first + second;
     }
 
     private static int generateControlNumber(String[] arrOfNums) {
