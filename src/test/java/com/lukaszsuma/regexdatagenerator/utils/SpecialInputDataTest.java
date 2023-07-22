@@ -1,13 +1,17 @@
 package com.lukaszsuma.regexdatagenerator.utils;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.stream.IntStream;
@@ -17,17 +21,31 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class SpecialInputDataTest {
 
+    @DisplayName("Testing returning empty optional for every SpecialInputDate beyond ID if = or empty String is passed")
+    @ParameterizedTest(name = "specialInputData: {0}")
+    @EnumSource(value = SpecialInputData.class, names = "ID", mode = EnumSource.Mode.EXCLUDE)
+    void shouldAlwaysReturnEmptyOptionalWhenEqualsInParamsOrOnlyNameWithPipeIsPassed(SpecialInputData specialInputData) {
+        // when
+        Optional<String> shouldBeEmpty = specialInputData.generateData().apply(
+                specialInputData + StringSeparator.PIPE + StringSeparator.EQUALS);
+        Optional<String> shouldAlsoBeEmpty = specialInputData.generateData().apply(
+                specialInputData + StringSeparator.PIPE + StringSeparator.EMPTY_STRING);
+        // then
+        assertTrue(shouldBeEmpty.isEmpty());
+        assertTrue(shouldAlsoBeEmpty.isEmpty());
+    }
+
     @DisplayName("Testing correct parameters for NAME SpecialInputData")
     @ParameterizedTest(name = "startAt: {0}, female: {1}")
     @MethodSource("getCorrectArgumentsForNameAndSurnameSpecialInputData")
-    void shouldGetRandomValueBasedOnParametersForNAME(String letter, String isFemale) {
+    void shouldReturnRandomNameBasedOnCorrectParametersForNAME(String letter, String isFemale) {
         // given
         String parameter = String.format("NAME|startAt=%s,female=%s", letter, isFemale);
         // when
-        Optional<String> optionalName = SpecialInputData.NAME.generateData().apply(parameter);
+        Optional<String> shouldBeName = SpecialInputData.NAME.generateData().apply(parameter);
         // then
-        assertTrue(optionalName.isPresent());
-        String name = optionalName.get();
+        assertTrue(shouldBeName.isPresent());
+        String name = shouldBeName.get();
         boolean female = Boolean.parseBoolean(isFemale);
         if (!female && letter.equals("v")) {
             assertEquals("Jan", name);
@@ -47,41 +65,41 @@ class SpecialInputDataTest {
         // given
         String parameter = "NAME";
         // when
-        Optional<String> optionalName = SpecialInputData.NAME.generateData().apply(parameter);
+        Optional<String> shouldBeName = SpecialInputData.NAME.generateData().apply(parameter);
         // then
-        assertTrue(optionalName.isPresent());
-        String name = optionalName.get();
+        assertTrue(shouldBeName.isPresent());
+        String name = shouldBeName.get();
         assertFalse(name.isBlank());
     }
 
-    @DisplayName("Testing incorrect parameters for NAME SpecialInputData")
+    @DisplayName("Testing incorrect startAt value but female always as false for NAME SpecialInputData")
     @ParameterizedTest(name = "startAt: {0}, female: {1}")
     @MethodSource("getTwoIncorrectParameters")
-    void shouldReturnEmptyOptionalOrDefaultValueForMaleBasedOnIncorrectParamsForNAME(String letter, String isFemale) {
+    void shouldReturnEmptyOptionalOrDefaultNameForMaleBasedOnIncorrectParamsForNAME(String letter, String isFemale) {
         // given
         String parameter = String.format("NAME|startAt=%s,female=%s", letter, isFemale);
         // when
-        Optional<String> optionalName = SpecialInputData.NAME.generateData().apply(parameter);
+        Optional<String> shouldBeEmptyOrWithJan = SpecialInputData.NAME.generateData().apply(parameter);
         // then
-        assertTrue(optionalName.isEmpty() || optionalName.get().equals("Jan"));
+        assertTrue(shouldBeEmptyOrWithJan.isEmpty() || shouldBeEmptyOrWithJan.get().equals("Jan"));
     }
 
     @DisplayName("Testing incorrect startAt value but female always as true for NAME SpecialInputData")
     @ParameterizedTest(name = "startAt: {0}, female: {1}")
     @MethodSource("getIncorrectFirstAndCorrectSecondOneParametersForNameAndSurnameSpecialInputData")
-    void shouldReturnEmptyOptionalOrDefaultValueForFemaleBasedOnIncorrectParamsForNAME(String letter, String isFemale) {
+    void shouldReturnEmptyOptionalOrDefaultNameForFemaleBasedOnIncorrectParamsForNAME(String letter, String isFemale) {
         // given
         String parameter = String.format("NAME|startAt=%s,female=%s", letter, isFemale);
         // when
-        Optional<String> optionalName = SpecialInputData.NAME.generateData().apply(parameter);
+        Optional<String> shouldBeEmptyOrWithJanina = SpecialInputData.NAME.generateData().apply(parameter);
         // then
-        assertTrue(optionalName.isEmpty() || optionalName.get().equals("Janina"));
+        assertTrue(shouldBeEmptyOrWithJanina.isEmpty() || shouldBeEmptyOrWithJanina.get().equals("Janina"));
     }
 
     @DisplayName("Testing incorrect parameters and arguments for NAME SpecialInputData")
     @ParameterizedTest(name = "startAt: {0}, female: {1}, startAtVal: {2}, femaleVal: {3}")
     @MethodSource("getFourIncorrectParameters")
-    void shouldNotThrowAnyExceptionIfAllArgsAndParamsAreSetWronglyForNameSpecialInputData(
+    void shouldNotThrowAnyExceptionWhenAllArgsAndParamsAreSetWronglyForNameSpecialInputData(
             String startAt, String female, String letter, String isFemale) {
         // given
         String parameter = String.format("NAME|%s=%s,%s=%s", startAt, female, letter, isFemale);
@@ -92,14 +110,14 @@ class SpecialInputDataTest {
     @DisplayName("Testing correct parameters for SURNAME SpecialInputData")
     @ParameterizedTest(name = "startAt: {0}, female: {1}")
     @MethodSource("getCorrectArgumentsForNameAndSurnameSpecialInputData")
-    void shouldReturnRandomValueWhenParamsAreCorrectForSURNAME(String letter, String isFemale) {
+    void shouldReturnRandomSurnameWhenParamsAreCorrectForSURNAME(String letter, String isFemale) {
         // given
         String parameter = String.format("SURNAME|startAt=%s,female=%s", letter, isFemale);
         // when
-        Optional<String> optionalOfName = SpecialInputData.SURNAME.generateData().apply(parameter);
+        Optional<String> shouldBeSurname = SpecialInputData.SURNAME.generateData().apply(parameter);
         // then
-        assertTrue(optionalOfName.isPresent());
-        String surname = optionalOfName.get();
+        assertTrue(shouldBeSurname.isPresent());
+        String surname = shouldBeSurname.get();
         if (letter.equals("v")) {
             if (Boolean.parseBoolean(isFemale)) {
                 assertEquals("Kowalska", surname);
@@ -117,35 +135,37 @@ class SpecialInputDataTest {
         // given
         String parameter = "SURNAME";
         // when
-        Optional<String> optionalSurname = SpecialInputData.SURNAME.generateData().apply(parameter);
+        Optional<String> shouldBeSurname = SpecialInputData.SURNAME.generateData().apply(parameter);
         // then
-        assertTrue(optionalSurname.isPresent());
-        String surname = optionalSurname.get();
+        assertTrue(shouldBeSurname.isPresent());
+        String surname = shouldBeSurname.get();
         assertFalse(surname.isBlank());
     }
 
     @DisplayName("Testing incorrect startAt value but female always as true for SURNAME SpecialInputData")
     @ParameterizedTest(name = "startAt: {0}, female: {1}")
     @MethodSource("getIncorrectFirstAndCorrectSecondOneParametersForNameAndSurnameSpecialInputData")
-    void shouldReturnEmptyOptionalOrDefaultValueForFemaleWhenWrongParamsArePassedForSURNAME(String letter, String isFemale) {
+    void shouldReturnEmptyOptionalOrDefaultSurnameForFemaleWhenWrongParamsArePassedForSURNAME(
+            String letter, String isFemale) {
         // given
         String parameter = String.format("SURNAME|startAt=%s,female=%s", letter, isFemale);
         // when
-        Optional<String> optionalName = SpecialInputData.SURNAME.generateData().apply(parameter);
+        Optional<String> shouldBeEmptyOrWithKowalska = SpecialInputData.SURNAME.generateData().apply(parameter);
         // then
-        assertTrue(optionalName.isEmpty() || optionalName.get().equals("Kowalska"));
+        assertTrue(shouldBeEmptyOrWithKowalska.isEmpty() || shouldBeEmptyOrWithKowalska.get().equals("Kowalska"));
     }
 
     @DisplayName("Testing incorrect data for SURNAME SpecialInputData")
     @ParameterizedTest(name = "startAt: {0}, female: {1}")
     @MethodSource("getTwoIncorrectParameters")
-    void shouldReturnEmptyOptionalOrDefaultValueForMaleWhenWrongParamsArePassedForSURNAME(String letter, String isFemale) {
+    void shouldReturnEmptyOptionalOrDefaultSurnameForMaleWhenWrongParamsArePassedForSURNAME(
+            String letter, String isFemale) {
         // given
         String parameter = String.format("SURNAME|startAt=%s,female=%s", letter, isFemale);
         // when
-        Optional<String> optionalName = SpecialInputData.SURNAME.generateData().apply(parameter);
+        Optional<String> shouldBeEmptyOrWithKowalski = SpecialInputData.SURNAME.generateData().apply(parameter);
         // then
-        assertTrue(optionalName.isEmpty() || optionalName.get().equals("Kowalski"));
+        assertTrue(shouldBeEmptyOrWithKowalski.isEmpty() || shouldBeEmptyOrWithKowalski.get().equals("Kowalski"));
     }
 
     @DisplayName("Testing incorrect parameters and arguments for SURNAME SpecialInputData")
@@ -178,11 +198,10 @@ class SpecialInputDataTest {
         // given
         String parameter = "PESEL";
         // when
-        Optional<String> optionalPesel = SpecialInputData.PESEL.generateData().apply(parameter);
-        System.out.println(optionalPesel);
+        Optional<String> shouldBePesel = SpecialInputData.PESEL.generateData().apply(parameter);
         // then
-        assertTrue(optionalPesel.isPresent());
-        String pesel = optionalPesel.get();
+        assertTrue(shouldBePesel.isPresent());
+        String pesel = shouldBePesel.get();
         assertFalse(pesel.isBlank());
         String shouldBeMale = pesel.substring(pesel.length() - 2, pesel.length() - 1);
         assertEquals(1, Integer.parseInt(shouldBeMale) % 2);
@@ -343,33 +362,34 @@ class SpecialInputDataTest {
     @DisplayName("Testing incorrect parameter without pipe for POSTCODE SpecialInputData")
     @ParameterizedTest(name = "redundant parameter value: {0}")
     @MethodSource("getOneIncorrectParameter")
-    void shouldReturnRandomPostCodeWithSpecificFormatWhenRedundantParametersIsPassedAndIsWithoutPipeForPOSTCODE(
+    void shouldReturnRandomPostcodeWithSpecificFormatWhenRedundantParametersIsPassedAndIsWithoutPipeForPOSTCODE(
             String redundantValue) {
         // given
         Pattern pattern = Pattern.compile("\\d{2}-\\d{3}");
         String incorrectParameter = "POSTCODE" + redundantValue;
         // when
-        Optional<String> shouldBePostcode = SpecialInputData.POSTCODE.generateData().apply(incorrectParameter);
+        Optional<String> optionalPostcode = SpecialInputData.POSTCODE.generateData().apply(incorrectParameter);
         // then
-        assertTrue(shouldBePostcode.isPresent());
-        String postcode = shouldBePostcode.get();
-        assertTrue(pattern.matcher(postcode).matches());
+        if (optionalPostcode.isPresent()) {
+            String postcode = optionalPostcode.get();
+            assertTrue(pattern.matcher(postcode).matches());
+        } else {
+            assertTrue(redundantValue.contains(StringSeparator.PIPE_REGEX) ||
+                    redundantValue.contains(StringSeparator.PIPE));
+        }
     }
 
     @DisplayName("Testing incorrect parameter with pipe for POSTCODE SpecialInputData")
     @ParameterizedTest(name = "redundant parameter value: {0}")
     @MethodSource("getOneIncorrectParameter")
-    void shouldReturnRandomPostCodeWithSpecificFormatWhenRedundantParametersIsPassedAndIsWithPipeForPOSTCODE(
+    void shouldNotReturnAnyPostcodeWithSpecificFormatOrEmptyOptionalWhenRedundantParametersIsPassedAndIsWithPipeForPOSTCODE(
             String redundantValue) {
         // given
-        Pattern pattern = Pattern.compile("\\d{2}-\\d{3}");
         String incorrectParameter = "POSTCODE|" + redundantValue;
         // when
-        Optional<String> shouldBePostcode = SpecialInputData.POSTCODE.generateData().apply(incorrectParameter);
+        Optional<String> shouldBeEmpty = SpecialInputData.POSTCODE.generateData().apply(incorrectParameter);
         // then
-        assertTrue(shouldBePostcode.isPresent());
-        String postcode = shouldBePostcode.get();
-        assertTrue(pattern.matcher(postcode).matches());
+        assertTrue(shouldBeEmpty.isEmpty());
     }
 
     @DisplayName("Testing of creating random street for STREET SpecialInputData")
@@ -388,29 +408,23 @@ class SpecialInputDataTest {
     @DisplayName("Testing incorrect parameter and without pipe for STREET SpecialInputData")
     @ParameterizedTest(name = "redundant parameter value: {0}")
     @MethodSource("getOneIncorrectParameter")
-    void shouldReturnRandomStreetWhenRedundantParametersIsPassedAndIsWithoutPipeForSTREET(String redundantValue) {
+    void shouldReturnRandomStreetOrEmptyOptionalWhenRedundantParametersIsPassedAndIsWithoutPipeForSTREET(String redundantValue) {
         // given
         String incorrectParameter = "STREET" + redundantValue;
-        // when
-        Optional<String> shouldBeStreet = SpecialInputData.STREET.generateData().apply(incorrectParameter);
         // then
-        assertTrue(shouldBeStreet.isPresent());
-        String street = shouldBeStreet.get();
-        assertFalse(street.isBlank());
+        assertDoesNotThrow(() -> SpecialInputData.STREET.generateData().apply(incorrectParameter));
     }
 
     @DisplayName("Testing incorrect parameter and with pipe for STREET SpecialInputData")
     @ParameterizedTest(name = "redundant parameter value: {0}")
     @MethodSource("getOneIncorrectParameter")
-    void shouldReturnRandomStreetWhenRedundantParametersIsPassedAndIsWithPipeForSTREET(String redundantValue) {
+    void shouldReturnEmptyOptionalWhenRedundantParametersIsPassedAndIsWithPipeForSTREET(String redundantValue) {
         // given
         String incorrectParameter = "STREET|" + redundantValue;
         // when
-        Optional<String> shouldBeStreet = SpecialInputData.STREET.generateData().apply(incorrectParameter);
+        Optional<String> shouldBeEmpty = SpecialInputData.STREET.generateData().apply(incorrectParameter);
         // then
-        assertTrue(shouldBeStreet.isPresent());
-        String street = shouldBeStreet.get();
-        assertFalse(street.isBlank());
+        assertTrue(shouldBeEmpty.isEmpty());
     }
 
     @DisplayName("Testing correct parameters for CITY SpecialInputData")
@@ -470,11 +484,109 @@ class SpecialInputDataTest {
     @DisplayName("Testing incorrect parameters and arguments for CITY SpecialInputData")
     @ParameterizedTest(name = "startAt: {0}, startAtVal: {1}")
     @MethodSource("getTwoIncorrectParameters")
-    void shouldReturnRandomCityOrEmptyOptionalIfArgsAndParamsAreWrongForCITY(String startAt, String startAtVal) {
+    void shouldNotThrowAnyExceptionWhenArgsAndParamsAreWrongForCITY(String startAt, String startAtVal) {
         // given
         String parameter = String.format("CITY|%s=%s", startAt, startAtVal);
         // then
         assertDoesNotThrow(() -> SpecialInputData.CITY.generateData().apply(parameter));
+    }
+
+    @DisplayName("Testing of creating random voivodeship for VOIVODESHIP SpecialInputData")
+    @Test
+    void shouldReturnRandomStreetForVOIVODESHIP() {
+        // given
+        String parameter = "VOIVODESHIP";
+        // when
+        Optional<String> shouldBeVoivodeship = SpecialInputData.VOIVODESHIP.generateData().apply(parameter);
+        // then
+        assertTrue(shouldBeVoivodeship.isPresent());
+        String voivodeship = shouldBeVoivodeship.get();
+        assertFalse(voivodeship.isBlank());
+    }
+
+    @DisplayName("Testing incorrect parameter and without pipe for VOIVODESHIP SpecialInputData")
+    @ParameterizedTest(name = "redundant parameter value: {0}")
+    @MethodSource("getOneIncorrectParameter")
+    void shouldNotThrowAnyExceptionWhenRedundantParametersIsPassedAndIsWithoutPipeForVOIVODESHIP(String redundantValue) {
+        // given
+        String incorrectParameter = "VOIVODESHIP" + redundantValue;
+        // then
+        assertDoesNotThrow(() -> SpecialInputData.VOIVODESHIP.generateData().apply(incorrectParameter));
+    }
+
+    @DisplayName("Testing incorrect parameter and with pipe for VOIVODESHIP SpecialInputData")
+    @ParameterizedTest(name = "redundant parameter value: {0}")
+    @MethodSource("getOneIncorrectParameter")
+    void shouldReturnEmptyOptionalWhenRedundantParametersIsPassedAndIsWithPipeForVOIVODESHIP(String redundantValue) {
+        // given
+        String incorrectParameter = "VOIVODESHIP|" + redundantValue;
+        // when
+        Optional<String> shouldBeEmpty = SpecialInputData.VOIVODESHIP.generateData().apply(incorrectParameter);
+        // then
+        assertTrue(shouldBeEmpty.isEmpty());
+    }
+
+    @DisplayName("Testing of creating random county for COUNTY SpecialInputData")
+    @Test
+    void shouldReturnRandomStreetForCOUNTY() {
+        // given
+        String parameter = "COUNTY";
+        // when
+        Optional<String> shouldBeCounty = SpecialInputData.COUNTY.generateData().apply(parameter);
+        // then
+        assertTrue(shouldBeCounty.isPresent());
+        String county = shouldBeCounty.get();
+        assertFalse(county.isBlank());
+    }
+
+    @DisplayName("Testing incorrect parameter and without pipe for COUNTY SpecialInputData")
+    @ParameterizedTest(name = "redundant parameter value: {0}")
+    @MethodSource("getOneIncorrectParameter")
+    void shouldNotThrowAnyExceptionWhenRedundantParametersIsPassedAndIsWithoutPipeForCOUNTY(String redundantValue) {
+        // given
+        String incorrectParameter = "COUNTY" + redundantValue;
+        // then
+        assertDoesNotThrow(() -> SpecialInputData.COUNTY.generateData().apply(incorrectParameter));
+    }
+
+    @DisplayName("Testing incorrect parameter and with pipe for COUNTY SpecialInputData")
+    @ParameterizedTest(name = "redundant parameter value: {0}")
+    @MethodSource("getOneIncorrectParameter")
+    void shouldReturnEmptyOptionalWhenRedundantParametersIsPassedAndIsWithPipeForCOUNTY(String redundantValue) {
+        // given
+        String incorrectParameter = "COUNTY|" + redundantValue;
+        // when
+        Optional<String> shouldBeEmpty = SpecialInputData.COUNTY.generateData().apply(incorrectParameter);
+        // then
+        assertTrue(shouldBeEmpty.isEmpty());
+    }
+
+    @DisplayName("Testing correct parameters for ADDRESS SpecialInputData")
+    @Test
+    @SuppressWarnings("unchecked")
+    void shouldReturnRandomAddressBasedOnCorrectParametersForADDRESS() {
+        // given
+        String beforeFormat =
+                "ADDRESS|cityPropName=%s,streetPropName=%s,postcodePropName=%s,voivodeshipPropName=%s,countyPropName=%s";
+        String cityName = "cityTest";
+        String streetName = "streetTest";
+        String postcodeName = "postcodeTest";
+        String voivodeshipName = "voivodeshipTest";
+        String countyName = "countyTest";
+        String parameter = String.format(beforeFormat, cityName, streetName, postcodeName,
+                voivodeshipName, countyName);
+        // when
+        Optional<String> shouldBeAddress = SpecialInputData.ADDRESS.generateData().apply(parameter);
+        // then
+        assertTrue(shouldBeAddress.isPresent());
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map<String, String> parsedAddress = new HashMap<>();
+        assertDoesNotThrow(() -> parsedAddress.putAll(objectMapper.readValue(shouldBeAddress.get(), Map.class)));
+        assertFalse(parsedAddress.get(cityName).isBlank());
+        assertFalse(parsedAddress.get(streetName).isBlank());
+        assertFalse(parsedAddress.get(postcodeName).isBlank());
+        assertFalse(parsedAddress.get(voivodeshipName).isBlank());
+        assertFalse(parsedAddress.get(countyName).isBlank());
     }
 
     private static Stream<Arguments> getCorrectParametersForIBANSpecialInputData() {

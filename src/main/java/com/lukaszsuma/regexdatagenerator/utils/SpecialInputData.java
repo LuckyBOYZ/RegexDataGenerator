@@ -220,6 +220,10 @@ public enum SpecialInputData {
                                 }
                         ));
             }
+            if(specialInputData ==  COUNTY || specialInputData == VOIVODESHIP) {
+                return Optional.of(randomAddressRow);
+            }
+
             String[] split = randomAddressRow.split(StringSeparator.SEMICOLON);
             int index = getIndexOfAddressElement(specialInputData);
             if (index < 0) {
