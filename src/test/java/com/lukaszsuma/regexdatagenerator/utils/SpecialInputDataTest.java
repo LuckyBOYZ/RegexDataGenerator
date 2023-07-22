@@ -1,15 +1,15 @@
 package com.lukaszsuma.regexdatagenerator.utils;
 
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.Optional;
+import java.util.regex.Pattern;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -39,6 +39,19 @@ class SpecialInputDataTest {
                 assertFalse(name.endsWith("a"));
             }
         }
+    }
+
+    @DisplayName("Testing NAME SpecialInputData without any parameter")
+    @Test
+    void shouldReturnRandomNameWhenArgumentIsWithoutPipeForNAME() {
+        // given
+        String parameter = "NAME";
+        // when
+        Optional<String> optionalName = SpecialInputData.NAME.generateData().apply(parameter);
+        // then
+        assertTrue(optionalName.isPresent());
+        String name = optionalName.get();
+        assertFalse(name.isBlank());
     }
 
     @DisplayName("Testing incorrect parameters for NAME SpecialInputData")
@@ -98,6 +111,19 @@ class SpecialInputDataTest {
         }
     }
 
+    @DisplayName("Testing SURNAME SpecialInputData without any parameter")
+    @Test
+    void shouldReturnRandomSurnameWhenArgumentIsWithoutPipeForSURNAME() {
+        // given
+        String parameter = "SURNAME";
+        // when
+        Optional<String> optionalSurname = SpecialInputData.SURNAME.generateData().apply(parameter);
+        // then
+        assertTrue(optionalSurname.isPresent());
+        String surname = optionalSurname.get();
+        assertFalse(surname.isBlank());
+    }
+
     @DisplayName("Testing incorrect startAt value but female always as true for SURNAME SpecialInputData")
     @ParameterizedTest(name = "startAt: {0}, female: {1}")
     @MethodSource("getIncorrectFirstAndCorrectSecondOneParametersForNameAndSurnameSpecialInputData")
@@ -146,6 +172,24 @@ class SpecialInputDataTest {
         assertTrue(shouldBePesel.isPresent());
     }
 
+    @DisplayName("Testing PESEL SpecialInputData without any parameter")
+    @Test
+    void shouldReturnRandomPeselForMaleAndPersonBornBefore2000WhenArgumentIsWithoutPipeForPESEL() {
+        // given
+        String parameter = "PESEL";
+        // when
+        Optional<String> optionalPesel = SpecialInputData.PESEL.generateData().apply(parameter);
+        System.out.println(optionalPesel);
+        // then
+        assertTrue(optionalPesel.isPresent());
+        String pesel = optionalPesel.get();
+        assertFalse(pesel.isBlank());
+        String shouldBeMale = pesel.substring(pesel.length() - 2, pesel.length() - 1);
+        assertEquals(1, Integer.parseInt(shouldBeMale) % 2);
+        String shouldBeLowerThan2 = pesel.substring(2, 3);
+        assertTrue(Integer.parseInt(shouldBeLowerThan2) < 2);
+    }
+
     @DisplayName("Testing incorrect parameters for PESEL SpecialInputData")
     @ParameterizedTest(name = "canBeAsBornAfter2000: {0}, isFemale: {1}, onlyAdults: {2}")
     @MethodSource("getThreeIncorrectParameters")
@@ -180,8 +224,9 @@ class SpecialInputDataTest {
         // given
         String parameter = String.format("IBAN|country=%s,bankName=%s,formatted=%s,withLetters=%s",
                 country, bankName, formatted, withLetters);
-        // then
+        // when
         Optional<String> shouldBeIBAN = SpecialInputData.IBAN.generateData().apply(parameter);
+        // then
         assertTrue(shouldBeIBAN.isPresent());
         String iban = shouldBeIBAN.get();
         int ibanControlNumberFromGeneratedIBAN;
@@ -206,6 +251,28 @@ class SpecialInputDataTest {
         assertEquals(ibanControlNumber, ibanControlNumberFromGeneratedIBAN);
     }
 
+    @DisplayName("Testing IBAN SpecialInputData without any parameter")
+    @Test
+    void shouldReturnIbanForPolandCountryAndINGBankNameWhenArgumentIsWithoutPipeForIBAN() {
+        // given
+        String parameter = "IBAN";
+        // when
+        Optional<String> optionalIban = SpecialInputData.IBAN.generateData().apply(parameter);
+        // then
+        assertTrue(optionalIban.isPresent());
+        String iban = optionalIban.get();
+        assertDoesNotThrow(() -> {
+            String sub1 = iban.substring(0, iban.length() / 2);
+            String sub2 = iban.substring(iban.length() / 2);
+            Long.parseLong(sub1);
+            Long.parseLong(sub2);
+        });
+        int ibanControlNumberFromGenerateIban = Integer.parseInt(iban.substring(0, 2));
+        String number = CountryLettersToNumber.convertCountryLettersToNumber("PL");
+        int ibanControlNumber = IBANValidator.getIbanControlNumber(new StringBuilder(iban.substring(2)), number);
+        assertEquals(ibanControlNumber, ibanControlNumberFromGenerateIban);
+    }
+
     @DisplayName("Testing incorrect parameters for IBAN SpecialInputData")
     @ParameterizedTest(name = "country: {0}, bankName: {1} formatted: {2}, withLetters: {3}")
     @MethodSource("getFourIncorrectParameters")
@@ -214,9 +281,10 @@ class SpecialInputDataTest {
         // given
         String parameter = String.format("IBAN|country=%s,bankName=%s,formatted=%s,withLetters=%s",
                 country, bankName, formatted, withLetters);
-        // then
+        // when
         Optional<String> shouldBeIBAN = SpecialInputData.IBAN.generateData().apply(parameter);
-        if(shouldBeIBAN.isPresent()) {
+        // then
+        if (shouldBeIBAN.isPresent()) {
             String iban = shouldBeIBAN.get();
             assertDoesNotThrow(() -> {
                 String sub1 = iban.substring(0, iban.length() / 2);
@@ -240,9 +308,10 @@ class SpecialInputDataTest {
         // given
         String parameter = String.format("IBAN|%s=%s,%s=%s,%s=%s,%s=%s",
                 country, countryVal, bankName, bankNameVal, formatted, formattedVal, withLetters, withLettersVal);
-        // then
+        // when
         Optional<String> shouldBeIBAN = SpecialInputData.IBAN.generateData().apply(parameter);
-        if(shouldBeIBAN.isPresent()) {
+        // then
+        if (shouldBeIBAN.isPresent()) {
             String iban = shouldBeIBAN.get();
             assertDoesNotThrow(() -> {
                 String sub1 = iban.substring(0, iban.length() / 2);
@@ -257,6 +326,157 @@ class SpecialInputDataTest {
         }
     }
 
+    @DisplayName("Testing of creating random post code for POSTCODE SpecialInputData")
+    @RepeatedTest(value = 20, name = "execution {currentRepetition}/{totalRepetitions}")
+    void shouldReturnRandomPostCodeWithSpecificFormatForPOSTCODE() {
+        // given
+        Pattern pattern = Pattern.compile("\\d{2}-\\d{3}");
+        String parameter = "POSTCODE";
+        // when
+        Optional<String> shouldBePostcode = SpecialInputData.POSTCODE.generateData().apply(parameter);
+        // then
+        assertTrue(shouldBePostcode.isPresent());
+        String postcode = shouldBePostcode.get();
+        assertTrue(pattern.matcher(postcode).matches());
+    }
+
+    @DisplayName("Testing incorrect parameter without pipe for POSTCODE SpecialInputData")
+    @ParameterizedTest(name = "redundant parameter value: {0}")
+    @MethodSource("getOneIncorrectParameter")
+    void shouldReturnRandomPostCodeWithSpecificFormatWhenRedundantParametersIsPassedAndIsWithoutPipeForPOSTCODE(
+            String redundantValue) {
+        // given
+        Pattern pattern = Pattern.compile("\\d{2}-\\d{3}");
+        String incorrectParameter = "POSTCODE" + redundantValue;
+        // when
+        Optional<String> shouldBePostcode = SpecialInputData.POSTCODE.generateData().apply(incorrectParameter);
+        // then
+        assertTrue(shouldBePostcode.isPresent());
+        String postcode = shouldBePostcode.get();
+        assertTrue(pattern.matcher(postcode).matches());
+    }
+
+    @DisplayName("Testing incorrect parameter with pipe for POSTCODE SpecialInputData")
+    @ParameterizedTest(name = "redundant parameter value: {0}")
+    @MethodSource("getOneIncorrectParameter")
+    void shouldReturnRandomPostCodeWithSpecificFormatWhenRedundantParametersIsPassedAndIsWithPipeForPOSTCODE(
+            String redundantValue) {
+        // given
+        Pattern pattern = Pattern.compile("\\d{2}-\\d{3}");
+        String incorrectParameter = "POSTCODE|" + redundantValue;
+        // when
+        Optional<String> shouldBePostcode = SpecialInputData.POSTCODE.generateData().apply(incorrectParameter);
+        // then
+        assertTrue(shouldBePostcode.isPresent());
+        String postcode = shouldBePostcode.get();
+        assertTrue(pattern.matcher(postcode).matches());
+    }
+
+    @DisplayName("Testing of creating random street for STREET SpecialInputData")
+    @Test
+    void shouldReturnRandomStreetForSTREET() {
+        // given
+        String parameter = "STREET";
+        // when
+        Optional<String> shouldBeStreet = SpecialInputData.STREET.generateData().apply(parameter);
+        // then
+        assertTrue(shouldBeStreet.isPresent());
+        String street = shouldBeStreet.get();
+        assertFalse(street.isBlank());
+    }
+
+    @DisplayName("Testing incorrect parameter and without pipe for STREET SpecialInputData")
+    @ParameterizedTest(name = "redundant parameter value: {0}")
+    @MethodSource("getOneIncorrectParameter")
+    void shouldReturnRandomStreetWhenRedundantParametersIsPassedAndIsWithoutPipeForSTREET(String redundantValue) {
+        // given
+        String incorrectParameter = "STREET" + redundantValue;
+        // when
+        Optional<String> shouldBeStreet = SpecialInputData.STREET.generateData().apply(incorrectParameter);
+        // then
+        assertTrue(shouldBeStreet.isPresent());
+        String street = shouldBeStreet.get();
+        assertFalse(street.isBlank());
+    }
+
+    @DisplayName("Testing incorrect parameter and with pipe for STREET SpecialInputData")
+    @ParameterizedTest(name = "redundant parameter value: {0}")
+    @MethodSource("getOneIncorrectParameter")
+    void shouldReturnRandomStreetWhenRedundantParametersIsPassedAndIsWithPipeForSTREET(String redundantValue) {
+        // given
+        String incorrectParameter = "STREET|" + redundantValue;
+        // when
+        Optional<String> shouldBeStreet = SpecialInputData.STREET.generateData().apply(incorrectParameter);
+        // then
+        assertTrue(shouldBeStreet.isPresent());
+        String street = shouldBeStreet.get();
+        assertFalse(street.isBlank());
+    }
+
+    @DisplayName("Testing correct parameters for CITY SpecialInputData")
+    @ParameterizedTest(name = "startAt: {0}")
+    @MethodSource("getArgumentsWithLettersOnly")
+    void shouldGetRandomCityBasedOnParameterForCITY(String letter) {
+        // given
+        String parameter = String.format("CITY|startAt=%s", letter);
+        // when
+        Optional<String> optionalCity = SpecialInputData.CITY.generateData().apply(parameter);
+        // then
+        assertTrue(optionalCity.isPresent());
+        String city = optionalCity.get();
+        if (letter.equals("v")) {
+            assertEquals("Warszawa", city);
+        } else {
+            String firstCityLetter = city.substring(0, 1);
+            assertEquals(letter.toUpperCase(), firstCityLetter);
+        }
+    }
+
+    @DisplayName("Testing of creating random city for CITY SpecialInputData")
+    @Test
+    void shouldReturnRandomCityForCITY() {
+        // given
+        String parameter = "CITY";
+        // when
+        Optional<String> shouldBeCity = SpecialInputData.CITY.generateData().apply(parameter);
+        // then
+        assertTrue(shouldBeCity.isPresent());
+        String city = shouldBeCity.get();
+        assertFalse(city.isBlank());
+    }
+
+    @DisplayName("Testing incorrect parameter and without pipe for CITY SpecialInputData")
+    @ParameterizedTest(name = "redundant parameter value: {0}")
+    @MethodSource("getOneIncorrectParameter")
+    void shouldReturnRandomCityOrEmptyOptionalWhenRedundantParametersIsPassedAndIsWithoutPipeForCITY(String redundantValue) {
+        // given
+        String incorrectParameter = "CITY" + redundantValue;
+        // then
+        assertDoesNotThrow(() -> SpecialInputData.CITY.generateData().apply(incorrectParameter));
+    }
+
+    @DisplayName("Testing incorrect parameter and with pipe for CITY SpecialInputData")
+    @ParameterizedTest(name = "redundant parameter value: {0}")
+    @MethodSource("getOneIncorrectParameter")
+    void shouldNotReturnCityWhenRedundantParametersIsPassedAndIsWithPipeForCITY(String redundantValue) {
+        // given
+        String incorrectParameter = "CITY|" + redundantValue;
+        // when
+        Optional<String> shouldBeCity = SpecialInputData.CITY.generateData().apply(incorrectParameter);
+        // then
+        assertFalse(shouldBeCity.isPresent());
+    }
+
+    @DisplayName("Testing incorrect parameters and arguments for CITY SpecialInputData")
+    @ParameterizedTest(name = "startAt: {0}, startAtVal: {1}")
+    @MethodSource("getTwoIncorrectParameters")
+    void shouldReturnRandomCityOrEmptyOptionalIfArgsAndParamsAreWrongForCITY(String startAt, String startAtVal) {
+        // given
+        String parameter = String.format("CITY|%s=%s", startAt, startAtVal);
+        // then
+        assertDoesNotThrow(() -> SpecialInputData.CITY.generateData().apply(parameter));
+    }
+
     private static Stream<Arguments> getCorrectParametersForIBANSpecialInputData() {
         int availableCountryLength = AvailableCountries.values().length;
         int polandBankIdLength = PolandBankId.values().length;
@@ -267,30 +487,22 @@ class SpecialInputDataTest {
             int polandBankIdIndex = polandBankIdLength * i / numberOfAllCombinations;
             int modulo = i % 4;
             switch (modulo) {
-                case 0 -> {
-                    stream = Stream.concat(stream, Stream.of(
-                            Arguments.of(
-                                    AvailableCountries.values()[availableCountryIndex],
-                                    PolandBankId.values()[polandBankIdIndex], true, true)));
-                }
-                case 1 -> {
-                    stream = Stream.concat(stream, Stream.of(
-                            Arguments.of(
-                                    AvailableCountries.values()[availableCountryIndex],
-                                    PolandBankId.values()[polandBankIdIndex], true, false)));
-                }
-                case 2 -> {
-                    stream = Stream.concat(stream, Stream.of(
-                            Arguments.of(
-                                    AvailableCountries.values()[availableCountryIndex],
-                                    PolandBankId.values()[polandBankIdIndex], false, true)));
-                }
-                case 3 -> {
-                    stream = Stream.concat(stream, Stream.of(
-                            Arguments.of(
-                                    AvailableCountries.values()[availableCountryIndex],
-                                    PolandBankId.values()[polandBankIdIndex], false, false)));
-                }
+                case 0 -> stream = Stream.concat(stream, Stream.of(
+                        Arguments.of(
+                                AvailableCountries.values()[availableCountryIndex],
+                                PolandBankId.values()[polandBankIdIndex], true, true)));
+                case 1 -> stream = Stream.concat(stream, Stream.of(
+                        Arguments.of(
+                                AvailableCountries.values()[availableCountryIndex],
+                                PolandBankId.values()[polandBankIdIndex], true, false)));
+                case 2 -> stream = Stream.concat(stream, Stream.of(
+                        Arguments.of(
+                                AvailableCountries.values()[availableCountryIndex],
+                                PolandBankId.values()[polandBankIdIndex], false, true)));
+                case 3 -> stream = Stream.concat(stream, Stream.of(
+                        Arguments.of(
+                                AvailableCountries.values()[availableCountryIndex],
+                                PolandBankId.values()[polandBankIdIndex], false, false)));
             }
         }
         return stream;
@@ -308,6 +520,11 @@ class SpecialInputDataTest {
                 });
     }
 
+    private static Stream<Arguments> getArgumentsWithLettersOnly() {
+        return Arrays.stream(generateArrayOfLetters())
+                .map(Arguments::of);
+    }
+
     private static Stream<Arguments> getCorrectArgumentsForNameAndSurnameSpecialInputData() {
         int allCorrectPossibilities = ('z' - 'a' - 2) * 2;
         Arguments[] arguments = new Arguments[allCorrectPossibilities];
@@ -323,11 +540,12 @@ class SpecialInputDataTest {
                 Arguments.of("abcd", "falsy"),
                 Arguments.of("ABCD", "truthy"),
                 Arguments.of("null", "null"),
-                Arguments.of(null, null),
                 Arguments.of("-1", "1"),
                 Arguments.of("-", "-"),
                 Arguments.of("--", "--"),
+                Arguments.of(".*", ".*"),
                 Arguments.of(StringSeparator.PIPE, StringSeparator.PIPE),
+                Arguments.of(StringSeparator.PIPE_REGEX, StringSeparator.PIPE_REGEX),
                 Arguments.of("||", "||"),
                 Arguments.of(StringSeparator.COMMA, StringSeparator.COMMA),
                 Arguments.of(",,", ",,"),
@@ -336,16 +554,36 @@ class SpecialInputDataTest {
         );
     }
 
+    private static Stream<Arguments> getOneIncorrectParameter() {
+        return Stream.of(
+                Arguments.of("abcd"),
+                Arguments.of("ABCD"),
+                Arguments.of("null"),
+                Arguments.of("-1"),
+                Arguments.of("-"),
+                Arguments.of("--"),
+                Arguments.of(".*"),
+                Arguments.of(StringSeparator.PIPE),
+                Arguments.of(StringSeparator.PIPE_REGEX),
+                Arguments.of("||"),
+                Arguments.of(StringSeparator.COMMA),
+                Arguments.of(",,"),
+                Arguments.of(StringSeparator.EMPTY_STRING),
+                Arguments.of(StringSeparator.EMPTY_SPACE)
+        );
+    }
+
     private static Stream<Arguments> getIncorrectFirstAndCorrectSecondOneParametersForNameAndSurnameSpecialInputData() {
         return Stream.of(
                 Arguments.of("abcd", "true"),
                 Arguments.of("ABCD", "true"),
                 Arguments.of("null", "true"),
-                Arguments.of(null, "true"),
                 Arguments.of("-1", "true"),
                 Arguments.of("-", "true"),
                 Arguments.of("--", "true"),
+                Arguments.of(".*", "true"),
                 Arguments.of(StringSeparator.PIPE, "true"),
+                Arguments.of(StringSeparator.PIPE_REGEX, "true"),
                 Arguments.of("||", "true"),
                 Arguments.of(StringSeparator.COMMA, "true"),
                 Arguments.of(",,", "true"),
@@ -359,11 +597,13 @@ class SpecialInputDataTest {
                 Arguments.of("abcd", "falsy", StringSeparator.EMPTY_SPACE, StringSeparator.EMPTY_SPACE),
                 Arguments.of("ABCD", "truthy", StringSeparator.EMPTY_STRING, StringSeparator.EMPTY_STRING),
                 Arguments.of("null", "null", "null", "null"),
-                Arguments.of(null, null, null, null),
                 Arguments.of("-1", "1", StringSeparator.PIPE, StringSeparator.PIPE),
+                Arguments.of("-1", "1", StringSeparator.PIPE_REGEX, StringSeparator.PIPE_REGEX),
                 Arguments.of("-", "-", ",,", ",,"),
+                Arguments.of(".*", ".*", ".*", ".*"),
                 Arguments.of("--", "--", "||", "||"),
                 Arguments.of(StringSeparator.PIPE, StringSeparator.PIPE, "{", "}"),
+                Arguments.of(StringSeparator.PIPE_REGEX, StringSeparator.PIPE_REGEX, "{", "}"),
                 Arguments.of("||", "||", "ABCD", "truthy"),
                 Arguments.of(StringSeparator.COMMA, StringSeparator.COMMA, StringSeparator.COMMA, StringSeparator.COMMA),
                 Arguments.of(",,", ",,", "-", "-"),
@@ -403,11 +643,13 @@ class SpecialInputDataTest {
                 Arguments.of("abcd", "falsy", StringSeparator.EMPTY_SPACE),
                 Arguments.of("ABCD", "truthy", StringSeparator.EMPTY_STRING),
                 Arguments.of("null", "null", "null"),
-                Arguments.of(null, null, null),
                 Arguments.of("-1", "1", StringSeparator.PIPE),
+                Arguments.of("-1", "1", StringSeparator.PIPE_REGEX),
                 Arguments.of("-", "-", ",,"),
+                Arguments.of(".*", ".*", ".*"),
                 Arguments.of("--", "--", "||"),
                 Arguments.of(StringSeparator.PIPE, StringSeparator.PIPE, "{"),
+                Arguments.of(StringSeparator.PIPE_REGEX, StringSeparator.PIPE_REGEX, "{"),
                 Arguments.of("||", "||", "ABCD", "truthy"),
                 Arguments.of(StringSeparator.COMMA, StringSeparator.COMMA, StringSeparator.COMMA),
                 Arguments.of(",,", ",,", "-"),

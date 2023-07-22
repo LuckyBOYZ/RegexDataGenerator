@@ -1,7 +1,6 @@
 package com.lukaszsuma.regexdatagenerator.utils;
 
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
@@ -27,9 +26,12 @@ public enum SpecialInputData {
         @Override
         public Function<String, Optional<String>> generateData() {
             return (rawValue) -> {
-                String[] conditions = getConditionsFromRawValue(rawValue);
-                if (conditions.length == 0) {
-                    return Optional.empty();
+                String[] conditions = EMPTY_ARRAY;
+                if (rawValue.contains(StringSeparator.PIPE)) {
+                    conditions = getConditionsFromRawValue(rawValue);
+                    if (conditions.length == 0) {
+                        return Optional.empty();
+                    }
                 }
                 Map<String, String> mapOfPassedParams = getMapOfParamsFromConditions(conditions, PESEL.conditions);
                 boolean bornAfter2000 = Boolean.parseBoolean(mapOfPassedParams.get("bornAfter2000"));
@@ -43,9 +45,12 @@ public enum SpecialInputData {
         @Override
         public Function<String, Optional<String>> generateData() {
             return (rawValue) -> {
-                String[] conditions = getConditionsFromRawValue(rawValue);
-                if (conditions.length == 0) {
-                    return Optional.empty();
+                String[] conditions = EMPTY_ARRAY;
+                if (rawValue.contains(StringSeparator.PIPE)) {
+                    conditions = getConditionsFromRawValue(rawValue);
+                    if (conditions.length == 0) {
+                        return Optional.empty();
+                    }
                 }
                 Map<String, String> mapOfPassedParams = getMapOfParamsFromConditions(conditions, IBAN.conditions);
                 String country = "PL";
@@ -107,6 +112,7 @@ public enum SpecialInputData {
     private static final String DEFAULT_WOMAN_NAME = "Janina";
     private static final String DEFAULT_MAN_SURNAME = "Kowalski";
     private static final String DEFAULT_WOMAN_SURNAME = "Kowalska";
+    private static final String DEFAULT_ADDRESS_ROW = "00-001;Świętokrzyska 31/33;Warszawa;Mazowieckie;Warszawa";
     private final List<String> conditions;
 
     SpecialInputData(List<String> conditions) {
@@ -117,9 +123,12 @@ public enum SpecialInputData {
 
     private static Function<String, Optional<String>> generateNameOrSurname(boolean isName) {
         return (rawValue) -> {
-            String[] conditions = getConditionsFromRawValue(rawValue);
-            if (conditions.length == 0) {
-                return Optional.empty();
+            String[] conditions = EMPTY_ARRAY;
+            if (rawValue.contains(StringSeparator.PIPE)) {
+                conditions = getConditionsFromRawValue(rawValue);
+                if (conditions.length == 0) {
+                    return Optional.empty();
+                }
             }
             SpecialInputData specialInputData = isName ? NAME : SURNAME;
             Map<String, String> mapOfPassedParams = getMapOfParamsFromConditions(conditions, specialInputData.conditions);
@@ -127,6 +136,7 @@ public enum SpecialInputData {
             String path = isName ? getPathBySpecialInputType(NAME) : getPathForSurnameSpecialInputData(isFemale);
             try (Stream<String> stream = Files.lines(Path.of(path))) {
                 return Optional.of(stream
+                        .filter(el -> !el.isBlank())
                         .filter(el -> {
                             String start = mapOfPassedParams.get("startAt");
                             return start == null || el.startsWith(start.toUpperCase());
@@ -135,7 +145,7 @@ public enum SpecialInputData {
                         .collect(Collectors.collectingAndThen(
                                 Collectors.toCollection(ArrayList::new),
                                 list -> {
-                                    if(list.isEmpty()) {
+                                    if (list.isEmpty()) {
                                         return getDefaultNameOrSurnameByParams(isName, isFemale);
                                     }
                                     Collections.shuffle(list);
@@ -159,13 +169,10 @@ public enum SpecialInputData {
     }
 
     private static String[] getConditionsFromRawValue(String rawValue) {
-        String[] split = rawValue.split(StringSeparator.PIPE);
-        if (split.length != 2) {
-            return EMPTY_ARRAY;
-        }
+        String[] split = rawValue.split(StringSeparator.PIPE_REGEX, 2);
         String[] result = split[1].split(StringSeparator.COMMA);
         for (String el : result) {
-            if(!el.contains(StringSeparator.EQUALS) || el.endsWith(StringSeparator.EQUALS)) {
+            if (!el.contains(StringSeparator.EQUALS) || el.endsWith(StringSeparator.EQUALS)) {
                 return EMPTY_ARRAY;
             }
         }
@@ -173,22 +180,32 @@ public enum SpecialInputData {
     }
 
     private static Optional<String> getValueFromAddress(String rawValue, SpecialInputData specialInputData) {
-        String[] conditions = getConditionsFromRawValue(rawValue);
-        if (conditions.length == 0) {
-            return Optional.empty();
+        String[] conditions = EMPTY_ARRAY;
+        if (rawValue.contains(StringSeparator.PIPE)) {
+            conditions = getConditionsFromRawValue(rawValue);
+            if (conditions.length == 0) {
+                return Optional.empty();
+            }
         }
         Map<String, String> mapOfPassedParams = getMapOfParamsFromConditions(conditions, specialInputData.conditions);
         String path = getPathBySpecialInputType(specialInputData);
         try (Stream<String> stream = Files.lines(Path.of(path))) {
             String randomAddressRow;
             if (specialInputData == CITY) {
-                randomAddressRow = stream.filter(el -> {
+                randomAddressRow = stream
+                        .filter(row -> !row.isBlank())
+                        .filter(row -> {
                             String start = mapOfPassedParams.get("startAt");
-                            return start == null || el.startsWith(start.toUpperCase());
+                            String cityFromRow = row
+                                    .split(StringSeparator.SEMICOLON)[getIndexOfAddressElement(specialInputData)];
+                            return start == null || cityFromRow.startsWith(start.toUpperCase());
                         })
                         .collect(Collectors.collectingAndThen(
                                 Collectors.toCollection(ArrayList::new),
                                 list -> {
+                                    if(list.isEmpty()) {
+                                        return DEFAULT_ADDRESS_ROW;
+                                    }
                                     Collections.shuffle(list);
                                     return list.get(RANDOM.nextInt(0, list.size()));
                                 }
@@ -217,9 +234,9 @@ public enum SpecialInputData {
 
     private static String getPathBySpecialInputType(SpecialInputData specialInputData) {
         return switch (specialInputData) {
-            case VOIVODESHIP -> "src/main/resources/voivodeships.txt";
+            case VOIVODESHIP -> "src/main/resources/voivodeships.csv";
             case COUNTY -> "src/main/resources/counties.csv";
-            case ADDRESS -> "src/main/resources/addresses.txt";
+            case ADDRESS, POSTCODE, STREET, CITY -> "src/main/resources/addresses.csv";
             case NAME -> "src/main/resources/names.csv";
             default -> throw new RuntimeException(String.format("No file for '%s' special input",
                     specialInputData.name()));

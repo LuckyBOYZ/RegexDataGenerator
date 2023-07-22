@@ -187,7 +187,7 @@ public class RegexDataGenerator {
         }
         SpecialInputData specialInputData;
         try {
-            String specialInputName = rawValue.split(StringSeparator.PIPE)[0].toUpperCase();
+            String specialInputName = rawValue.split(StringSeparator.PIPE_REGEX, 1)[0].toUpperCase();
             specialInputData = SpecialInputData.valueOf(specialInputName);
         } catch (IllegalArgumentException ignore) {
             return false;
