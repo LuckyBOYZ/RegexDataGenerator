@@ -239,7 +239,7 @@
 00-221;Rybaki 5;Warszawa;Mazowieckie;Warszawa
 00-222;Sanguszki Romana 28;Warszawa;Mazowieckie;Warszawa
 00-223;Wenedów 72;Warszawa;Mazowieckie;Warszawa
-00-224;Skwer Batalionu AK ""Gozdawa""" 170;Warszawa;Mazowieckie;Warszawa
+00-224;Skwer Batalionu AK Gozdawa 170;Warszawa;Mazowieckie;Warszawa
 00-224;Wójtowska 11;Warszawa;Mazowieckie;Warszawa
 00-225;Szymanowska 200;Warszawa;Mazowieckie;Warszawa
 00-225;Zakroczymska 74;Warszawa;Mazowieckie;Warszawa
@@ -416,7 +416,7 @@
 00-419;Rozbrat 104;Warszawa;Mazowieckie;Warszawa
 00-420;Szara 98;Warszawa;Mazowieckie;Warszawa
 00-421;Czerniakowska 58;Warszawa;Mazowieckie;Warszawa
-00-422;Al- Zgrupowania AK ""Kryska""" 100;Warszawa;Mazowieckie;Warszawa
+00-422;Al- Zgrupowania AK Kryska 100;Warszawa;Mazowieckie;Warszawa
 00-422;Wilanowska 157;Warszawa;Mazowieckie;Warszawa
 00-423;Okrąg 71;Warszawa;Mazowieckie;Warszawa
 00-424;Solec 178;Warszawa;Mazowieckie;Warszawa
@@ -456,7 +456,7 @@
 00-459;Myśliwiecka 156;Warszawa;Mazowieckie;Warszawa
 00-460;Szpitala Ujazdowskiego 68;Warszawa;Mazowieckie;Warszawa
 00-460;Agrykola 146;Warszawa;Mazowieckie;Warszawa
-00-460;Skwer Kisielewskiego Stefana ""Kisiela""" 92;Warszawa;Mazowieckie;Warszawa
+00-460;Skwer Kisielewskiego Stefana Kisiela 92;Warszawa;Mazowieckie;Warszawa
 00-461;Aleje Ujazdowskie 153;Warszawa;Mazowieckie;Warszawa
 00-462;Kusocińskiego Janusza 192;Warszawa;Mazowieckie;Warszawa
 00-463;Podchorążych 24;Warszawa;Mazowieckie;Warszawa
@@ -486,7 +486,7 @@
 00-491;Konopnickiej Marii 155;Warszawa;Mazowieckie;Warszawa
 00-492;Frascati 22;Warszawa;Mazowieckie;Warszawa
 00-493;Prusa Bolesława 95;Warszawa;Mazowieckie;Warszawa
-00-493;Skwer Batalionu AK ""Miłosz""" 24;Warszawa;Mazowieckie;Warszawa
+00-493;Skwer Batalionu AK Miłosz 24;Warszawa;Mazowieckie;Warszawa
 00-495;Aleje Jerozolimskie 120;Warszawa;Mazowieckie;Warszawa
 00-496;Mysia 7;Warszawa;Mazowieckie;Warszawa
 00-496;Nowy Świat 85;Warszawa;Mazowieckie;Warszawa
@@ -653,7 +653,7 @@
 00-666;Noakowskiego Stanisława 117;Warszawa;Mazowieckie;Warszawa
 00-667;Koszykowa 69;Warszawa;Mazowieckie;Warszawa
 00-668;Noakowskiego Stanisława 57;Warszawa;Mazowieckie;Warszawa
-00-668;Skwer 3 Batalionu Pancernego AK ""Golski""";Warszawa;Mazowieckie;Warszawa
+00-668;Skwer 3 Batalionu Pancernego AK Golski;Warszawa;Mazowieckie;Warszawa
 00-669;Plater Emilii 161;Warszawa;Mazowieckie;Warszawa
 00-670;Wilcza 190;Warszawa;Mazowieckie;Warszawa
 00-671;Koszykowa 154;Warszawa;Mazowieckie;Warszawa
@@ -712,24 +712,24 @@
 00-711;Ananasowa 105;Warszawa;Mazowieckie;Warszawa
 00-711;Gąsocińska 41;Warszawa;Mazowieckie;Warszawa
 00-712;Polski Walczącej 73;Warszawa;Mazowieckie;Warszawa
-00-712;Batalionu AK ""Karpaty""" 76;Warszawa;Mazowieckie;Warszawa
+00-712;Batalionu AK Karpaty 76;Warszawa;Mazowieckie;Warszawa
 00-712;Bluszczańska 86;Warszawa;Mazowieckie;Warszawa
-00-712;Dywizjonu AK ""Jeleń""" 35;Warszawa;Mazowieckie;Warszawa
+00-712;Dywizjonu AK Jeleń 35;Warszawa;Mazowieckie;Warszawa
 00-712;Melomanów 194;Warszawa;Mazowieckie;Warszawa
 00-712;Wojskowej Służby Kobiet 200;Warszawa;Mazowieckie;Warszawa
-00-713;Al- Godziny ""W""" 127 152;Warszawa;Mazowieckie;Warszawa
-00-713;Batalionu AK ""Bałtyk""" 179;Warszawa;Mazowieckie;Warszawa
-00-713;Batalionu AK ""Olza""" 22;Warszawa;Mazowieckie;Warszawa
-00-713;Batalionu AK ""Ryś""" 189;Warszawa;Mazowieckie;Warszawa
+00-713;Al- Godziny W 127 152;Warszawa;Mazowieckie;Warszawa
+00-713;Batalionu AK Bałtyk 179;Warszawa;Mazowieckie;Warszawa
+00-713;Batalionu AK Olza 22;Warszawa;Mazowieckie;Warszawa
+00-713;Batalionu AK Ryś 189;Warszawa;Mazowieckie;Warszawa
 00-713;Cytrynowa 32;Warszawa;Mazowieckie;Warszawa
 00-713;Daktylowa 57;Warszawa;Mazowieckie;Warszawa
 00-713;Figowa 85;Warszawa;Mazowieckie;Warszawa
-00-713;Grupy AK ""Północ""" 105;Warszawa;Mazowieckie;Warszawa
+00-713;Grupy AK Północ 105;Warszawa;Mazowieckie;Warszawa
 00-713;Niewielka 23;Warszawa;Mazowieckie;Warszawa
 00-713;Pod Kopcem 20 131;Warszawa;Mazowieckie;Warszawa
-00-713;Pułku AK ""Broda""" 127 175;Warszawa;Mazowieckie;Warszawa
-00-713;Pułku AK ""Kampinos""" 19;Warszawa;Mazowieckie;Warszawa
-00-713;Pułku AK ""Waligóra""" 66;Warszawa;Mazowieckie;Warszawa
+00-713;Pułku AK Broda 127 175;Warszawa;Mazowieckie;Warszawa
+00-713;Pułku AK Kampinos 19;Warszawa;Mazowieckie;Warszawa
+00-713;Pułku AK Waligóra 66;Warszawa;Mazowieckie;Warszawa
 00-714;Czerniakowska 123;Warszawa;Mazowieckie;Warszawa
 00-715;Czerniakowska 1;Warszawa;Mazowieckie;Warszawa
 00-716;Bartycka 126;Warszawa;Mazowieckie;Warszawa
@@ -939,7 +939,7 @@
 00-912;Żwirki i Wigury 105;Warszawa;Mazowieckie;Warszawa
 00-914;Podchorążych 38 190;Warszawa;Mazowieckie;Warszawa
 00-914;Podchorążych 38 148;Warszawa;Mazowieckie;Warszawa
-00-915;Armii Ludowej 3/5";Warszawa;Mazowieckie;Warszawa
+00-915;Armii Ludowej 3/5;Warszawa;Mazowieckie;Warszawa
 00-916;Świetokrzyska 12;Warszawa;Mazowieckie;Warszawa
 00-916;Świetokrzyska 12;Warszawa;Mazowieckie;Warszawa
 00-918;Litewska 2/4;Warszawa;Mazowieckie;Warszawa
@@ -964,15 +964,15 @@
 00-928;Chałubińskiego 4/6;Warszawa;Mazowieckie;Warszawa
 00-928;Chałubińskiego 4/6;Warszawa;Mazowieckie;Warszawa
 00-928;Chałubińskiego 4/6;Warszawa;Mazowieckie;Warszawa
-00-929;Stanów Zjednoczonych 53";Warszawa;Mazowieckie;Warszawa
+00-929;Stanów Zjednoczonych 53;Warszawa;Mazowieckie;Warszawa
 00-930;Wspólna 30;Warszawa;Mazowieckie;Warszawa
 00-930;Wspólna 30;Warszawa;Mazowieckie;Warszawa
-00-931;Dzika 20";Warszawa;Mazowieckie;Warszawa
-00-932;Stanów Zjednoczonych 53";Warszawa;Mazowieckie;Warszawa
-00-933;Stanów Zjednoczonych 53";Warszawa;Mazowieckie;Warszawa
-00-933;Stanów Zjednoczonych 53";Warszawa;Mazowieckie;Warszawa
-00-934;Stanów Zjednoczonych 53";Warszawa;Mazowieckie;Warszawa
-00-937;Wilcza 50/52";Warszawa;Mazowieckie;Warszawa
+00-931;Dzika 20;Warszawa;Mazowieckie;Warszawa
+00-932;Stanów Zjednoczonych 53;Warszawa;Mazowieckie;Warszawa
+00-933;Stanów Zjednoczonych 53;Warszawa;Mazowieckie;Warszawa
+00-933;Stanów Zjednoczonych 53;Warszawa;Mazowieckie;Warszawa
+00-934;Stanów Zjednoczonych 53;Warszawa;Mazowieckie;Warszawa
+00-937;Wilcza 50/52;Warszawa;Mazowieckie;Warszawa
 00-939;Jerozolimskie 28;Warszawa;Mazowieckie;Warszawa
 00-940;Małachowskiego 2;Warszawa;Mazowieckie;Warszawa
 00-941;Świętokrzyska 31/33;Warszawa;Mazowieckie;Warszawa
@@ -1016,7 +1016,7 @@
 00-984;Senatorska 6/8;Warszawa;Mazowieckie;Warszawa
 00-986;11 listopada 15a;Warszawa;Mazowieckie;Warszawa
 00-987;Targowa 73;Warszawa;Mazowieckie;Warszawa
-00-988;Rosoła Jana 10";Warszawa;Mazowieckie;Warszawa
+00-988;Rosoła Jana 10;Warszawa;Mazowieckie;Warszawa
 00-989;Waszyngtona 26;Warszawa;Mazowieckie;Warszawa
 00-991;Szembeka 1;Warszawa;Mazowieckie;Warszawa
 00-992;Jagiellońska 88;Warszawa;Mazowieckie;Warszawa
@@ -1507,7 +1507,7 @@
 01-473;Kircholmska 97;Warszawa;Mazowieckie;Warszawa
 01-473;Kocjana Antoniego 200;Warszawa;Mazowieckie;Warszawa
 01-473;Krajeńska 186;Warszawa;Mazowieckie;Warszawa
-01-473;Majora Dobrzańskiego Henryka ""Hubala""" 124;Warszawa;Mazowieckie;Warszawa
+01-473;Majora Dobrzańskiego Henryka Hubala 124;Warszawa;Mazowieckie;Warszawa
 01-473;Skłoby 87;Warszawa;Mazowieckie;Warszawa
 01-473;Strawczyńska 158;Warszawa;Mazowieckie;Warszawa
 01-474;Lazurowa 42;Warszawa;Mazowieckie;Warszawa
@@ -1944,7 +1944,7 @@
 01-872;Perzyńskiego Włodzimierza 72;Warszawa;Mazowieckie;Warszawa
 01-873;Magiera Antoniego 89;Warszawa;Mazowieckie;Warszawa
 01-874;Duracza Teodora 140;Warszawa;Mazowieckie;Warszawa
-01-875;Niedzielskiego Mieczysława ""Żywiciela""" 170;Warszawa;Mazowieckie;Warszawa
+01-875;Niedzielskiego Mieczysława Żywiciela 170;Warszawa;Mazowieckie;Warszawa
 01-875;Zgrupowanie Żmija 113;Warszawa;Mazowieckie;Warszawa
 01-876;Broniewskiego Władysława 181;Warszawa;Mazowieckie;Warszawa
 01-876;Zgrupowanie Żubr 143;Warszawa;Mazowieckie;Warszawa
@@ -2286,7 +2286,7 @@
 02-163;Indukcji 62;Warszawa;Mazowieckie;Warszawa
 02-164;Ogrodników 110 172;Warszawa;Mazowieckie;Warszawa
 02-165;Trapez 35;Warszawa;Mazowieckie;Warszawa
-02-166;Skwer Bazy Lotniczej ""Łużyce""" 63;Warszawa;Mazowieckie;Warszawa
+02-166;Skwer Bazy Lotniczej Łużyce 63;Warszawa;Mazowieckie;Warszawa
 02-168;Tapicerska 32;Warszawa;Mazowieckie;Warszawa
 02-169;Czardasza 86;Warszawa;Mazowieckie;Warszawa
 02-170;Słowicza 17;Warszawa;Mazowieckie;Warszawa
@@ -2959,7 +2959,7 @@
 02-642;Maklakiewicza Jana 189;Warszawa;Mazowieckie;Warszawa
 02-643;Etiudy Rewolucyjnej 106;Warszawa;Mazowieckie;Warszawa
 02-644;Odyńca Antoniego Edwarda 6;Warszawa;Mazowieckie;Warszawa
-02-645;Bytnara Janka ""Rudego""" 148;Warszawa;Mazowieckie;Warszawa
+02-645;Bytnara Janka Rudego 148;Warszawa;Mazowieckie;Warszawa
 02-645;Gandhiego Mahatmy 169;Warszawa;Mazowieckie;Warszawa
 02-646;Joliot-Curie Fryderyka 109;Warszawa;Mazowieckie;Warszawa
 02-647;Baboszewska 59;Warszawa;Mazowieckie;Warszawa
@@ -3233,7 +3233,7 @@
 02-785;Puławska 124;Warszawa;Mazowieckie;Warszawa
 02-785;Puszczyka 107;Warszawa;Mazowieckie;Warszawa
 02-785;Surowieckiego Wawrzyńca 68;Warszawa;Mazowieckie;Warszawa
-02-786;Aleja Jana Rodowicza ""Anody""" 164 52;Warszawa;Mazowieckie;Warszawa
+02-786;Aleja Jana Rodowicza Anody 164 52;Warszawa;Mazowieckie;Warszawa
 02-786;Bacewiczówny Grażyny 6;Warszawa;Mazowieckie;Warszawa
 02-786;Ciszewskiego Józefa Feliksa 103;Warszawa;Mazowieckie;Warszawa
 02-786;Jastrzębowskiego Wojciecha Bogumiła 199;Warszawa;Mazowieckie;Warszawa
@@ -3250,12 +3250,12 @@
 02-787;Stokłosy 194;Warszawa;Mazowieckie;Warszawa
 02-787;Symfonii 24;Warszawa;Mazowieckie;Warszawa
 02-788;Zamiany 12;Warszawa;Mazowieckie;Warszawa
-02-790;Gęsickiego Zbigniewa ""Juno""" 70;Warszawa;Mazowieckie;Warszawa
+02-790;Gęsickiego Zbigniewa Juno 70;Warszawa;Mazowieckie;Warszawa
 02-790;Kapitana Pawlaczyka Zygmunta 106;Warszawa;Mazowieckie;Warszawa
 02-790;Pachnąca 121;Warszawa;Mazowieckie;Warszawa
-02-790;Pietraszewicza Bronisława ""Lota""" 32;Warszawa;Mazowieckie;Warszawa
+02-790;Pietraszewicza Bronisława Lota 32;Warszawa;Mazowieckie;Warszawa
 02-790;Sengera Jana Cichego 56;Warszawa;Mazowieckie;Warszawa
-02-790;Sotta Kazimierza ""Sokoła""" 88;Warszawa;Mazowieckie;Warszawa
+02-790;Sotta Kazimierza Sokoła 88;Warszawa;Mazowieckie;Warszawa
 02-791;Braci Wagów 125;Warszawa;Mazowieckie;Warszawa
 02-791;Meander 171;Warszawa;Mazowieckie;Warszawa
 02-791;Na Uboczu 151;Warszawa;Mazowieckie;Warszawa
@@ -3959,7 +3959,7 @@
 03-127;Krejczego Karola 64;Warszawa;Mazowieckie;Warszawa
 03-127;Porazińskiej Janiny 175;Warszawa;Mazowieckie;Warszawa
 03-128;Świderska 35;Warszawa;Mazowieckie;Warszawa
-03-129;36 Pułku Piechoty ""Legii Akademickiej""";Warszawa;Mazowieckie;Warszawa
+03-129;36 Pułku Piechoty Legii Akademickiej;Warszawa;Mazowieckie;Warszawa
 03-130;Kamińskiego Aleksandra 135;Warszawa;Mazowieckie;Warszawa
 03-130;Milenijna 196;Warszawa;Mazowieckie;Warszawa
 03-130;Talarowa 85;Warszawa;Mazowieckie;Warszawa
@@ -4362,7 +4362,7 @@
 03-409;Wileńska 54;Warszawa;Mazowieckie;Warszawa
 03-410;Inżynierska 99;Warszawa;Mazowieckie;Warszawa
 03-411;Solidarności 137;Warszawa;Mazowieckie;Warszawa
-03-411;Al- Lisieckiego Kazimierza ""Dziadka""" 4;Warszawa;Mazowieckie;Warszawa
+03-411;Al- Lisieckiego Kazimierza Dziadka 4;Warszawa;Mazowieckie;Warszawa
 03-412;Solidarności 118;Warszawa;Mazowieckie;Warszawa
 03-414;Wileńska 86;Warszawa;Mazowieckie;Warszawa
 03-415;Rzeszotarskiej Heleny 58;Warszawa;Mazowieckie;Warszawa
@@ -4484,7 +4484,7 @@
 03-539;Świdnicka 61;Warszawa;Mazowieckie;Warszawa
 03-540;Prałatowska 130;Warszawa;Mazowieckie;Warszawa
 03-541;Pratulińska 136;Warszawa;Mazowieckie;Warszawa
-03-541;Skwer Wiecheckiego Stefana ""Wiecha""" 188;Warszawa;Mazowieckie;Warszawa
+03-541;Skwer Wiecheckiego Stefana Wiecha 188;Warszawa;Mazowieckie;Warszawa
 03-542;Ossowskiego Michała 93;Warszawa;Mazowieckie;Warszawa
 03-543;Barkocińska 194;Warszawa;Mazowieckie;Warszawa
 03-543;Hodowlana 164 13;Warszawa;Mazowieckie;Warszawa
@@ -5066,7 +5066,7 @@
 03-982;Rogalskiego Stanisława 69;Warszawa;Mazowieckie;Warszawa
 03-982;Salamandry 179;Warszawa;Mazowieckie;Warszawa
 03-982;Stoczniowców 14;Warszawa;Mazowieckie;Warszawa
-03-983;21 Pułku Piechoty ""Dzieci Warszawy""";Warszawa;Mazowieckie;Warszawa
+03-983;21 Pułku Piechoty Dzieci Warszawy;Warszawa;Mazowieckie;Warszawa
 03-983;Dedala 99;Warszawa;Mazowieckie;Warszawa
 03-983;Pawlikowskiego Mieczysława 173;Warszawa;Mazowieckie;Warszawa
 03-983;Sosabowskiego Stanisława 166;Warszawa;Mazowieckie;Warszawa
@@ -5481,7 +5481,7 @@
 04-398;Grochowska 45;Warszawa;Mazowieckie;Warszawa
 04-400;Niedziałkowskiego 25;Warszawa;Mazowieckie;Warszawa
 04-401;Gawędziarzy 99;Warszawa;Mazowieckie;Warszawa
-04-401;Generała Chruściela Antoniego ""Montera"" 16;Warszawa;Mazowieckie;Warszawa
+04-401;Generała Chruściela Antoniego Montera 16;Warszawa;Mazowieckie;Warszawa
 04-402;Cyrulików 158;Warszawa;Mazowieckie;Warszawa
 04-402;Fiszera Stanisława 53;Warszawa;Mazowieckie;Warszawa
 04-402;Konwisarska 189;Warszawa;Mazowieckie;Warszawa
@@ -5493,7 +5493,7 @@
 04-404;Ułańska 168;Warszawa;Mazowieckie;Warszawa
 04-406;Cyrulików 180;Warszawa;Mazowieckie;Warszawa
 04-407;Konwisarska 66;Warszawa;Mazowieckie;Warszawa
-04-408;Generała Ziemskiego Karola ""Wachnowskiego""" 84;Warszawa;Mazowieckie;Warszawa
+04-408;Generała Ziemskiego Karola Wachnowskiego 84;Warszawa;Mazowieckie;Warszawa
 04-408;Rasztowska 50;Warszawa;Mazowieckie;Warszawa
 04-409;Buławy 113;Warszawa;Mazowieckie;Warszawa
 04-409;Markietanki 197;Warszawa;Mazowieckie;Warszawa
@@ -5504,11 +5504,11 @@
 04-410;Sobiborska 17;Warszawa;Mazowieckie;Warszawa
 04-410;Szatkowników 163;Warszawa;Mazowieckie;Warszawa
 04-412;Gawędziarzy 44;Warszawa;Mazowieckie;Warszawa
-04-412;Generała Chruściela Antoniego ""Montera"" 27;Warszawa;Mazowieckie;Warszawa
+04-412;Generała Chruściela Antoniego Montera 27;Warszawa;Mazowieckie;Warszawa
 04-413;Fizyków 148;Warszawa;Mazowieckie;Warszawa
 04-413;Górna 92;Warszawa;Mazowieckie;Warszawa
 04-413;Haubicy 6;Warszawa;Mazowieckie;Warszawa
-04-414;Generała Chruściela Antoniego ""Montera"" 88;Warszawa;Mazowieckie;Warszawa
+04-414;Generała Chruściela Antoniego Montera 88;Warszawa;Mazowieckie;Warszawa
 04-416;Bombardierów 91;Warszawa;Mazowieckie;Warszawa
 04-416;Strycharska 93;Warszawa;Mazowieckie;Warszawa
 04-417;Pielgrzymów 107;Warszawa;Mazowieckie;Warszawa
@@ -5564,7 +5564,7 @@
 04-452;Orbity 80;Warszawa;Mazowieckie;Warszawa
 04-452;Zawiszaków 145;Warszawa;Mazowieckie;Warszawa
 04-453;Katiuszy 120;Warszawa;Mazowieckie;Warszawa
-04-454;Generała Chruściela Antoniego ""Montera"" 60;Warszawa;Mazowieckie;Warszawa
+04-454;Generała Chruściela Antoniego Montera 60;Warszawa;Mazowieckie;Warszawa
 04-455;Strażacka 98;Warszawa;Mazowieckie;Warszawa
 04-457;Żołnierska 28;Warszawa;Mazowieckie;Warszawa
 04-458;Chełmżyńska 130;Warszawa;Mazowieckie;Warszawa
@@ -5588,19 +5588,19 @@
 04-471;Suflerska 144;Warszawa;Mazowieckie;Warszawa
 04-473;Płatnerska 78;Warszawa;Mazowieckie;Warszawa
 04-474;Grawerska 12;Warszawa;Mazowieckie;Warszawa
-04-474;Majora Amałowicza M- Franciszka ""Tatara""" 182;Warszawa;Mazowieckie;Warszawa
+04-474;Majora Amałowicza M- Franciszka Tatara 182;Warszawa;Mazowieckie;Warszawa
 04-475;Dowódców 107;Warszawa;Mazowieckie;Warszawa
 04-475;Klasztorna 198;Warszawa;Mazowieckie;Warszawa
 04-476;Żeligowskiego Lucjana 58;Warszawa;Mazowieckie;Warszawa
 04-476;Arsenalska 69;Warszawa;Mazowieckie;Warszawa
-04-478;Bocheńskiego Eugeniusza ""Dubańca""" 34;Warszawa;Mazowieckie;Warszawa
+04-478;Bocheńskiego Eugeniusza Dubańca 34;Warszawa;Mazowieckie;Warszawa
 04-479;Ilskiego Franciszka 76;Warszawa;Mazowieckie;Warszawa
 04-480;Kacpury Antoniego 57;Warszawa;Mazowieckie;Warszawa
 04-481;Bellony 194;Warszawa;Mazowieckie;Warszawa
 04-482;Jaworzniaków 126;Warszawa;Mazowieckie;Warszawa
 04-483;Kłuszyńskiej Doroty 139;Warszawa;Mazowieckie;Warszawa
 04-483;Księdza Skrzeszewskiego Stanisława 165;Warszawa;Mazowieckie;Warszawa
-04-483;Łyszkiewicza Stefana ""Pechowca""" 131;Warszawa;Mazowieckie;Warszawa
+04-483;Łyszkiewicza Stefana Pechowca 131;Warszawa;Mazowieckie;Warszawa
 04-484;Niedziałkowskiego Mieczysława 29;Warszawa;Mazowieckie;Warszawa
 04-485;Komandosów 50;Warszawa;Mazowieckie;Warszawa
 04-487;Dokerów 60;Warszawa;Mazowieckie;Warszawa
@@ -8503,7 +8503,7 @@
 15-439;Piotrowska 196;Białystok;Podlaskie;Białystok
 15-440;Malmeda Icchaka 64;Białystok;Podlaskie;Białystok
 15-441;Spółdzielcza 122;Białystok;Podlaskie;Białystok
-15-442;Pl- Niepodległości ""Romana Dmowskiego""" 3 175;Białystok;Podlaskie;Białystok
+15-442;Pl- Niepodległości Romana Dmowskiego 3 175;Białystok;Podlaskie;Białystok
 15-443;Piłsudskiego Józefa 153;Białystok;Podlaskie;Białystok
 15-444;Piłsudskiego Józefa 96;Białystok;Podlaskie;Białystok
 15-445;Piłsudskiego Józefa 39;Białystok;Podlaskie;Białystok
@@ -9008,7 +9008,7 @@
 15-722;Kobryńska 126;Białystok;Podlaskie;Białystok
 15-723;Płaska 99;Białystok;Podlaskie;Białystok
 15-724;Marczukowska 130;Białystok;Podlaskie;Białystok
-15-725;Pl- Generała Augusta Emila Fieldorfa ""NILA""" 55;Białystok;Podlaskie;Białystok
+15-725;Pl- Generała Augusta Emila Fieldorfa NILA 55;Białystok;Podlaskie;Białystok
 15-727;Hetmańska 52;Białystok;Podlaskie;Białystok
 15-729;Księdza Popiełuszki Jerzego 157;Białystok;Podlaskie;Białystok
 15-730;Broniewskiego Władysława 128;Białystok;Podlaskie;Białystok
@@ -13957,7 +13957,7 @@
 31-271;Kluczborska 142;Kraków;Małopolskie;Kraków
 31-271;Krowoderskich Zuchów 99;Kraków;Małopolskie;Kraków
 31-272;Krowoderskich Zuchów 77;Kraków;Małopolskie;Kraków
-31-273;Batalionu ""Skała"" AK" 198;Kraków;Małopolskie;Kraków
+31-273;Batalionu Skała AK 198;Kraków;Małopolskie;Kraków
 31-274;Opolska pawilon 9;Kraków;Małopolskie;Kraków
 31-275;Opolska 95;Kraków;Małopolskie;Kraków
 31-276;Opolska 164;Kraków;Małopolskie;Kraków
@@ -14648,7 +14648,7 @@
 31-839;Spytka z Melsztyna 21;Kraków;Małopolskie;Kraków
 31-843;Łokietkówny Elżbiety 64;Kraków;Małopolskie;Kraków
 31-845;Włosika Bogdana 34;Kraków;Małopolskie;Kraków
-31-845;Batalionu ""Parasol""" 65;Kraków;Małopolskie;Kraków
+31-845;Batalionu Parasol 65;Kraków;Małopolskie;Kraków
 31-845;Ptaka Franciszka 47;Kraków;Małopolskie;Kraków
 31-850;Medweckiego 2;Kraków;Małopolskie;Kraków
 31-851;Dąbrowskiej Marii 107;Kraków;Małopolskie;Kraków
@@ -14660,7 +14660,7 @@
 31-859;Kremskiego Jana 54;Kraków;Małopolskie;Kraków
 31-859;Uniwersału Połanieckiego 53;Kraków;Małopolskie;Kraków
 31-860;Bieńczycka 152;Kraków;Małopolskie;Kraków
-31-862;Batalionu ""Zośka""" 186;Kraków;Małopolskie;Kraków
+31-862;Batalionu Zośka 186;Kraków;Małopolskie;Kraków
 31-863;Jutrzenka 172;Kraków;Małopolskie;Kraków
 31-864;Jana Pawła II 45;Kraków;Małopolskie;Kraków
 31-866;Florera Romana 33;Kraków;Małopolskie;Kraków
@@ -15207,7 +15207,7 @@
 35-113;Sosnowa 189;Rzeszów;Podkarpackie;Rzeszów
 35-113;Stwosza Wita 169;Rzeszów;Podkarpackie;Rzeszów
 35-113;Wiśniowa 189;Rzeszów;Podkarpackie;Rzeszów
-35-114;Generała Chruściela Antoniego ""Montera""" 126;Rzeszów;Podkarpackie;Rzeszów
+35-114;Generała Chruściela Antoniego Montera 126;Rzeszów;Podkarpackie;Rzeszów
 35-114;Korczaka Janusza 71;Rzeszów;Podkarpackie;Rzeszów
 35-114;Malczewskiego Jacka 102;Rzeszów;Podkarpackie;Rzeszów
 35-114;Szarych Szeregów 115;Rzeszów;Podkarpackie;Rzeszów
@@ -16116,7 +16116,7 @@
 40-158;Cisowa 146;Katowice;Śląskie;Katowice
 40-158;Jesionowa 44;Katowice;Śląskie;Katowice
 40-158;Owocowa 10;Katowice;Śląskie;Katowice
-40-159;Jesionowa 15";Katowice;Śląskie;Katowice
+40-159;Jesionowa 15;Katowice;Śląskie;Katowice
 40-160;Korfantego Wojciecha 172;Katowice;Śląskie;Katowice
 40-161;Korfantego Wojciecha 14;Katowice;Śląskie;Katowice
 40-162;Cedrowa 69;Katowice;Śląskie;Katowice
@@ -16559,7 +16559,7 @@
 40-593;Szybowa 190;Katowice;Śląskie;Katowice
 40-594;Gallusa Józefa 195;Katowice;Śląskie;Katowice
 40-595;Pola Wincentego 193;Katowice;Śląskie;Katowice
-40-596;Dziewięciu z ""Wujka""" 56;Katowice;Śląskie;Katowice
+40-596;Dziewięciu z Wujka 56;Katowice;Śląskie;Katowice
 40-596;Pola Wincentego 177;Katowice;Śląskie;Katowice
 40-597;Pola Wincentego 14;Katowice;Śląskie;Katowice
 40-598;Dolna 109;Katowice;Śląskie;Katowice
@@ -17093,7 +17093,7 @@
 40-930;Młyńska 4;Katowice;Śląskie;Katowice
 40-940;Oddziałów Młodzieży Powstańczej 7 31;Katowice;Śląskie;Katowice
 40-950;Oddziałów Młodzieży Powst- 6 156;Katowice;Śląskie;Katowice
-40-959;Młyńska 1";Katowice;Śląskie;Katowice
+40-959;Młyńska 1;Katowice;Śląskie;Katowice
 41-100;Przodowników Pracy 74 122;Siemianowice Śląskie;Śląskie;Siemianowice
 41-100;Sportowców 30;Siemianowice Śląskie;Śląskie;Siemianowice
 41-100;Skargi Piotra 1;Siemianowice Śląskie;Śląskie;Siemianowice
@@ -24418,7 +24418,7 @@
 50-314;Nowowiejska 50;Wrocław;Dolnośląskie;Wrocław
 50-315;Nowowiejska 28;Wrocław;Dolnośląskie;Wrocław
 50-316;Prusa Bolesława 12;Wrocław;Dolnośląskie;Wrocław
-50-316;Skwer Ludzi ze znakiem ""P""" 122;Wrocław;Dolnośląskie;Wrocław
+50-316;Skwer Ludzi ze znakiem P 122;Wrocław;Dolnośląskie;Wrocław
 50-317;Prusa Bolesława 63;Wrocław;Dolnośląskie;Wrocław
 50-318;Prusa Bolesława 142;Wrocław;Dolnośląskie;Wrocław
 50-319;Prusa Bolesława 176;Wrocław;Dolnośląskie;Wrocław
@@ -25507,7 +25507,7 @@
 52-200;Unruga 13-15;Wrocław;Dolnośląskie;Wrocław
 52-201;Generała Maczka Stanisława 143;Wrocław;Dolnośląskie;Wrocław
 52-203;Generała Bołtucia Mikołaja 79;Wrocław;Dolnośląskie;Wrocław
-52-203;Generała Skotnickiego Stanisława ""Grzmota""" 70;Wrocław;Dolnośląskie;Wrocław
+52-203;Generała Skotnickiego Stanisława Grzmota 70;Wrocław;Dolnośląskie;Wrocław
 52-203;Generała Włada Franciszka 89;Wrocław;Dolnośląskie;Wrocław
 52-203;Starzyńskiego Stefana 57;Wrocław;Dolnośląskie;Wrocław
 52-204;Obrońców Poczty Gdańskiej 150;Wrocław;Dolnośląskie;Wrocław
@@ -26124,7 +26124,7 @@
 53-673;Legnicka 166;Wrocław;Dolnośląskie;Wrocław
 53-674;Legnicka 142;Wrocław;Dolnośląskie;Wrocław
 53-675;Legnicka 30;Wrocław;Dolnośląskie;Wrocław
-53-676;Skwer Ruchu Oporu ""Olimp""" 29;Wrocław;Dolnośląskie;Wrocław
+53-676;Skwer Ruchu Oporu Olimp 29;Wrocław;Dolnośląskie;Wrocław
 53-676;Sokolnicza 33;Wrocław;Dolnośląskie;Wrocław
 53-676;Zelwerowicza Aleksandra 171;Wrocław;Dolnośląskie;Wrocław
 53-677;Nabycińska 48;Wrocław;Dolnośląskie;Wrocław
@@ -28054,22 +28054,22 @@
 60-870;Rynek Jeżycki 1/2;Poznań;Wielkopolskie;Poznań
 60-880;Poznańska 19;Poznań;Wielkopolskie;Poznań
 60-900;Głogowska 17;Poznań;Wielkopolskie;Poznań
-60-901;Grunwaldzka 22";Poznań;Wielkopolskie;Poznań
-60-902;Młyńska 13";Poznań;Wielkopolskie;Poznań
-60-903;Grunwaldzka 19";Poznań;Wielkopolskie;Poznań
-60-904;Grunwaldzka 19";Poznań;Wielkopolskie;Poznań
-60-907;Grunwaldzka 22";Poznań;Wielkopolskie;Poznań
+60-901;Grunwaldzka 22;Poznań;Wielkopolskie;Poznań
+60-902;Młyńska 13;Poznań;Wielkopolskie;Poznań
+60-903;Grunwaldzka 19;Poznań;Wielkopolskie;Poznań
+60-904;Grunwaldzka 19;Poznań;Wielkopolskie;Poznań
+60-907;Grunwaldzka 22;Poznań;Wielkopolskie;Poznań
 60-908;Dąbrowskiego 12;Poznań;Wielkopolskie;Poznań
 60-909;Forteczna 17a;Poznań;Wielkopolskie;Poznań
 60-911;Krańcowa 83;Poznań;Wielkopolskie;Poznań
 60-912;Wągrowska 1;Poznań;Wielkopolskie;Poznań
 60-915;Niepodległości 30 165;Poznań;Wielkopolskie;Poznań
-60-916;Sieroca 7";Poznań;Wielkopolskie;Poznań
-60-917;Klasztorna 24";Poznań;Wielkopolskie;Poznań
+60-916;Sieroca 7;Poznań;Wielkopolskie;Poznań
+60-917;Klasztorna 24;Poznań;Wielkopolskie;Poznań
 60-918;Wieniawskiego 5/9;Poznań;Wielkopolskie;Poznań
 60-919;Kościuszki 99;Poznań;Wielkopolskie;Poznań
-60-920;Kościuszki 99";Poznań;Wielkopolskie;Poznań
-60-921;Ratajczaka 14";Poznań;Wielkopolskie;Poznań
+60-920;Kościuszki 99;Poznań;Wielkopolskie;Poznań
+60-921;Ratajczaka 14;Poznań;Wielkopolskie;Poznań
 60-923;Wawrzyniaka 40;Poznań;Wielkopolskie;Poznań
 60-924;Fabryczna 27/26;Poznań;Wielkopolskie;Poznań
 60-925;Dąbrowskiego 12;Poznań;Wielkopolskie;Poznań
@@ -32897,7 +32897,7 @@
 75-848;Lubuszan 15;Koszalin;Zachodniopomorskie;Koszalin
 75-849;Polan 79;Koszalin;Zachodniopomorskie;Koszalin
 75-850;Stawisińskiego Jana 190;Koszalin;Zachodniopomorskie;Koszalin
-75-851;Ronda ""Solidarności""" 200;Koszalin;Zachodniopomorskie;Koszalin
+75-851;Ronda Solidarności 200;Koszalin;Zachodniopomorskie;Koszalin
 75-900;Zwycięstwa 1A;Koszalin;Zachodniopomorskie;Koszalin
 75-901;4-go Marca 2;Koszalin;Zachodniopomorskie;Koszalin
 75-903;Wojska Polskiego 66;Koszalin;Zachodniopomorskie;Koszalin
@@ -38474,7 +38474,7 @@
 91-218;Traktorowa 150;Łódź;Łódzkie;Łódź
 91-219;Żabieniec 56;Łódź;Łódzkie;Łódź
 91-219;Żeńców 137;Łódź;Łódzkie;Łódź
-91-219;Generała Augusta Emila Fieldorfa ""Nila""" 107;Łódź;Łódzkie;Łódź
+91-219;Generała Augusta Emila Fieldorfa Nila 107;Łódź;Łódzkie;Łódź
 91-219;Kieratowa 90;Łódź;Łódzkie;Łódź
 91-219;Krynicka 120;Łódź;Łódzkie;Łódź
 91-219;Pabianka 115;Łódź;Łódzkie;Łódź
@@ -40583,7 +40583,7 @@
 93-633;Czółenkowa 117;Łódź;Łódzkie;Łódź
 93-633;Elewatorowa 46;Łódź;Łódzkie;Łódź
 93-633;Gatunkowa 2;Łódź;Łódzkie;Łódź
-93-633;Generała Czyżewskiego Ludwika ""Juliana""" 14;Łódź;Łódzkie;Łódź
+93-633;Generała Czyżewskiego Ludwika Juliana 14;Łódź;Łódzkie;Łódź
 93-633;Jedwabnicza 137;Łódź;Łódzkie;Łódź
 93-633;Kopalniana 174;Łódź;Łódzkie;Łódź
 93-633;Małego Rycerza 127;Łódź;Łódzkie;Łódź
@@ -40605,7 +40605,7 @@
 93-645;Gościniec 63;Łódź;Łódzkie;Łódź
 93-645;Kamieńca Podolskiego 119 183;Łódź;Łódzkie;Łódź
 93-645;Kresowych Stanic 119;Łódź;Łódzkie;Łódź
-93-645;Wiśniowieckiego Jeremiego""Jaremy""" 174;Łódź;Łódzkie;Łódź
+93-645;Wiśniowieckiego JeremiegoJaremy 174;Łódź;Łódzkie;Łódź
 93-646;Boczna 92;Łódź;Łódzkie;Łódź
 93-646;Gościniec 3;Łódź;Łódzkie;Łódź
 93-647;Kolumny 13;Łódź;Łódzkie;Łódź
@@ -40909,7 +40909,7 @@
 94-312;Lontowa 189;Łódź;Łódzkie;Łódź
 94-312;Prochowa 84;Łódź;Łódzkie;Łódź
 94-313;Brus 89;Łódź;Łódzkie;Łódź
-94-313;Pułkownika Juszczakiewicza Stanisława ""Kornika""" 101;Łódź;Łódzkie;Łódź
+94-313;Pułkownika Juszczakiewicza Stanisława Kornika 101;Łódź;Łódzkie;Łódź
 94-313;Smulska 58;Łódź;Łódzkie;Łódź
 94-314;Stare Złotno 36;Łódź;Łódzkie;Łódź
 94-315;Złotno 17;Łódź;Łódzkie;Łódź

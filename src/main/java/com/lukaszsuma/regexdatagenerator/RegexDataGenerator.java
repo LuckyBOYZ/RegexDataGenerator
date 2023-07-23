@@ -1,5 +1,7 @@
 package com.lukaszsuma.regexdatagenerator;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.curiousoddman.rgxgen.RgxGen;
 import com.lukaszsuma.regexdatagenerator.config.Configuration;
@@ -7,17 +9,20 @@ import com.lukaszsuma.regexdatagenerator.config.ConfigurationPropertiesNames;
 import com.lukaszsuma.regexdatagenerator.utils.SpecialInputData;
 import com.lukaszsuma.regexdatagenerator.utils.StringSeparator;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @SuppressWarnings({"unchecked", "rawtypes"})
 public class RegexDataGenerator {
 
-    private static final Path JAR_START_DIR = FileSystems.getDefault().getPath("").toAbsolutePath();
+    private static final Path JAR_START_DIR = FileSystems.getDefault()
+            .getPath(StringSeparator.EMPTY_STRING).toAbsolutePath();
     private final Configuration configuration;
     private final ObjectMapper objectMapper;
     private final Map<String, Object> mapOfRegExs = new HashMap<>();
@@ -53,12 +58,26 @@ public class RegexDataGenerator {
     public void createResult() throws IOException {
         String fileName = getFileName();
         fileName = fileName.replace(".json", "_result.json");
-        this.objectMapper.writeValue(JAR_START_DIR.resolve(fileName).toFile(), this.isObjectPassed ?
-                this.result.get(0) : this.result);
+        File file = JAR_START_DIR.resolve(fileName).toFile();
+        if (file.exists()) {
+            int lastDotIndex = file.getPath().lastIndexOf(StringSeparator.DOT);
+            String pathWithoutExtension = file.getPath().substring(0, lastDotIndex);
+            file = new File(generateNewResultFilename(pathWithoutExtension));
+        }
+        this.objectMapper.writerWithDefaultPrettyPrinter().writeValue(file,
+                this.isObjectPassed ? this.result.get(0) : this.result);
         System.out.printf("Result file '%s' was created under path %s", fileName, JAR_START_DIR);
     }
 
-    private Map<String, Object> generateObjectBasedOnRegexMap(Map<String, Object> parsedObjectMap, Map<String, Object> regexMap, AtomicInteger id) {
+    private String generateNewResultFilename(String currentNameWithoutExtension) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+        String format = simpleDateFormat.format(new Date());
+        return currentNameWithoutExtension.concat(StringSeparator.UNDERSCORE.concat(format).concat(".json"));
+    }
+
+    private Map<String, Object> generateObjectBasedOnRegexMap(
+            Map<String, Object> parsedObjectMap, Map<String, Object> regexMap, AtomicInteger id)
+            throws JsonProcessingException {
         Map<String, Object> result = new HashMap<>();
         RgxGen rgxGen;
         for (Map.Entry<String, Object> entry : parsedObjectMap.entrySet()) {
@@ -159,7 +178,8 @@ public class RegexDataGenerator {
         return innerRegexMap;
     }
 
-    private List<Map<String, Object>> generateListOfObjectsBasedOnRegexMap(Map<String, Object> regexMap, Map<String, Object> parsedObject, String key) {
+    private List<Map<String, Object>> generateListOfObjectsBasedOnRegexMap(
+            Map<String, Object> regexMap, Map<String, Object> parsedObject, String key) throws JsonProcessingException {
         List<Map<String, Object>> arr = new ArrayList<>();
         Map<String, Object> innerRegexMap = getInnerRegexMapFromRegexMap(regexMap, key);
         int iterationNumber = getIterationNumberFromParsedObject(parsedObject);
@@ -180,7 +200,8 @@ public class RegexDataGenerator {
                 .toList();
     }
 
-    private boolean handleSpecialInput(String key, String rawValue, Map<String, Object> result, AtomicInteger id) {
+    private boolean handleSpecialInput(String key, String rawValue, Map<String, Object> result, AtomicInteger id)
+            throws JsonProcessingException {
         boolean isSpecialInputData = isSpecialInputData(rawValue);
         if (!isSpecialInputData) {
             return false;
@@ -193,11 +214,19 @@ public class RegexDataGenerator {
             return false;
         }
         switch (specialInputData) {
-            case NAME, SURNAME, PESEL, IBAN, POSTCODE, STREET, CITY, VOIVODESHIP, COUNTY, ADDRESS -> {
+            case NAME, SURNAME, PESEL, IBAN, POSTCODE, STREET, CITY, VOIVODESHIP, COUNTY -> {
                 Optional<String> generatedData = specialInputData.generateData().apply(rawValue);
                 if (generatedData.isPresent()) {
                     String val = generatedData.get();
                     result.put(key, val);
+                }
+            }
+            case ADDRESS -> {
+                Optional<String> generatedData = specialInputData.generateData().apply(rawValue);
+                if (generatedData.isPresent()) {
+                    String val = generatedData.get();
+                    Map<String, String> parsedStringAddress = this.objectMapper.readValue(val, Map.class);
+                    result.put(key, parsedStringAddress);
                 }
             }
             case ID -> {

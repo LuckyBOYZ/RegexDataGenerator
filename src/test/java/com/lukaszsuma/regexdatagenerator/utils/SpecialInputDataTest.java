@@ -589,6 +589,80 @@ class SpecialInputDataTest {
         assertFalse(parsedAddress.get(countyName).isBlank());
     }
 
+    @DisplayName("Testing ADDRESS SpecialInputData without any parameter")
+    @Test
+    @SuppressWarnings("unchecked")
+    void shouldReturnRandomAddressWithDefaultPropNamesWhenNoParametersArePassedForADDRESS() {
+        // given
+        String parameter = "ADDRESS";
+        String cityKey = "city";
+        String streetKey = "street";
+        String postcodeKey = "postcode";
+        String voivodeshipKey = "voivodeship";
+        String countyKey = "county";
+        // when
+        Optional<String> shouldBeAddress = SpecialInputData.ADDRESS.generateData().apply(parameter);
+        // then
+        assertTrue(shouldBeAddress.isPresent());
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map<String, String> parsedAddress = new HashMap<>();
+        assertDoesNotThrow(() -> parsedAddress.putAll(objectMapper.readValue(shouldBeAddress.get(), Map.class)));
+        assertNotNull(parsedAddress.get(cityKey));
+        assertNotNull(parsedAddress.get(streetKey));
+        assertNotNull(parsedAddress.get(postcodeKey));
+        assertNotNull(parsedAddress.get(voivodeshipKey));
+        assertNotNull(parsedAddress.get(countyKey));
+    }
+
+    @DisplayName("Testing incorrect parameters for ADDRESS SpecialInputData")
+    @ParameterizedTest(name =
+            "cityPropName: {0}, streetPropName: {1}, postcodePropName: {2}, voivodeshipPropName: {3}, countyPropName:{4}")
+    @MethodSource("getFiveIncorrectParameters")
+    void shouldNotThrowAnyExceptionWhenWrongParametersArePassedForADDRESS(
+            String cityVal, String streetVal, String postcodeVal, String voivodeshipVal, String countyVal) {
+        // given
+        String beforeFormat =
+                "ADDRESS|cityPropName=%s,streetPropName=%s,postcodePropName=%s,voivodeshipPropName=%s,countyPropName=%s";
+        String parameter = String.format(beforeFormat, cityVal, streetVal, postcodeVal,
+                voivodeshipVal, countyVal);
+        // then
+        assertDoesNotThrow(() -> SpecialInputData.ADDRESS.generateData().apply(parameter));
+    }
+
+    @DisplayName("Testing incorrect parameters for ADDRESS SpecialInputData")
+    @ParameterizedTest(name =
+            "cityProp: {0}, cityVal: {1}, streetProp: {2}, streetVal: {3}, postcodeProp:{4}, postcodeVal: {5}, " +
+                    "voivodeshipProp: {6}, voivodeshipVal: {7}, countyProp: {8}, countyVal:{9}")
+    @MethodSource("getTenIncorrectParameters")
+    @SuppressWarnings("unchecked")
+    void shouldReturnEmptyOptionalRandomAddressWithDefaultPropNamesWhenWrongArgsAndParamsArePassedForADDRESS(
+            String cityProp, String cityVal, String streetProp, String streetVal, String postcodeProp,
+            String postcodeVal, String voivodeshipProp, String voivodeshipVal, String countyProp, String countyVal) {
+        // given
+        String beforeFormat =
+                "ADDRESS|%s=%s,%s=%s,%s=%s,%s=%s,%s=%s";
+        String parameter = String.format(beforeFormat, cityProp, cityVal, streetProp, streetVal, postcodeProp,
+                postcodeVal, voivodeshipProp, voivodeshipVal, countyProp, countyVal);
+        String cityKey = "city";
+        String streetKey = "street";
+        String postcodeKey = "postcode";
+        String voivodeshipKey = "voivodeship";
+        String countyKey = "county";
+        // when
+        Optional<String> shouldBeAddress = SpecialInputData.ADDRESS.generateData().apply(parameter);
+        // then
+        if (shouldBeAddress.isPresent()) {
+            ObjectMapper objectMapper = new ObjectMapper();
+            Map<String, String> parsedAddress = new HashMap<>();
+            assertDoesNotThrow(() -> parsedAddress.putAll(objectMapper.readValue(shouldBeAddress.get(), Map.class)));
+            assertNotNull(parsedAddress.get(cityKey));
+            assertNotNull(parsedAddress.get(streetKey));
+            assertNotNull(parsedAddress.get(postcodeKey));
+            assertNotNull(parsedAddress.get(voivodeshipKey));
+            assertNotNull(parsedAddress.get(countyKey));
+        }
+    }
+
     private static Stream<Arguments> getCorrectParametersForIBANSpecialInputData() {
         int availableCountryLength = AvailableCountries.values().length;
         int polandBankIdLength = PolandBankId.values().length;
@@ -721,6 +795,47 @@ class SpecialInputDataTest {
                 Arguments.of(",,", ",,", "-", "-"),
                 Arguments.of(StringSeparator.EMPTY_STRING, StringSeparator.EMPTY_STRING, "--", "--"),
                 Arguments.of(StringSeparator.EMPTY_SPACE, StringSeparator.EMPTY_SPACE, "01", "-1")
+        );
+    }
+
+    private static Stream<Arguments> getTenIncorrectParameters() {
+        return getFiveIncorrectParameters()
+                .map(arg -> {
+                    Object[] params = arg.get();
+                    Object[] newParams = new Object[params.length * 2];
+                    for (int i = 0; i < newParams.length; i++) {
+                        newParams[i] = params[i / 2];
+                    }
+                    return Arguments.of(newParams);
+                });
+    }
+
+    private static Stream<Arguments> getFiveIncorrectParameters() {
+        return Stream.of(
+                Arguments.of("abcd", "falsy", StringSeparator.EMPTY_SPACE, StringSeparator.EMPTY_SPACE,
+                        "truthy"),
+                Arguments.of("ABCD", "truthy", StringSeparator.EMPTY_STRING, StringSeparator.EMPTY_STRING,
+                        StringSeparator.PIPE),
+                Arguments.of("null", "null", "null", "null", "null"),
+                Arguments.of("-1", "1", StringSeparator.PIPE, StringSeparator.PIPE,
+                        StringSeparator.EMPTY_STRING),
+                Arguments.of("-1", "1", StringSeparator.PIPE_REGEX, StringSeparator.PIPE_REGEX, ".*"),
+                Arguments.of("-", "-", ",,", ",,", StringSeparator.PIPE_REGEX),
+                Arguments.of(".*", ".*", ".*", ".*", StringSeparator.COMMA),
+                Arguments.of("--", "--", "||", "||", "||"),
+                Arguments.of(StringSeparator.PIPE, StringSeparator.PIPE, "{", "}", StringSeparator.EQUALS),
+                Arguments.of(StringSeparator.PIPE_REGEX, StringSeparator.PIPE_REGEX, "{", "}",
+                        StringSeparator.EQUALS),
+                Arguments.of("||", "||", "ABCD", "truthy", StringSeparator.EMPTY_SPACE),
+                Arguments.of(StringSeparator.COMMA, StringSeparator.COMMA, StringSeparator.COMMA,
+                        StringSeparator.COMMA, StringSeparator.COMMA),
+                Arguments.of(",,", ",,", "-", "-", StringSeparator.PIPE),
+                Arguments.of(StringSeparator.EMPTY_STRING, StringSeparator.EMPTY_STRING, "--", "--",
+                        StringSeparator.SEMICOLON),
+                Arguments.of(StringSeparator.EQUALS, StringSeparator.EQUALS, StringSeparator.EQUALS,
+                        StringSeparator.EQUALS, StringSeparator.EQUALS),
+                Arguments.of(StringSeparator.EMPTY_SPACE, StringSeparator.EMPTY_SPACE, "01", "-1",
+                        StringSeparator.EMPTY_SPACE)
         );
     }
 

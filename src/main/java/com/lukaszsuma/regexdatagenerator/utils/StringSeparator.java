@@ -8,4 +8,6 @@ public interface StringSeparator {
     String EMPTY_STRING = "";
     String SEMICOLON = ";";
     String EMPTY_SPACE = " ";
+    String UNDERSCORE = "_";
+    String DOT = ".";
 }

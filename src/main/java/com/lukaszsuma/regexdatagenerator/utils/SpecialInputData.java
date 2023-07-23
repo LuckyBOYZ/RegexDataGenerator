@@ -203,7 +203,7 @@ public enum SpecialInputData {
                         .collect(Collectors.collectingAndThen(
                                 Collectors.toCollection(ArrayList::new),
                                 list -> {
-                                    if(list.isEmpty()) {
+                                    if (list.isEmpty()) {
                                         return DEFAULT_ADDRESS_ROW;
                                     }
                                     Collections.shuffle(list);
@@ -220,7 +220,7 @@ public enum SpecialInputData {
                                 }
                         ));
             }
-            if(specialInputData ==  COUNTY || specialInputData == VOIVODESHIP) {
+            if (specialInputData == COUNTY || specialInputData == VOIVODESHIP) {
                 return Optional.of(randomAddressRow);
             }
 
@@ -257,6 +257,9 @@ public enum SpecialInputData {
         ArrayList<String> valuesForAddressObject = new ArrayList<>(10);
         ADDRESS.conditions.forEach(cond -> {
             String propName = params.get(cond);
+            if (propName == null || propName.isBlank()) {
+                propName = getDefaultPropertyNameForAddress(cond);
+            }
             SpecialInputData sid = getSpecialInputDataForAddressByNameInProp(cond);
             String value = split[getIndexOfAddressElement(sid)];
             valuesForAddressObject.add(propName);
@@ -280,6 +283,17 @@ public enum SpecialInputData {
                 valuesForAddressObject.get(7),
                 valuesForAddressObject.get(8),
                 valuesForAddressObject.get(9));
+    }
+
+    private static String getDefaultPropertyNameForAddress(String propName) {
+        return switch (propName) {
+            case "cityPropName" -> "city";
+            case "streetPropName" -> "street";
+            case "postcodePropName" -> "postcode";
+            case "voivodeshipPropName" -> "voivodeship";
+            case "countyPropName" -> "county";
+            default -> throw new NoSuchElementException(String.format("No value for address property '%s'", propName));
+        };
     }
 
     private static int getIndexOfAddressElement(SpecialInputData specialInputData) {

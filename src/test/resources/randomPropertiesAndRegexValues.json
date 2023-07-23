@@ -1,0 +1,17 @@
+[{
+  "$iteration$": 7,
+  "threeDigits": "\\d{3}",
+  "sixLettersLowercase": "[a-z]{6}",
+  "arrayWithThreeStrings": ["\\w{1,5}", 3],
+  "objectWithTwoProperties": {
+    "someUppercaseTwoLetters": "[A-Z]{2}",
+    "arrayWithLowercaseThreeLettersAndOneNumber": ["[a-z]{3}\\d{1}", 2]
+  },
+  "arrayOfTwoObjects": [
+    {
+      "$iteration$": 2,
+      "name": "name[A-C]{3}",
+      "surname": "surname[D-F]{2}"
+    }
+  ]
+}]
