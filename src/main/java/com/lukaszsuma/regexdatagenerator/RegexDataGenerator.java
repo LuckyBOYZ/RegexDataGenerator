@@ -1,7 +1,6 @@
 package com.lukaszsuma.regexdatagenerator;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.curiousoddman.rgxgen.RgxGen;
 import com.lukaszsuma.regexdatagenerator.config.Configuration;
