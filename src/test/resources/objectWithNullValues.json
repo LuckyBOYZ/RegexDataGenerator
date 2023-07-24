@@ -1,0 +1,13 @@
+{
+  "$iteration$": 5,
+  "name": null,
+  "surname": null,
+  "pesel": null,
+  "iban": null,
+  "id": null,
+  "city": null,
+  "street": null,
+  "postcode": null,
+  "voivodeship": null,
+  "address": null
+}

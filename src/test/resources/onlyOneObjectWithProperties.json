@@ -1,0 +1,9 @@
+{
+  "random": "random\\d{2}value",
+  "id": "some \\d id",
+  "array": ["test \\w{2} value", 3],
+  "object": {
+    "name": "someName\\d{2}",
+    "surname": "someSurname\\d{2}"
+  }
+}

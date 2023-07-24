@@ -26,7 +26,6 @@ public class MainTest {
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     @BeforeAll
-
     static void removeAllResultFiles() {
         File testResourcesDirectory = new File(TEST_RESOURCE_DIRECTORY.toString());
         File[] listOfFiles = Arrays.stream(testResourcesDirectory.listFiles())
@@ -45,12 +44,8 @@ public class MainTest {
     void shouldCreateResultFileInTheSameDirectoryWithDefaultValuesForEverySpecialInputData() throws IOException {
         //given
         String inputFileName = "allSpecialInputDataTest.json";
-        String resultFileName = "allSpecialInputDataTest_result.json";
-        Path allSpecialInputDataTest = TEST_RESOURCE_DIRECTORY.resolve(inputFileName);
-        Main main = new Main("jsonFileName=" + allSpecialInputDataTest);
         // when
-        main.generateData();
-        main.createResult();
+        List<Map<String, Object>> resultFromFile = (List<Map<String, Object>>) generateResultByFileName(inputFileName);
         // then
         String address = "address";
         String city = "city";
@@ -63,9 +58,6 @@ public class MainTest {
         String voivodeship = "voivodeship";
         String id = "id";
         String pesel = "pesel";
-        InputStream stream = Files.newInputStream(TEST_RESOURCE_DIRECTORY
-                .resolve(resultFileName), StandardOpenOption.READ);
-        List<Map<String, Object>> resultFromFile = OBJECT_MAPPER.readValue(stream, List.class);
         assertEquals(5, resultFromFile.size());
         for (Map<String, Object> object : resultFromFile) {
             Object surnameValue = object.get(surname);
@@ -90,12 +82,8 @@ public class MainTest {
     void shouldCreateResultFileWithSomeRandomValuesGeneratedFromRegex() throws IOException {
         //given
         String inputFileName = "randomPropertiesAndRegexValues.json";
-        String resultFileName = "randomPropertiesAndRegexValues_result.json";
-        Path allSpecialInputDataTest = TEST_RESOURCE_DIRECTORY.resolve(inputFileName);
-        Main main = new Main("jsonFileName=" + allSpecialInputDataTest);
         // when
-        main.generateData();
-        main.createResult();
+        List<Map<String, Object>> resultFromFile = (List<Map<String, Object>>) generateResultByFileName(inputFileName);
         // then
         String threeDigits = "threeDigits";
         Pattern threeDigitsPattern = Pattern.compile("\\d{3}");
@@ -107,15 +95,12 @@ public class MainTest {
         String someUppercaseTwoLetters = "someUppercaseTwoLetters";
         Pattern someUppercaseTwoLettersPattern = Pattern.compile("[A-Z]{2}");
         String arrayWithLowercaseThreeLettersAndOneNumber = "arrayWithLowercaseThreeLettersAndOneNumber";
-        Pattern arrayWithLowercaseThreeLettersAndOneNumberPattern = Pattern.compile("[a-z]{3}\\d{1}");
+        Pattern arrayWithLowercaseThreeLettersAndOneNumberPattern = Pattern.compile("[a-z]{3}\\d");
         String arrayOfTwoObjects = "arrayOfTwoObjects";
         String name = "name";
         Pattern namePattern = Pattern.compile("name[A-C]{3}");
         String surname = "surname";
         Pattern surnamePattern = Pattern.compile("surname[D-F]{2}");
-        InputStream stream = Files.newInputStream(TEST_RESOURCE_DIRECTORY
-                .resolve(resultFileName), StandardOpenOption.READ);
-        List<Map<String, Object>> resultFromFile = OBJECT_MAPPER.readValue(stream, List.class);
         assertEquals(7, resultFromFile.size());
         for (Map<String, Object> object : resultFromFile) {
             String threeDigitsVal = (String) object.get(threeDigits);
@@ -156,6 +141,78 @@ public class MainTest {
                 assertTrue(surnamePattern.matcher(surnameVal).matches());
             }
         }
+    }
+
+    @Test
+    void shouldCreateResultFileInTheSameDirectoryWithObject() throws IOException {
+        //given
+        String inputFileName = "onlyOneObjectWithProperties.json";
+        // when
+        Map<String, Object> resultFromFile = (Map<String, Object>) generateResultByFileName(inputFileName);
+        // then
+        String random = "random";
+        Pattern randomPattern = Pattern.compile("random\\d{2}value");
+        String id = "id";
+        Pattern idPattern = Pattern.compile("some \\d id");
+        String array = "array";
+        Pattern arrayValuePattern = Pattern.compile("test \\w{2} value");
+        String object = "object";
+        String name = "name";
+        Pattern namePattern = Pattern.compile("someName\\d{2}");
+        String surname = "surname";
+        Pattern surnamePattern = Pattern.compile("someSurname\\d{2}");
+        assertEquals(4, resultFromFile.size());
+        String randomVal = (String) resultFromFile.get(random);
+        assertNotNull(randomVal);
+        assertTrue(randomPattern.matcher(randomVal).matches());
+        String idVal = (String) resultFromFile.get(id);
+        assertNotNull(idVal);
+        assertTrue(idPattern.matcher(idVal).matches());
+        List<String> arrayVal = (List<String>) resultFromFile.get(array);
+        assertNotNull(arrayVal);
+        for (String generatedValue : arrayVal) {
+            assertNotNull(generatedValue);
+            assertTrue(arrayValuePattern.matcher(generatedValue).matches());
+        }
+        Map<String, String> objectVal = (Map<String, String>) resultFromFile.get(object);
+        assertNotNull(objectVal);
+        String nameVal = objectVal.get(name);
+        assertNotNull(nameVal);
+        assertTrue(namePattern.matcher(nameVal).matches());
+        String surnameVal = objectVal.get(surname);
+        assertNotNull(surnameVal);
+        assertTrue(surnamePattern.matcher(surnameVal).matches());
+    }
+
+    @Test
+    void shouldCreateResultFileWithEmptyArray() throws IOException {
+        // given
+        String inputFileName = "arrayOfObjectsWithNullValues.json";
+        // when
+        List<Map<String, Object>> resultFromFile = (List<Map<String, Object>>) generateResultByFileName(inputFileName);
+        // then
+        assertEquals(0, resultFromFile.size());
+    }
+
+    @Test
+    void shouldCreateResultFileWithEmptyObject() throws IOException {
+        //given
+        String inputFileName = "objectWithNullValues.json";
+        // when
+        Map<String, Object> resultFromFile = (Map<String, Object>) generateResultByFileName(inputFileName);
+        // then
+        assertEquals(0, resultFromFile.size());
+    }
+
+    private Object generateResultByFileName(String inputFileName) throws IOException {
+        String resultFileName = inputFileName.replace(".json", "_result.json");
+        Path allSpecialInputDataTest = TEST_RESOURCE_DIRECTORY.resolve(inputFileName);
+        Main main = new Main("jsonFileName=" + allSpecialInputDataTest);
+        main.generateData();
+        main.createResult();
+        InputStream stream = Files.newInputStream(TEST_RESOURCE_DIRECTORY
+                .resolve(resultFileName), StandardOpenOption.READ);
+        return OBJECT_MAPPER.readValue(stream, Object.class);
     }
 
 }

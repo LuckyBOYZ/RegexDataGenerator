@@ -45,7 +45,9 @@ public class RegexDataGenerator {
             AtomicInteger id = new AtomicInteger(1);
             for (int i = 0; i < iterationNumber; i++) {
                 Map<String, Object> generatedValues = generateObjectBasedOnRegexMap(parsedObjectMap, this.mapOfRegExs, id);
-                this.result.add(generatedValues);
+                if (!generatedValues.isEmpty()) {
+                    this.result.add(generatedValues);
+                }
             }
         } else if (parsedJson instanceof Map<?, ?> map) {
             this.isObjectPassed = true;
