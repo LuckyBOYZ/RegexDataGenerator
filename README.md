@@ -14,8 +14,10 @@
 
 # Description
 
-Application let you spend less time on creating dummy data for example when you want to use `json-server`
-to create API for your front-end application
+Application let you save a time on creating dummy data for example when you want to use `json-server`
+to create API for your front-end application. Really big thanks for owner [RgxGen](https://github.com/curious-odd-man/RgxGen) application.
+In short: RegexDataGenerator is using RgxGen to generate json file based on regular expresion or by special property value to generate
+random real data (like PESEL or polish names)
 
 # Requirements
 
@@ -60,9 +62,70 @@ Below is an overview with the most important information about
 creating configuration for every data type:
 
 ### string
-It must be
+You can use regular expression, some hardcoded value (e.g. `abcd`) or `Special Input Data` name (please check **table of contents**)
+### object
+The name for every property is up to you apart of `$iteration$`. This property tells application how many objects must be created and it works **ONLY** inside of array. <br>
+The name for this property can be configured (please check `How To Run` section)
+### array
+Array requires 1 element (string or object) but can be used second optional element - how many elements application must create (value must be the number)
+String and object must be created in the same way as it is described above.
 
 # Special Input Data
+You can use special values to create some random data but without regular expresion. <br>
+Here you have an example of file:
+```json
+[
+  {
+    "$iteration$": 5,
+    "name": "NAME",
+    "surname": "SURNAME",
+    "pesel": "PESEL",
+    "iban": "IBAN",
+    "id": "ID",
+    "city": "CITY",
+    "street": "STREET",
+    "postcode": "POSTCODE",
+    "voivodeship": "VOIVODESHIP",
+    "address": "ADDRESS"
+  }
+]
+```
+and this is an example result:
+```json
+[
+  {
+    "address": {
+      "city": "Radom",
+      "street": "Czarna 169",
+      "postcode": "26-606",
+      "voivodeship": "Mazowieckie",
+      "county": "Radom"
+    },
+    "city": "Racibórz",
+    "surname": "Świtała",
+    "street": "Barska 70",
+    "iban": "48168026071333993994432069",
+    "name": "Stefan",
+    "postcode": "26-606",
+    "voivodeship": "Łódzkie",
+    "id": 1,
+    "pesel": "94033121676"
+  }
+]
+```
+There are 2 ways to use special values:
+1. use only name of special value (e.g. `SURNAME`)
+2. use name of special value with parameters. If some special input data has parameters, then after special name **MUST** be used pipe -> `|`
+Here are all `Special Input Data` values and theirs configuration:
+
+## NAME
+
+Example value with all parameters: `NAME|startAt=a,female=true`
+
+| **PROPERTY NAME** |         **DESCRIPTION**         |          **POSSIBLE VALUE**          |
+|:-----------------:|:-------------------------------:|:------------------------------------:|
+|    **startAt**    |    First letter of the name     | every letter (a-z), case insensitive |
+|    **female**     | Is the name must be for female? |             true, false              |
 
 # How To Run
 
