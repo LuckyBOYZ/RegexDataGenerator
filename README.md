@@ -58,8 +58,8 @@ directory where you have an `jar` file. This is an example:
 ```
 Apart of `$iteration$` every properties keys are up to you (this property will be explained later. <br>
 The value for those properties can be typical regex or you can use [Special Input Data](https://github.com/LuckyBOYZ/RegexDataGenerator#special-input-data) name. <br> 
-Below is an overview with the most important information about 
-creating configuration for every data type:
+You can use either `array` and `object` as a root in config file. <br>
+Below is an overview with the most important information about creating configuration for every data type:
 
 ### string
 You can use regular expression, some hardcoded value (e.g. `abcd`) or `Special Input Data` name (please check **table of contents**)
@@ -129,6 +129,8 @@ Here are all `Special Input Data` values and theirs configuration:
 
 ### NAME
 
+> :notebook_with_decorative_cover: **Description:** It generates one of the name that is used in Poland.
+
 | **PROPERTY NAME** |         **DESCRIPTION**         |          **POSSIBLE VALUE**          |
 |:-----------------:|:-------------------------------:|:------------------------------------:|
 |    **startAt**    |    First letter of the name     | every letter (a-z), case insensitive |
@@ -139,6 +141,8 @@ Examples:
 2.  all properties with incorrect values: `NAME|startAt=$,female=ABCD`
 
 ### SURNAME
+
+> :notebook_with_decorative_cover: **Description:** It generates one of the surname that is used in Poland.
 
 | **PROPERTY NAME** |         **DESCRIPTION**            |          **POSSIBLE VALUE**          |
 |:-----------------:|:----------------------------------:|:------------------------------------:|
@@ -151,6 +155,8 @@ Examples:
 
 ### PESEL
 
+> :notebook_with_decorative_cover: **Description:** It generates PESEL number. PESEL is like an id for every person in Poland.
+
 | **PROPERTY NAME** |                    **DESCRIPTION**                     | **POSSIBLE VALUE** |
 |:-----------------:|:------------------------------------------------------:|:------------------:|
 | **bornAfter2000** | Does a pesel must be for person whos born after 2000?  |    true, false     |
@@ -162,6 +168,8 @@ Examples:
 2.  all properties with incorrect values: `PESEL|bornAfter2000=nope,female=truthy,onlyAdults=falsy`
 
 ### IBAN
+
+> :notebook_with_decorative_cover: **Description:** It generates valid IBAN number BUT as a default the application doesn't generate the letters at the beggining of number and without spaces (please check properties below)
 
 | **PROPERTY NAME** |                           **DESCRIPTION**                           |         **POSSIBLE VALUE**         |
 |:-----------------:|:-------------------------------------------------------------------:|:----------------------------------:|
@@ -214,6 +222,121 @@ _POLAND BANK NAMES TABLE_
 Examples:
 1.  all properties with correect random values: `IBAN|country=PL,bankName=BFF,formatted=true,withLetters=true`
 2.  all properties with incorrect values: `IBAN|country=GB,bankName=UNKNOWN,formatted=abcd,withLetters=falsy`
+
+### ID
+
+NO PROPERTIES
+
+> :notebook_with_decorative_cover: **Description:** This special input data is only for generating ids when you have object inside of array. <br>
+> Is really useful if you want to have some unique value for every project. It will always return values 1, 2, 3 and so on.
+
+Example input in file:
+```json
+[
+  {
+    "$iteration$": 7,
+    "id": "ID"
+  }
+]
+```
+Result:
+```json
+[
+  {
+    "id": 1
+  },
+  {
+    "id": 2
+  },
+  {
+    "id": 3
+  },
+  {
+    "id": 4
+  },
+  {
+    "id": 5
+  },
+  {
+    "id": 6
+  },
+  {
+    "id": 7
+  }
+]
+
+```
+
+### POSTCODE
+
+> :notebook_with_decorative_cover: **Description:** It generates post code in format `\d{2}-\d{3}`.
+
+NO PROPERTIES
+
+### STREET
+
+> :notebook_with_decorative_cover: **Description:** It generates street from list of available streets in Poland.
+
+NO PROPERTIES
+
+### CITY
+
+> :notebook_with_decorative_cover: **Description:** It generates city from list of available cities in Poland.
+
+| **PROPERTY NAME** |     **DESCRIPTION**      |          **POSSIBLE VALUE**          |
+|:-----------------:|:------------------------:|:------------------------------------:|
+|    **startAt**    | First letter of the city | every letter (a-z), case insensitive |
+
+Examples:
+1.  all properties with correect random values: `CITY|startAt=a`
+2.  all properties with incorrect values: `CITY|startAt=$`
+
+### VOIVODESHIP
+
+> :notebook_with_decorative_cover: **Description:** It generates voivodeship from the list of available voivodeships in Poland.
+
+NO PROPERTIES
+
+### COUNTY
+
+> :notebook_with_decorative_cover: **Description:** It generates county from the list of available counties in Poland.
+
+NO PROPERTIES
+
+### ADDRESS
+
+> :notebook_with_decorative_cover: **Description:** It generates object that is a combination of `POSTCODE`, `STREET`, `CITY`, `VOIVODESHIP` and `COUNTY`.
+
+|    **PROPERTY NAME**    |        **DESCRIPTION**        |           **POSSIBLE VALUE**            |
+|:-----------------------:|:-----------------------------:|:---------------------------------------:|
+|    **cityPropName**     |    Property name for city     | Any valid string for key in json object |
+|   **streetPropName**    |   Property name for street    | Any valid string for key in json object |
+|  **postcodePropName**   |  Property name for postcode   | Any valid string for key in json object |
+| **voivodeshipPropName** | Property name for voivodeship | Any valid string for key in json object |
+|   **countyPropName**    |   Property name for county    | Any valid string for key in json object |
+
+Examples:
+1.  all properties with correect random values: `ADDRESS|cityPropName=cityKeyName,streetPropName=streetKeyName,postcodePropName=postcodeKeyName,voivodeshipPropName=voivodeshipKeyName,countyPropName=countyKeyName`
+2.  all properties with incorrect values: `ADDRESS|cityPropName=,streetPropName=,postcodePropName=,voivodeshipPropName=,countyPropName=` (empty string cannot be the key in json object)
+
+Input file:
+```json
+{
+  "fullPolishAddress": "ADDRESS|cityPropName=cityKeyName,streetPropName=streetKeyName,postcodePropName=postcodeKeyName,voivodeshipPropName=voivodeshipKeyName,countyPropName=countyKeyName"
+}
+```
+Result
+```json
+{
+  "fullPolishAddress": {
+    "cityKeyName": "Bydgoszcz",
+    "streetKeyName": "Tulipanowa 125",
+    "postcodeKeyName": "85-485",
+    "voivodeshipKeyName": "Kujawsko-pomorskie",
+    "countyKeyName": "Bydgoszcz"
+  }
+}
+```
 
 # How To Run
 
