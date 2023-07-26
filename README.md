@@ -76,7 +76,7 @@ Here you have an example of file:
 ```json
 [
   {
-    "$iteration$": 5,
+    "$iteration$": 1,
     "name": "NAME",
     "surname": "SURNAME",
     "pesel": "PESEL",
@@ -115,17 +115,105 @@ and this is an example result:
 ```
 There are 2 ways to use special values:
 1. use only name of special value (e.g. `SURNAME`)
-2. use name of special value with parameters. If some special input data has parameters, then after special name **MUST** be used pipe -> `|`
+2. use name of special value with parameters. If some special input data has parameters, then after special name **MUST** be used pipe -> `|`. You can use only some parameters instead of all of them.
+
+> :warning: **WARNING:** Please be aware that using `|` without any property after this will cause that this value will be ommited in the result!
 Here are all `Special Input Data` values and theirs configuration:
 
-## NAME
+> :warning: **WARNING:** When you're using properties with `Special Input Data` you **MUST** use them like _key_=_value_ and every property must be seperated by comma (`,`) from another one like this
+> _key1_=_value1_,_key2_=_value2_ <br>
+> You can't use empty string as a kay or value because property will be ommited in the result.
 
-Example value with all parameters: `NAME|startAt=a,female=true`
+
+Here are all `Special Input Data` values and theirs configuration:
+
+### NAME
 
 | **PROPERTY NAME** |         **DESCRIPTION**         |          **POSSIBLE VALUE**          |
 |:-----------------:|:-------------------------------:|:------------------------------------:|
 |    **startAt**    |    First letter of the name     | every letter (a-z), case insensitive |
-|    **female**     | Is the name must be for female? |             true, false              |
+|    **female**     | Does a name must be for female? |             true, false              |
+
+Examples:
+1.  all properties with correect random values: `NAME|startAt=a,female=true`
+2.  all properties with incorrect values: `NAME|startAt=$,female=ABCD`
+
+### SURNAME
+
+| **PROPERTY NAME** |         **DESCRIPTION**            |          **POSSIBLE VALUE**          |
+|:-----------------:|:----------------------------------:|:------------------------------------:|
+|    **startAt**    |    First letter of the surname     | every letter (a-z), case insensitive |
+|    **female**     | Does a surname must be for female? |             true, false              |
+
+Examples:
+1.  all properties with correect random values: `SURNAME|startAt=a,female=true`
+2.  all properties with incorrect values: `SURNAME|startAt=$,female=ABCD`
+
+### PESEL
+
+| **PROPERTY NAME** |                    **DESCRIPTION**                     | **POSSIBLE VALUE** |
+|:-----------------:|:------------------------------------------------------:|:------------------:|
+| **bornAfter2000** | Does a pesel must be for person whos born after 2000?  |    true, false     |
+|    **female**     |            Does a pesel must be for female?            |    true, false     |
+|  **onlyAdults**   | Does application must to create pesel only for adults? |    true, false     |
+
+Examples:
+1.  all properties with correect random values: `PESEL|bornAfter2000=true,female=true,onlyAdults=true`
+2.  all properties with incorrect values: `PESEL|bornAfter2000=nope,female=truthy,onlyAdults=falsy`
+
+### IBAN
+
+| **PROPERTY NAME** |                           **DESCRIPTION**                           |         **POSSIBLE VALUE**         |
+|:-----------------:|:-------------------------------------------------------------------:|:----------------------------------:|
+|    **country**    |             Country from table with available countries             |      Available Country Table       |
+|   **bankName**    |                Bank name from table with bank names                 | Bank Name Table for chosen country |
+|   **formatted**   | Does iban have to be splitted by space between every 4th character? |            true, false             |
+|  **withLetters**  |          Does iban must contain letters at the beginning?           |            true, false             |
+
+_AVAILABLE COUNTRY TABLE_
+
+| **AVAILABLE COUNTRY** | **VALUE** |
+|:---------------------:|:---------:|
+|      **Poland**       |    PL     |
+
+_POLAND BANK NAMES TABLE_
+
+|             **BANK NAME**              |  **VALUE**   |
+|:--------------------------------------:|:------------:|
+|        **Narodowy Bank Polski**        |     NBP      | 
+|          **PKO Bank Polski**           |    PKOBP     | 
+|         **Citibank Handlowy**          |     CITI     | 
+|          **ING Bank Śląski**           |     ING      | 
+|    **Santander Consumer Bank S.A.**    | SANTANDER_PL | 
+|    **Bank Gospodarstwa Krajowego**     |     BGK      | 
+|              **mBank SA**              |    MBANK     | 
+|           **Bank Millenium**           |  MILLENNIUM  | 
+|          **Bank Pekao S.A.**           |    PKOSA     | 
+|          **Bank Pocztowy SA**          |   POCZTOWY   | 
+|    **Bank Ochrony Środowiska S.A.**    |     BOS      | 
+|         **Mercedes-Benz Bank**         |   MERCEDES   | 
+|      **SGB-Bank Spółka Akcyjna**       |     SGB      | 
+|           **Plus Bank S.A.**           |     PLUS     | 
+|          **Société Générale**          |   SOCIETE    | 
+|             **Nest Bank**              |     NEST     | 
+| **Bank Polskiej Spółdzielczości S.A.** |     BPS      | 
+|        **Bank Credit Agricole**        |   AGRICOLE   | 
+|    **BNP Paribas Bank Polska S.A.**    |     BNP      | 
+|    **Santander Consumer Bank S.A.**    | SANTANDER_CS | 
+|      **Toyota Bank Polska S.A.**       |    TOYOTA    | 
+|          **DNB Bank Polska**           |     DNB      | 
+|             **Alior Bank**             |    ALIOR     | 
+| **Ford Credit Europe Bank Polska SA**  |     FCE      | 
+|               **InBank**               |    INBANK    | 
+|       **Volkswagen Bank Polska**       |  VOLKSWAGEN  | 
+|         **HSBC Holdings plc**          |     HSBC     | 
+|         **BFF Banking Group**          |     BFF      | 
+|          **Aion Bank NV/SA**           |     AION     | 
+|           **VeloBank S.A.**            |     VELO     | 
+
+Examples:
+1.  all properties with correect random values: `IBAN|country=PL,bankName=BFF,formatted=true,withLetters=true`
+2.  all properties with incorrect values: `IBAN|country=GB,bankName=UNKNOWN,formatted=abcd,withLetters=falsy`
 
 # How To Run
 
@@ -133,8 +221,4 @@ Example value with all parameters: `NAME|startAt=a,female=true`
 
 - [ ] Adding `Dockerfile`
 - [ ] Adding possibility to use name of `Special Input Data` but like a typical regex
-- [ ] Creating UI and API for using app through a browser
-
-
-- kiedy jest sam pipe podany do argumentu
-- kiedy jest parametr ale jest on tylko znakiem =
+- [ ] Creating UI and API for using application in the browser
