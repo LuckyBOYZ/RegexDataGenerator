@@ -390,6 +390,7 @@ _POLAND BANK NAMES TABLE_
 |         **BFF Banking Group**          |     BFF      | 
 |          **Aion Bank NV/SA**           |     AION     | 
 |           **VeloBank S.A.**            |     VELO     | 
+
 **Example:**
 
 Input file with correct values:
@@ -523,6 +524,7 @@ Result:
 | **PROPERTY NAME** |     **DESCRIPTION**      |          **POSSIBLE VALUE**          |
 |:-----------------:|:------------------------:|:------------------------------------:|
 |    **startAt**    | First letter of the city | every letter (a-z), case insensitive |
+
 **Example:**
 
 Input file with correct values:
@@ -614,6 +616,7 @@ Result:
 |  **postcodePropName**   |  Property name for postcode   | Any valid string for key in json object |
 | **voivodeshipPropName** | Property name for voivodeship | Any valid string for key in json object |
 |   **countyPropName**    |   Property name for county    | Any valid string for key in json object |
+
 **Example:**
 
 Input file with all properties:
