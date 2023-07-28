@@ -1,7 +1,7 @@
 ﻿# RegexDataGenerator
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg?style=plastic)](https://opensource.org/licenses/Apache-2.0)
-[![codecov](https://codecov.io/gh/LuckyBOYZ/RegexDataGenerator/branch/regexDataGenerator/graph/badge.svg?token=WYMHGAQIQG)](https://codecov.io/gh/LuckyBOYZ/RegexDataGenerator)
+[![codecov](https://codecov.io/gh/LuckyBOYZ/RegexDataGenerator/branch/main/graph/badge.svg)](https://codecov.io/gh/LuckyBOYZ/RegexDataGenerator)
 
 # Table of contents
 
