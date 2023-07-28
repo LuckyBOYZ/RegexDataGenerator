@@ -78,9 +78,8 @@ public class PESELUtils {
 
     private static int generateYearByConditions(boolean canBeAsBornAfter2000, boolean onlyAdults) {
         int twoLastDigitsOfCurrentYear = getLastDigitsOfCurrentYear();
-        int startIndex = canBeAsBornAfter2000 && onlyAdults ? twoLastDigitsOfCurrentYear - 18 : 0;
-        int endIndex = canBeAsBornAfter2000 ? twoLastDigitsOfCurrentYear + 1 : 100;
-        return RANDOM.nextInt(startIndex, endIndex);
+        int endIndex = canBeAsBornAfter2000 ? onlyAdults ? twoLastDigitsOfCurrentYear - 17 : twoLastDigitsOfCurrentYear : 100;
+        return RANDOM.nextInt(0, endIndex);
     }
 
     private static int getLastDigitsOfCurrentYear() {

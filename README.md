@@ -1,27 +1,53 @@
 ﻿# RegexDataGenerator
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg?style=plastic)](https://opensource.org/licenses/Apache-2.0)
-[![codecov](https://codecov.io/gh/LuckyBOYZ/RegexDataGenerator/branch/main/graph/badge.svg?token=WYMHGAQIQG)](https://codecov.io/gh/LuckyBOYZ/RegexDataGenerator)
+[![codecov](https://codecov.io/gh/LuckyBOYZ/RegexDataGenerator/branch/regexDataGenerator/graph/badge.svg?token=WYMHGAQIQG)](https://codecov.io/gh/LuckyBOYZ/RegexDataGenerator)
 
 # Table of contents
 
 [Description](https://github.com/LuckyBOYZ/RegexDataGenerator#description) <br>
 [Requirements](https://github.com/LuckyBOYZ/RegexDataGenerator#requirements) <br>
+[How To Run](https://github.com/LuckyBOYZ/RegexDataGenerator#how-to-run) <br>
 [How To Use](https://github.com/LuckyBOYZ/RegexDataGenerator#how-to-use) <br>
 [Special Input Data](https://github.com/LuckyBOYZ/RegexDataGenerator#special-input-data) <br>
-[How To Run](https://github.com/LuckyBOYZ/RegexDataGenerator#how-to-run) <br>
 [TODO](https://github.com/LuckyBOYZ/RegexDataGenerator#todo) <br>
+[GOTCHA](https://github.com/LuckyBOYZ/RegexDataGenerator#gotcha)
 
 # Description
 
 Application let you save a time on creating dummy data for example when you want to use `json-server`
-to create API for your front-end application. Really big thanks for owner [RgxGen](https://github.com/curious-odd-man/RgxGen) application.
-In short: RegexDataGenerator is using RgxGen to generate json file based on regular expresion or by special property value to generate
-random real data (like PESEL or polish names)
+to create API for your front-end application. <br>
+In short: RegexDataGenerator is using regular expressions to generate json file based on regular expression or by
+special property
+value to generate random real data (like PESEL or polish names).
+
+> :notebook_with_decorative_cover: **WORTH TO MENTION:** every available syntax for regular expressions you can
+> check [here](https://github.com/curious-odd-man/RgxGen#supported-syntax)
+> and every limitation are available [here](https://github.com/curious-odd-man/RgxGen#limitations)
 
 # Requirements
 
 To run this application you have to install `java 17` on your machine.
+
+# How To Run
+
+At the moment I didn't prepare any `Dockerfile` or API so the only one way for using it is run it on your local machine
+by command <br>
+`java -jar <JAR_NAME> <ARGUMENTS>`. There are few arguments which you can add to command to customize how the
+application must work:
+
+|       **ARGUMENT NAME**       |                                                                        **DESCRIPTION**                                                                        |                   **VALUES**                    | **DEFAULT VALUE** |
+|:-----------------------------:|:-------------------------------------------------------------------------------------------------------------------------------------------------------------:|:-----------------------------------------------:|:-----------------:|
+|    **iterationFieldName**     |                                                 name for field 'how many objects must to be created in array'                                                 |        every valid name for key in json         |     iteration     |
+|      **iterationNumber**      |                                                            value for `iterationFieldName` argument                                                            |            every number more than 0             |        10         |
+|       **jsonFileName**        | name of input file - it can be path but file **HAS TO** be inside the same folder as application (e.g. dummy/test.jar and file is under dummy/test/file.json) | every valid path to file with `.json` extension |     file.json     |
+|      **prefixAndSuffix**      |     character which is used before and after special keys. At the moment this property is used only for creating `iterationFieldName` as a key in object      |                 every character                 |         $         |
+| **specialInputDataSeparator** |                                               separator between `SpecialInputData` name and properties for this                                               |                 every character                 |        \|         |
+|     **isFormattedResult**     |                                               whether the result must be formatted (multiline and indentations)                                               |                `true` or `false`                |      `false`      |
+
+Those arguments **HAVE TO** be seperated by `=`
+e.g. `java -jar <JAR_NAME> jsonFileName=test.json iterationFieldName=it` <br>
+The result will be always in the same directory as the application is run.
 
 # How To Use
 
@@ -56,23 +82,35 @@ directory where you have an `jar` file. This is an example:
 ]
 
 ```
-Apart of `$iteration$` every properties keys are up to you (this property will be explained later. <br>
-The value for those properties can be typical regex or you can use [Special Input Data](https://github.com/LuckyBOYZ/RegexDataGenerator#special-input-data) name. <br> 
+
+Apart of `$iteration$` every properties keys are up to you (this property will be explained later). <br>
+The value for those properties can be typical regex, or you can
+use [Special Input Data](https://github.com/LuckyBOYZ/RegexDataGenerator#special-input-data) name. <br>
 You can use either `array` and `object` as a root in config file. <br>
 Below is an overview with the most important information about creating configuration for every data type:
 
 ### string
-You can use regular expression, some hardcoded value (e.g. `abcd`) or `Special Input Data` name (please check **table of contents**)
+
+You can use regular expression, some hardcoded value (e.g. `abcd`) or `Special Input Data` name (please check **table of
+contents**)
+
 ### object
-The name for every property is up to you apart of `$iteration$`. This property tells application how many objects must be created and it works **ONLY** inside of array. <br>
-The name for this property can be configured (please check `How To Run` section)
+
+The name for every property is up to you apart of `$iteration$`. This property tells application how many objects must
+be created, and it works **ONLY** if the object is inside of array.
+
 ### array
-Array requires 1 element (string or object) but can be used second optional element - how many elements application must create (value must be the number)
+
+Array requires 1 element (string or object) but can be used second optional element - how many elements application must
+create (value must be the number). If the second element is not a number the default value for iteration (10) will be
+used.
 String and object must be created in the same way as it is described above.
 
 # Special Input Data
-You can use special values to create some random data but without regular expresion. <br>
+
+You can use special values to create some random data but without regular expression. <br>
 Here you have an example of file:
+
 ```json
 [
   {
@@ -90,7 +128,9 @@ Here you have an example of file:
   }
 ]
 ```
+
 and this is an example result:
+
 ```json
 [
   {
@@ -113,63 +153,195 @@ and this is an example result:
   }
 ]
 ```
+
 There are 2 ways to use special values:
+
 1. use only name of special value (e.g. `SURNAME`)
-2. use name of special value with parameters. If some special input data has parameters, then after special name **MUST** be used pipe -> `|`. You can use only some parameters instead of all of them.
+2. use name of special value with parameters. If some special input data has parameters, then after special name **MUST
+   ** be used pipe -> `|`. You can use only some parameters instead of all of them.
 
-> :warning: **WARNING:** Please be aware that using `|` without any property after this will cause that this value will be ommited in the result!
-Here are all `Special Input Data` values and theirs configuration:
+> :warning: **WARNING:** Please be aware that using `|` without any property after this will cause that this value will
+> be omitted in the result!
+> Here are all `Special Input Data` values and theirs configuration:
 
-> :warning: **WARNING:** When you're using properties with `Special Input Data` you **MUST** use them like _key_=_value_ and every property must be seperated by comma (`,`) from another one like this
+> :warning: **WARNING:** When you're using properties with `Special Input Data` you **MUST** use them like _key_=_value_
+> and every property must be seperated by comma (`,`) from another one like this
 > _key1_=_value1_,_key2_=_value2_ <br>
-> You can't use empty string as a kay or value because property will be ommited in the result.
+> You can't use empty string as a kay or value because property will be omitted in the result.
 
 
 Here are all `Special Input Data` values and theirs configuration:
 
 ### NAME
 
-> :notebook_with_decorative_cover: **Description:** It generates one of the name that is used in Poland.
+> :notebook_with_decorative_cover: **Description:** It generates one of the name that is used in Poland. If application
+> cannot find any value for parameters then is returned `Jan` for male and `Janina` for female
 
 | **PROPERTY NAME** |         **DESCRIPTION**         |          **POSSIBLE VALUE**          |
 |:-----------------:|:-------------------------------:|:------------------------------------:|
 |    **startAt**    |    First letter of the name     | every letter (a-z), case insensitive |
 |    **female**     | Does a name must be for female? |             true, false              |
 
-Examples:
-1.  all properties with correect random values: `NAME|startAt=a,female=true`
-2.  all properties with incorrect values: `NAME|startAt=$,female=ABCD`
+**Example:**
+
+Input file with correct values:
+
+```json
+{
+  "somePropName": "NAME|startAt=a,female=true"
+}
+```
+
+**Result:**
+
+```json
+{
+  "somePropName": "Alicja"
+}
+```
+
+Input file with incorrect values:
+
+```json
+{
+  "somePropName": "NAME|startAt=$,female=ABCD"
+}
+```
+
+**Result:**
+
+```json
+{
+  "somePropName": "Jan"
+}
+```
+
+Input startAt but female with `true` value:
+
+```json
+{
+  "somePropName": "NAME|startAt=$,female=true"
+}
+```
+
+**Result:**
+
+```json
+{
+  "somePropName": "Janina"
+}
+```
 
 ### SURNAME
 
-> :notebook_with_decorative_cover: **Description:** It generates one of the surname that is used in Poland.
+> :notebook_with_decorative_cover: **Description:** It generates one of the surname that is used in Poland. If
+> application
+> cannot find any value for parameters then is returned `Kowalski` for male and `Kowalska` for female
 
-| **PROPERTY NAME** |         **DESCRIPTION**            |          **POSSIBLE VALUE**          |
+| **PROPERTY NAME** |          **DESCRIPTION**           |          **POSSIBLE VALUE**          |
 |:-----------------:|:----------------------------------:|:------------------------------------:|
 |    **startAt**    |    First letter of the surname     | every letter (a-z), case insensitive |
 |    **female**     | Does a surname must be for female? |             true, false              |
 
-Examples:
-1.  all properties with correect random values: `SURNAME|startAt=a,female=true`
-2.  all properties with incorrect values: `SURNAME|startAt=$,female=ABCD`
+**Example:**
+
+Input file with correct values:
+
+```json
+{
+  "somePropName": "SURNAME|startAt=a,female=true"
+}
+```
+
+**Result:**
+
+```json
+{
+  "somePropName": "Adamczak"
+}
+```
+
+Input file with incorrect values:
+
+```json
+{
+  "somePropName": "SURNAME|startAt=$,female=ABCD"
+}
+```
+
+**Result:**
+
+```json
+{
+  "somePropName": "Kowalski"
+}
+```
+
+Input startAt but female with `true` value:
+
+```json
+{
+  "somePropName": "SURNAME|startAt=$,female=true"
+}
+```
+
+**Result:**
+
+```json
+{
+  "somePropName": "Kowalska"
+}
+```
 
 ### PESEL
 
-> :notebook_with_decorative_cover: **Description:** It generates PESEL number. PESEL is like an id for every person in Poland.
+> :notebook_with_decorative_cover: **Description:** It generates PESEL number. PESEL is like an id for every person in
+> Poland.
 
 | **PROPERTY NAME** |                    **DESCRIPTION**                     | **POSSIBLE VALUE** |
 |:-----------------:|:------------------------------------------------------:|:------------------:|
-| **bornAfter2000** | Does a pesel must be for person whos born after 2000?  |    true, false     |
-|    **female**     |            Does a pesel must be for female?            |    true, false     |
-|  **onlyAdults**   | Does application must to create pesel only for adults? |    true, false     |
+| **bornAfter2000** | Does a pesel must be for person whose born after 2000? | `true` or `false`  |
+|    **female**     |            Does a pesel must be for female?            | `true` or `false`  |
+|  **onlyAdults**   | Does application must to create pesel only for adults? | `true` or `false`  |
 
-Examples:
-1.  all properties with correect random values: `PESEL|bornAfter2000=true,female=true,onlyAdults=true`
-2.  all properties with incorrect values: `PESEL|bornAfter2000=nope,female=truthy,onlyAdults=falsy`
+**Example:**
+
+Input file with correct values:
+
+```json
+{
+  "somePropName": "PESEL|bornAfter2000=true,female=true,onlyAdults=true"
+}
+```
+
+**Result:**
+
+```json
+{
+  "somePropName": "05322838106"
+}
+```
+
+Input file with incorrect values:
+
+```json
+{
+  "somePropName": "PESEL|bornAfter2000=nope,female=truthy,onlyAdults=falsy"
+}
+```
+
+**Result:**
+
+```json
+{
+  "somePropName": "13032584417"
+}
+```
 
 ### IBAN
 
-> :notebook_with_decorative_cover: **Description:** It generates valid IBAN number BUT as a default the application doesn't generate the letters at the beggining of number and without spaces (please check properties below)
+> :notebook_with_decorative_cover: **Description:** It generates valid IBAN number BUT as a default the application
+> doesn't generate the letters at the beginning of number and without spaces (please check properties below)
 
 | **PROPERTY NAME** |                           **DESCRIPTION**                           |         **POSSIBLE VALUE**         |
 |:-----------------:|:-------------------------------------------------------------------:|:----------------------------------:|
@@ -218,19 +390,51 @@ _POLAND BANK NAMES TABLE_
 |         **BFF Banking Group**          |     BFF      | 
 |          **Aion Bank NV/SA**           |     AION     | 
 |           **VeloBank S.A.**            |     VELO     | 
+**Example:**
 
-Examples:
-1.  all properties with correect random values: `IBAN|country=PL,bankName=BFF,formatted=true,withLetters=true`
-2.  all properties with incorrect values: `IBAN|country=GB,bankName=UNKNOWN,formatted=abcd,withLetters=falsy`
+Input file with correct values:
+
+```json
+{
+   "somePropName": "IBAN|country=PL,bankName=BFF,formatted=true,withLetters=true"
+}
+```
+
+**Result:**
+
+```json
+{
+   "somePropName": "PL78 2850 6487 8839 8059 4744 2334"
+}
+```
+
+Input file with incorrect values:
+
+```json
+{
+   "somePropName": "IBAN|country=GB,bankName=UNKNOWN,formatted=abcd,withLetters=falsy"
+}
+```
+
+**Result:**
+
+```json
+{
+   "somePropName": "83280023120240014208594594"
+}
+```
 
 ### ID
 
 NO PROPERTIES
 
-> :notebook_with_decorative_cover: **Description:** This special input data is only for generating ids when you have object inside of array. <br>
-> Is really useful if you want to have some unique value for every project. It will always return values 1, 2, 3 and so on.
+> :notebook_with_decorative_cover: **Description:** This special input data is only for generating ids when you have
+> object inside of array. <br>
+> Is really useful if you want to have some unique value for every project. It will always return values 1, 2, 3 and so
+> on.
 
 Example input in file:
+
 ```json
 [
   {
@@ -239,7 +443,9 @@ Example input in file:
   }
 ]
 ```
+
 Result:
+
 ```json
 [
   {
@@ -264,7 +470,6 @@ Result:
     "id": 7
   }
 ]
-
 ```
 
 ### POSTCODE
@@ -273,12 +478,44 @@ Result:
 
 NO PROPERTIES
 
+Example input file:
+
+```json
+{
+   "somePropName": "POSTCODE"
+}
+```
+
+Result:
+
+```json
+{
+   "somePropName": "75-244"
+}
+```
+
 ### STREET
 
-> :notebook_with_decorative_cover: **Description:** It generates street from list of available streets in Poland.
+> :notebook_with_decorative_cover: **Description:** It generates street from list of available streets in Poland with
+> building number.
 
 NO PROPERTIES
 
+Example input file:
+
+```json
+{
+   "somePropName": "STREET"
+}
+```
+
+Result:
+
+```json
+{
+   "somePropName": "Przyjaźni 5"
+}
+```
 ### CITY
 
 > :notebook_with_decorative_cover: **Description:** It generates city from list of available cities in Poland.
@@ -286,16 +523,62 @@ NO PROPERTIES
 | **PROPERTY NAME** |     **DESCRIPTION**      |          **POSSIBLE VALUE**          |
 |:-----------------:|:------------------------:|:------------------------------------:|
 |    **startAt**    | First letter of the city | every letter (a-z), case insensitive |
+**Example:**
 
-Examples:
-1.  all properties with correect random values: `CITY|startAt=a`
-2.  all properties with incorrect values: `CITY|startAt=$`
+Input file with correct values:
+
+```json
+{
+   "somePropName": "CITY|startAt=a"
+}
+```
+
+**Result:**
+
+```json
+{
+   "somePropName": "Aleksandrów Kujawski"
+}
+```
+
+Input file with incorrect values:
+
+```json
+{
+   "somePropName": "CITY|startAt=$"
+}
+```
+
+**Result:**
+
+```json
+{
+   "somePropName": "Warszawa"
+}
+```
 
 ### VOIVODESHIP
 
-> :notebook_with_decorative_cover: **Description:** It generates voivodeship from the list of available voivodeships in Poland.
+> :notebook_with_decorative_cover: **Description:** It generates voivodeship from the list of available voivodeships in
+> Poland.
 
 NO PROPERTIES
+
+Example input file:
+
+```json
+{
+   "somePropName": "VOIVODESHIP"
+}
+```
+
+Result:
+
+```json
+{
+   "somePropName": "Mazowieckie"
+}
+```
 
 ### COUNTY
 
@@ -303,9 +586,26 @@ NO PROPERTIES
 
 NO PROPERTIES
 
+Example input file:
+
+```json
+{
+   "somePropName": "COUNTY"
+}
+```
+
+Result:
+
+```json
+{
+   "somePropName": "Bytom"
+}
+```
+
 ### ADDRESS
 
-> :notebook_with_decorative_cover: **Description:** It generates object that is a combination of `POSTCODE`, `STREET`, `CITY`, `VOIVODESHIP` and `COUNTY`.
+> :notebook_with_decorative_cover: **Description:** It generates object that is a combination
+> of `POSTCODE`, `STREET`, `CITY`, `VOIVODESHIP` and `COUNTY`.
 
 |    **PROPERTY NAME**    |        **DESCRIPTION**        |           **POSSIBLE VALUE**            |
 |:-----------------------:|:-----------------------------:|:---------------------------------------:|
@@ -314,31 +614,39 @@ NO PROPERTIES
 |  **postcodePropName**   |  Property name for postcode   | Any valid string for key in json object |
 | **voivodeshipPropName** | Property name for voivodeship | Any valid string for key in json object |
 |   **countyPropName**    |   Property name for county    | Any valid string for key in json object |
+**Example:**
 
-Examples:
-1.  all properties with correect random values: `ADDRESS|cityPropName=cityKeyName,streetPropName=streetKeyName,postcodePropName=postcodeKeyName,voivodeshipPropName=voivodeshipKeyName,countyPropName=countyKeyName`
-2.  all properties with incorrect values: `ADDRESS|cityPropName=,streetPropName=,postcodePropName=,voivodeshipPropName=,countyPropName=` (empty string cannot be the key in json object)
+Input file with all properties:
 
-Input file:
 ```json
 {
-  "fullPolishAddress": "ADDRESS|cityPropName=cityKeyName,streetPropName=streetKeyName,postcodePropName=postcodeKeyName,voivodeshipPropName=voivodeshipKeyName,countyPropName=countyKeyName"
-}
-```
-Result
-```json
-{
-  "fullPolishAddress": {
-    "cityKeyName": "Bydgoszcz",
-    "streetKeyName": "Tulipanowa 125",
-    "postcodeKeyName": "85-485",
-    "voivodeshipKeyName": "Kujawsko-pomorskie",
-    "countyKeyName": "Bydgoszcz"
-  }
+   "somePropName": "ADDRESS|cityPropName=cityKeyName,streetPropName=streetKeyName,postcodePropName=postcodeKeyName,voivodeshipPropName=voivodeshipKeyName,countyPropName=countyKeyName"
 }
 ```
 
-# How To Run
+**Result:**
+
+```json
+{
+   "somePropName": {
+      "cityKeyName": "Bydgoszcz",
+      "streetKeyName": "Młyńska 167",
+      "postcodeKeyName": "85-226",
+      "voivodeshipKeyName": "Kujawsko-pomorskie",
+      "countyKeyName": "Bydgoszcz"
+   }
+}
+```
+> :warning: **WARNING:** If you set the `ADDRESS` properties with empty strings like this `ADDRESS|cityPropName=,streetPropName=, postcodePropName=,voivodeshipPropName=,countyPropName=` then you'll get empty object (`{}`)
+
+# GOTCHA
+
+You **HAVE TO** remember about setting `iterationNumber` argument properly if it is important to you. If you set
+new iteration number key in json file, but you forgot to add it in arguments then you'll get default value (10) apart
+from
+whether value will be set correctly. If you added new iteration name in json, you set it via arguments correctly **BUT**
+you set the value not as a number, then the iteration property will be not omitted in the result and also the iteration
+number will be set on default (10).
 
 # TODO
 

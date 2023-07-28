@@ -1,11 +1,11 @@
-package com.lukaszsuma.regexdatagenerator.config;
+package com.lukaszsuma.regexdatagenerator;
 
 import com.lukaszsuma.regexdatagenerator.utils.StringSeparator;
 
 import java.util.*;
 
 @SuppressWarnings("rawtypes")
-public class Configuration {
+class Configuration {
 
     private final Map<String, Object> configMap;
     private String prefixValue = ConfigurationPropertiesNames.PREFIX_AND_SUFFIX_FOR_SPECIAL_NAMES.getDefaultValue();
@@ -16,6 +16,8 @@ public class Configuration {
             Class valueType = property.getTypeOfValue();
             if (valueType == Integer.class) {
                 this.configMap.put(property.getPropertyName(), Integer.parseInt(property.getDefaultValue()));
+            } else if (valueType == Boolean.class) {
+                this.configMap.put(property.getPropertyName(), Boolean.parseBoolean(property.getDefaultValue()));
             } else {
                 this.configMap.put(property.getPropertyName(), property.getDefaultValue());
             }
@@ -56,6 +58,8 @@ public class Configuration {
                             entry.setValue(Integer.valueOf(value));
                         } catch (NumberFormatException ignore) {
                         }
+                    } else if (valueType == Boolean.class) {
+                        entry.setValue(Boolean.parseBoolean(value));
                     } else {
                         entry.setValue(value);
                     }
@@ -89,9 +93,14 @@ public class Configuration {
         return (String) value;
     }
 
-    public Integer getIntegerValueByPropertyName(String propertyName) {
+    public int getIntegerValueByPropertyName(String propertyName) {
         Object value = getValueByPropertyName(propertyName);
-        return (Integer) value;
+        return (int) value;
+    }
+
+    public boolean getBooleanValueByPropertyName(String propertyName) {
+        Object value = getValueByPropertyName(propertyName);
+        return (boolean) value;
     }
 
 }

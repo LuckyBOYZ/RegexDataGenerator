@@ -33,7 +33,7 @@ public class BankAccountNumberUtils {
             countryLetters = country;
             defaultCountryLettersValue = CountryLettersToNumber.convertCountryLettersToNumber(country);
         }
-        int IBANControlNumber = IBANValidator.getIbanControlNumber(SB, defaultCountryLettersValue);
+        int IBANControlNumber = IBANValidator.getIbanControlNumber(SB, defaultCountryLettersValue, false, false);
         if (IBANControlNumber < 10) {
             SB.insert(0, IBANControlNumber).insert(0, 0);
         } else {

@@ -1,9 +1,8 @@
-package com.lukaszsuma.regexdatagenerator.utils;
+package com.lukaszsuma.regexdatagenerator;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.RepeatedTest;
-import org.junit.jupiter.api.Test;
+import com.lukaszsuma.regexdatagenerator.utils.*;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.EnumSource;
@@ -266,7 +265,7 @@ class SpecialInputDataTest {
         }
         StringBuilder sb = new StringBuilder(iban);
         String numberForCountry = CountryLettersToNumber.convertCountryLettersToNumber(country.name());
-        int ibanControlNumber = IBANValidator.getIbanControlNumber(sb, numberForCountry);
+        int ibanControlNumber = IBANValidator.getIbanControlNumber(sb, numberForCountry, false, false);
         assertEquals(ibanControlNumber, ibanControlNumberFromGeneratedIBAN);
     }
 
@@ -288,7 +287,8 @@ class SpecialInputDataTest {
         });
         int ibanControlNumberFromGenerateIban = Integer.parseInt(iban.substring(0, 2));
         String number = CountryLettersToNumber.convertCountryLettersToNumber("PL");
-        int ibanControlNumber = IBANValidator.getIbanControlNumber(new StringBuilder(iban.substring(2)), number);
+        StringBuilder ibanVal = new StringBuilder(iban.substring(2));
+        int ibanControlNumber = IBANValidator.getIbanControlNumber(ibanVal, number, false, false);
         assertEquals(ibanControlNumber, ibanControlNumberFromGenerateIban);
     }
 
@@ -313,7 +313,8 @@ class SpecialInputDataTest {
             });
             int ibanControlNumberFromGenerateIban = Integer.parseInt(iban.substring(0, 2));
             String number = CountryLettersToNumber.convertCountryLettersToNumber("PL");
-            int ibanControlNumber = IBANValidator.getIbanControlNumber(new StringBuilder(iban.substring(2)), number);
+            StringBuilder ibanVal = new StringBuilder(iban.substring(2));
+            int ibanControlNumber = IBANValidator.getIbanControlNumber(ibanVal, number, false, false);
             assertEquals(ibanControlNumber, ibanControlNumberFromGenerateIban);
         }
     }
@@ -340,7 +341,8 @@ class SpecialInputDataTest {
             });
             int ibanControlNumberFromGenerateIban = Integer.parseInt(iban.substring(0, 2));
             String number = CountryLettersToNumber.convertCountryLettersToNumber("PL");
-            int ibanControlNumber = IBANValidator.getIbanControlNumber(new StringBuilder(iban.substring(2)), number);
+            StringBuilder ibanVal = new StringBuilder(iban.substring(2));
+            int ibanControlNumber = IBANValidator.getIbanControlNumber(ibanVal, number, false, false);
             assertEquals(ibanControlNumber, ibanControlNumberFromGenerateIban);
         }
     }

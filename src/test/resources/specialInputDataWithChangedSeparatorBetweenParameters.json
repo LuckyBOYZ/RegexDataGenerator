@@ -1,0 +1,16 @@
+[
+  {
+    "$iteration$": 2,
+    "name": "NAME$startAt=B,female=true",
+    "surname": "SURNAME$startAt=C,female=true",
+    "pesel": "PESEL$bornAfter2000=true,female=true,onlyAdults=true",
+    "iban": "IBAN$country=PL,bankName=BFF,formatted=true,withLetters=true",
+    "id": "ID",
+    "city": "CITY$startAt=D",
+    "street": "STREET",
+    "county": "COUNTY",
+    "postcode": "POSTCODE",
+    "voivodeship": "VOIVODESHIP",
+    "address": "ADDRESS$cityPropName=cityKeyName,streetPropName=streetKeyName,postcodePropName=postcodeKeyName,voivodeshipPropName=voivodeshipKeyName,countyPropName=countyKeyName"
+  }
+]

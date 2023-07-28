@@ -1,13 +1,15 @@
-[{
-  "$iteration$": 5,
-  "name": "NAME",
-  "surname": "SURNAME",
-  "pesel": "PESEL",
-  "iban": "IBAN",
-  "id": "ID",
-  "city": "CITY",
-  "street": "STREET",
-  "postcode": "POSTCODE",
-  "voivodeship": "VOIVODESHIP",
-  "address": "ADDRESS"
-}]
+[
+  {
+    "$iteration$": 5,
+    "name": "NAME",
+    "surname": "SURNAME",
+    "pesel": "PESEL",
+    "iban": "IBAN",
+    "id": "ID",
+    "city": "CITY",
+    "street": "STREET",
+    "postcode": "POSTCODE",
+    "voivodeship": "VOIVODESHIP",
+    "address": "ADDRESS"
+  }
+]

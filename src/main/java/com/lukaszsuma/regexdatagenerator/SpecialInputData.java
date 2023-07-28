@@ -1,14 +1,23 @@
-package com.lukaszsuma.regexdatagenerator.utils;
+package com.lukaszsuma.regexdatagenerator;
 
+import com.lukaszsuma.regexdatagenerator.utils.BankAccountNumberUtils;
+import com.lukaszsuma.regexdatagenerator.utils.PESELUtils;
+import com.lukaszsuma.regexdatagenerator.utils.PolandBankId;
+import com.lukaszsuma.regexdatagenerator.utils.StringSeparator;
+
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.function.Function;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public enum SpecialInputData {
+enum SpecialInputData {
 
     NAME(List.of("startAt", "female")) {
         @Override
@@ -27,7 +36,7 @@ public enum SpecialInputData {
         public Function<String, Optional<String>> generateData() {
             return (rawValue) -> {
                 String[] conditions = EMPTY_ARRAY;
-                if (rawValue.contains(StringSeparator.PIPE)) {
+                if (rawValue.contains(specialInputDataSeparator)) {
                     conditions = getConditionsFromRawValue(rawValue);
                     if (conditions.length == 0) {
                         return Optional.empty();
@@ -46,7 +55,7 @@ public enum SpecialInputData {
         public Function<String, Optional<String>> generateData() {
             return (rawValue) -> {
                 String[] conditions = EMPTY_ARRAY;
-                if (rawValue.contains(StringSeparator.PIPE)) {
+                if (rawValue.contains(specialInputDataSeparator)) {
                     conditions = getConditionsFromRawValue(rawValue);
                     if (conditions.length == 0) {
                         return Optional.empty();
@@ -96,7 +105,7 @@ public enum SpecialInputData {
     COUNTY(Collections.emptyList()) {
         @Override
         public Function<String, Optional<String>> generateData() {
-            return (rawValue) -> getValueFromAddress(rawValue, VOIVODESHIP);
+            return (rawValue) -> getValueFromAddress(rawValue, COUNTY);
         }
     },
     ADDRESS(Arrays.asList("cityPropName", "streetPropName", "postcodePropName", "voivodeshipPropName", "countyPropName")) {
@@ -114,9 +123,16 @@ public enum SpecialInputData {
     private static final String DEFAULT_WOMAN_SURNAME = "Kowalska";
     private static final String DEFAULT_ADDRESS_ROW = "00-001;Świętokrzyska 31/33;Warszawa;Mazowieckie;Warszawa";
     private final List<String> conditions;
+    private static String specialInputDataSeparator = StringSeparator.PIPE;
+    private static String specialInputDataSeparatorRegex = StringSeparator.PIPE_REGEX;
 
     SpecialInputData(List<String> conditions) {
         this.conditions = conditions;
+    }
+
+    public static void setSpecialInputDataSeparator(String separator) {
+        specialInputDataSeparator = separator;
+        specialInputDataSeparatorRegex = Pattern.quote(separator);
     }
 
     public abstract Function<String, Optional<String>> generateData();
@@ -124,7 +140,7 @@ public enum SpecialInputData {
     private static Function<String, Optional<String>> generateNameOrSurname(boolean isName) {
         return (rawValue) -> {
             String[] conditions = EMPTY_ARRAY;
-            if (rawValue.contains(StringSeparator.PIPE)) {
+            if (rawValue.contains(specialInputDataSeparator)) {
                 conditions = getConditionsFromRawValue(rawValue);
                 if (conditions.length == 0) {
                     return Optional.empty();
@@ -134,7 +150,9 @@ public enum SpecialInputData {
             Map<String, String> mapOfPassedParams = getMapOfParamsFromConditions(conditions, specialInputData.conditions);
             boolean isFemale = Boolean.parseBoolean(mapOfPassedParams.get("female"));
             String path = isName ? getPathBySpecialInputType(NAME) : getPathForSurnameSpecialInputData(isFemale);
-            try (Stream<String> stream = Files.lines(Path.of(path))) {
+            try (InputStream inputStream = SpecialInputData.class.getResourceAsStream(path);
+                 Stream<String> stream = new BufferedReader(
+                         new InputStreamReader(Objects.requireNonNull(inputStream), StandardCharsets.UTF_8)).lines()) {
                 return Optional.of(stream
                         .filter(el -> !el.isBlank())
                         .filter(el -> {
@@ -169,7 +187,7 @@ public enum SpecialInputData {
     }
 
     private static String[] getConditionsFromRawValue(String rawValue) {
-        String[] split = rawValue.split(StringSeparator.PIPE_REGEX, 2);
+        String[] split = rawValue.split(specialInputDataSeparatorRegex, 2);
         String[] result = split[1].split(StringSeparator.COMMA);
         for (String el : result) {
             if (!el.contains(StringSeparator.EQUALS) || el.endsWith(StringSeparator.EQUALS)) {
@@ -181,7 +199,7 @@ public enum SpecialInputData {
 
     private static Optional<String> getValueFromAddress(String rawValue, SpecialInputData specialInputData) {
         String[] conditions = EMPTY_ARRAY;
-        if (rawValue.contains(StringSeparator.PIPE)) {
+        if (rawValue.contains(specialInputDataSeparator)) {
             conditions = getConditionsFromRawValue(rawValue);
             if (conditions.length == 0) {
                 return Optional.empty();
@@ -189,7 +207,9 @@ public enum SpecialInputData {
         }
         Map<String, String> mapOfPassedParams = getMapOfParamsFromConditions(conditions, specialInputData.conditions);
         String path = getPathBySpecialInputType(specialInputData);
-        try (Stream<String> stream = Files.lines(Path.of(path))) {
+        try (InputStream inputStream = SpecialInputData.class.getResourceAsStream(path);
+             Stream<String> stream = new BufferedReader(
+                     new InputStreamReader(Objects.requireNonNull(inputStream), StandardCharsets.UTF_8)).lines()) {
             String randomAddressRow;
             if (specialInputData == CITY) {
                 randomAddressRow = stream
@@ -238,17 +258,17 @@ public enum SpecialInputData {
 
     private static String getPathBySpecialInputType(SpecialInputData specialInputData) {
         return switch (specialInputData) {
-            case VOIVODESHIP -> "src/main/resources/voivodeships.csv";
-            case COUNTY -> "src/main/resources/counties.csv";
-            case ADDRESS, POSTCODE, STREET, CITY -> "src/main/resources/addresses.csv";
-            case NAME -> "src/main/resources/names.csv";
+            case VOIVODESHIP -> "/voivodeships.csv";
+            case COUNTY -> "/counties.csv";
+            case ADDRESS, POSTCODE, STREET, CITY -> "/addresses.csv";
+            case NAME -> "/names.csv";
             default -> throw new RuntimeException(String.format("No file for '%s' special input",
                     specialInputData.name()));
         };
     }
 
     private static String getPathForSurnameSpecialInputData(boolean isFemale) {
-        return isFemale ? "src/main/resources/womenSurnames.csv" : "src/main/resources/menSurnames.csv";
+        return isFemale ? "/womenSurnames.csv" : "/menSurnames.csv";
     }
 
     private static String generateFullAddressString(String randomAddressRow, Map<String, String> params) {

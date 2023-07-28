@@ -30,7 +30,7 @@ class PESELUtilsTest {
             assertTrue(month > 20);
             assertTrue(day > 0 && day < 32);
             if (onlyAdults) {
-                assertTrue(year >= twoDigitsOfCurrentYear - 18);
+                assertTrue(year <= twoDigitsOfCurrentYear - 18);
             }
         }
 

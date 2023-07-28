@@ -1,6 +1,6 @@
 [
   {
-    "$iteration$": 7,
+    "^iteration^": 7,
     "threeDigits": "\\d{3}",
     "sixLettersLowercase": "[a-z]{6}",
     "arrayWithThreeStrings": ["\\w{1,5}", 3],
@@ -10,7 +10,7 @@
     },
     "arrayOfTwoObjects": [
       {
-        "$iteration$": 2,
+        "^iteration^": 2,
         "name": "name[A-C]{3}",
         "surname": "surname[D-F]{2}"
       }

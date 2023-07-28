@@ -1,4 +1,4 @@
-package com.lukaszsuma.regexdatagenerator.config;
+package com.lukaszsuma.regexdatagenerator;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -36,21 +36,26 @@ class ConfigurationTest {
         defaultValue = configuration.getStringValueByPropertyName(
                 ConfigurationPropertiesNames.PREFIX_AND_SUFFIX_FOR_SPECIAL_NAMES.getPropertyName());
         assertEquals(defaultValue, ConfigurationPropertiesNames.PREFIX_AND_SUFFIX_FOR_SPECIAL_NAMES.getDefaultValue());
+        boolean defaultBooleanValue = configuration.getBooleanValueByPropertyName(
+                ConfigurationPropertiesNames.IS_FORMATTED_RESULT.getPropertyName());
+        assertEquals(defaultBooleanValue, Boolean.parseBoolean(
+                ConfigurationPropertiesNames.IS_FORMATTED_RESULT.getDefaultValue()));
     }
 
     @Test
     @DisplayName("Testing configuration with all valid properties")
     void shouldCreateConfigurationWhenConfigIsPassedWithCustomValues() {
         //given
-        String[] customConfig = {"iterationFieldName=it", "iterationNumber=5", "jsonFileName=test.json",
-                "prefixAndSuffix=%", "specialInputDataSeparator=_"};
+        String[] customConfig = {"iterationFieldName=it", "iterationNumber=5", "jsonFileName=emptyArraysInArray.json",
+                "prefixAndSuffix=%", "specialInputDataSeparator=_", "isFormattedResult=true"};
         Configuration configuration = new Configuration(customConfig);
         //then
         String iterationFieldName = "%it%";
         int iterationNumber = 5;
-        String jsonFileName = "test.json";
+        String jsonFileName = "emptyArraysInArray.json";
         String prefixAndSuffix = "%";
         String specialInputDataSeparator = "_";
+        boolean isFormattedResult = true;
         String customValue = configuration.getStringValueByPropertyName(
                 ConfigurationPropertiesNames.ITERATION_FIELD_NAME.getPropertyName());
         assertEquals(iterationFieldName, customValue);
@@ -66,10 +71,13 @@ class ConfigurationTest {
         customValue = configuration.getStringValueByPropertyName(
                 ConfigurationPropertiesNames.SPECIAL_INPUT_DATA_SEPARATOR.getPropertyName());
         assertEquals(specialInputDataSeparator, customValue);
+        boolean defaultBooleanCustomValue = configuration.getBooleanValueByPropertyName(
+                ConfigurationPropertiesNames.IS_FORMATTED_RESULT.getPropertyName());
+        assertEquals(isFormattedResult, defaultBooleanCustomValue);
     }
 
     @Test
-    @DisplayName("Testing configuration with not parsed value if property must be number")
+    @DisplayName("Testing configuration with not parsed value if property must be a number")
     void shouldContainsDefaultIterationNumberValueWhenValueIsNotANumber() {
         //given
         String[] customConfig = {"iterationNumber=abc"};
@@ -81,10 +89,22 @@ class ConfigurationTest {
     }
 
     @Test
+    @DisplayName("Testing configuration with not parsed value if property must be a boolean")
+    void shouldContainsDefaultIterationNumberValueWhenValueIsNotABoolean() {
+        //given
+        String[] customConfig = {"isFormattedResult=abc"};
+        Configuration configuration = new Configuration(customConfig);
+        //then
+        boolean defaultBooleanCustomValue = configuration.getBooleanValueByPropertyName(
+                ConfigurationPropertiesNames.IS_FORMATTED_RESULT.getPropertyName());
+        assertFalse(defaultBooleanCustomValue);
+    }
+
+    @Test
     @DisplayName("Testing configuration with not parsed value if property must be number")
     void shouldContainsDefaultValuesWhenValuesAreNotSeperatedByEqualSign() {
         //given
-        String[] customConfig = {"jsonFileName,test.json"};
+        String[] customConfig = {"jsonFileName,emptyArraysInArray.json"};
         Configuration configuration = new Configuration(customConfig);
         //then
         String shouldBeDefaultValue = configuration.getStringValueByPropertyName(
