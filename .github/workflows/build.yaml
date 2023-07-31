@@ -1,7 +1,7 @@
 name: Build And Push Jar To Repository
 on:
   workflow_run:
-    workflows: [ Deploy Test Coverage to Codecov ]
+    workflows: [Deploy Test Coverage to Codecov]
     types:
       - completed
   workflow_dispatch:
