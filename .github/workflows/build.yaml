@@ -1,7 +1,7 @@
 name: Build And Push Jar To Repository
 on:
   workflow_run:
-    workflows: [Deploy Test Coverage to Codecov]
+    workflows: [ Deploy Test Coverage to Codecov ]
     types:
       - completed
   workflow_dispatch:
@@ -24,13 +24,18 @@ jobs:
         uses: andstor/file-existence-action@v2
         with:
           files: bin/RegexDataGenerator.jar
-      - name: Clear bin directory
+      - name: Clean bin directory
         if: steps.check_files.outputs.files_exists == 'true'
         run: rm bin/RegexDataGenerator.jar
       - name: Move jar file to bin directory
         run: mv target/RegexDataGenerator-jar-with-dependencies.jar bin/RegexDataGenerator.jar
       - name: Commit and push jar file
-        uses: actions-x/commit@v6
+        uses: github-actions-x/commit@v2.9
         with:
-          branch: main
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          push-branch: 'main'
+          commit-message: 'Creating new jar file in bin directory'
+          rebase: 'true'
+          files: 'bin/RegexDataGenerator.jar'
+          name: '${{github.actor}}'
           email: '${{github.actor}}@users.noreply.github.com'
