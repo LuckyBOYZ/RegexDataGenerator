@@ -19,9 +19,16 @@ jobs:
       - name: Install dependencies and build application
         run: mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
       - name: Add permissions
-        run: chmod +rwx ./target/RegexDataGenerator-jar-with-dependencies.jar
+        run: chmod +rwx target/RegexDataGenerator-jar-with-dependencies.jar
+      - name: Check file RegexDataGenerator.jar
+        uses: andstor/file-existence-action@v2
+        with:
+          files: bin/RegexDataGenerator.jar
+      - name: Clear bin directory
+        if: steps.check_files.outputs.files_exists == 'true'
+        run: rm bin/RegexDataGenerator.jar
       - name: Move jar file to bin directory
-        run: mv ./target/RegexDataGenerator-jar-with-dependencies.jar ./bin/RegexDataGenerator.jar
+        run: mv target/RegexDataGenerator-jar-with-dependencies.jar bin/RegexDataGenerator.jar
       - name: Commit and push jar file
         uses: actions-x/commit@v6
         with:
