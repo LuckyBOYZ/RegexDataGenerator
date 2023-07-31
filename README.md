@@ -18,12 +18,11 @@
 Application let you save a time on creating dummy data for example when you want to use `json-server`
 to create API for your front-end application. <br>
 In short: RegexDataGenerator is using regular expressions to generate json file based on regular expression or by
-special property
-value to generate random real data (like PESEL or polish names).
+special property value to generate random real data (like PESEL or polish names).
 
 > :notebook_with_decorative_cover: **WORTH TO MENTION:** every available syntax for regular expressions you can
 > check [here](https://github.com/curious-odd-man/RgxGen#supported-syntax)
-> and every limitation are available [here](https://github.com/curious-odd-man/RgxGen#limitations)
+> and every limitation is available [here](https://github.com/curious-odd-man/RgxGen#limitations)
 
 # Requirements
 
@@ -33,12 +32,12 @@ To run this application you have to install `java 17` on your machine.
 
 At the moment I didn't prepare any `Dockerfile` or API so the only one way for using it is run it on your local machine
 by command <br>
-`java -jar <JAR_NAME> <ARGUMENTS>`. There are few arguments which you can add to command to customize how the
-application must work:
+`java -jar RegexDataGenerator.jar <ARGUMENTS>`. The latest version of application is put into `bin` directory. There are few
+arguments which you can add to command to customize how the application must work (but you don't need):
 
 |       **ARGUMENT NAME**       |                                                                        **DESCRIPTION**                                                                        |                   **VALUES**                    | **DEFAULT VALUE** |
 |:-----------------------------:|:-------------------------------------------------------------------------------------------------------------------------------------------------------------:|:-----------------------------------------------:|:-----------------:|
-|    **iterationFieldName**     |                                                 name for field 'how many objects must to be created in array'                                                 |        every valid name for key in json         |     iteration     |
+|    **iterationFieldName**     |                 name of 'how many objects have to be created in array' key property in json. This prop is **only** used for objects in array.                 |        every valid name for key in json         |     iteration     |
 |      **iterationNumber**      |                                                            value for `iterationFieldName` argument                                                            |            every number more than 0             |        10         |
 |       **jsonFileName**        | name of input file - it can be path but file **HAS TO** be inside the same folder as application (e.g. dummy/test.jar and file is under dummy/test/file.json) | every valid path to file with `.json` extension |     file.json     |
 |      **prefixAndSuffix**      |     character which is used before and after special keys. At the moment this property is used only for creating `iterationFieldName` as a key in object      |                 every character                 |         $         |
@@ -46,7 +45,7 @@ application must work:
 |     **isFormattedResult**     |                                               whether the result must be formatted (multiline and indentations)                                               |                `true` or `false`                |      `false`      |
 
 Those arguments **HAVE TO** be seperated by `=`
-e.g. `java -jar <JAR_NAME> jsonFileName=test.json iterationFieldName=it` <br>
+e.g. `java -jar RegexDataGenerator.jar jsonFileName=test.json iterationFieldName=it` <br>
 The result will be always in the same directory as the application is run.
 
 # How To Use
@@ -397,7 +396,7 @@ Input file with correct values:
 
 ```json
 {
-   "somePropName": "IBAN|country=PL,bankName=BFF,formatted=true,withLetters=true"
+  "somePropName": "IBAN|country=PL,bankName=BFF,formatted=true,withLetters=true"
 }
 ```
 
@@ -405,7 +404,7 @@ Input file with correct values:
 
 ```json
 {
-   "somePropName": "PL78 2850 6487 8839 8059 4744 2334"
+  "somePropName": "PL78 2850 6487 8839 8059 4744 2334"
 }
 ```
 
@@ -413,7 +412,7 @@ Input file with incorrect values:
 
 ```json
 {
-   "somePropName": "IBAN|country=GB,bankName=UNKNOWN,formatted=abcd,withLetters=falsy"
+  "somePropName": "IBAN|country=GB,bankName=UNKNOWN,formatted=abcd,withLetters=falsy"
 }
 ```
 
@@ -421,7 +420,7 @@ Input file with incorrect values:
 
 ```json
 {
-   "somePropName": "83280023120240014208594594"
+  "somePropName": "83280023120240014208594594"
 }
 ```
 
@@ -483,7 +482,7 @@ Example input file:
 
 ```json
 {
-   "somePropName": "POSTCODE"
+  "somePropName": "POSTCODE"
 }
 ```
 
@@ -491,7 +490,7 @@ Result:
 
 ```json
 {
-   "somePropName": "75-244"
+  "somePropName": "75-244"
 }
 ```
 
@@ -506,7 +505,7 @@ Example input file:
 
 ```json
 {
-   "somePropName": "STREET"
+  "somePropName": "STREET"
 }
 ```
 
@@ -514,9 +513,10 @@ Result:
 
 ```json
 {
-   "somePropName": "Przyjaźni 5"
+  "somePropName": "Przyjaźni 5"
 }
 ```
+
 ### CITY
 
 > :notebook_with_decorative_cover: **Description:** It generates city from list of available cities in Poland.
@@ -531,7 +531,7 @@ Input file with correct values:
 
 ```json
 {
-   "somePropName": "CITY|startAt=a"
+  "somePropName": "CITY|startAt=a"
 }
 ```
 
@@ -539,7 +539,7 @@ Input file with correct values:
 
 ```json
 {
-   "somePropName": "Aleksandrów Kujawski"
+  "somePropName": "Aleksandrów Kujawski"
 }
 ```
 
@@ -547,7 +547,7 @@ Input file with incorrect values:
 
 ```json
 {
-   "somePropName": "CITY|startAt=$"
+  "somePropName": "CITY|startAt=$"
 }
 ```
 
@@ -555,7 +555,7 @@ Input file with incorrect values:
 
 ```json
 {
-   "somePropName": "Warszawa"
+  "somePropName": "Warszawa"
 }
 ```
 
@@ -570,7 +570,7 @@ Example input file:
 
 ```json
 {
-   "somePropName": "VOIVODESHIP"
+  "somePropName": "VOIVODESHIP"
 }
 ```
 
@@ -578,7 +578,7 @@ Result:
 
 ```json
 {
-   "somePropName": "Mazowieckie"
+  "somePropName": "Mazowieckie"
 }
 ```
 
@@ -592,7 +592,7 @@ Example input file:
 
 ```json
 {
-   "somePropName": "COUNTY"
+  "somePropName": "COUNTY"
 }
 ```
 
@@ -600,7 +600,7 @@ Result:
 
 ```json
 {
-   "somePropName": "Bytom"
+  "somePropName": "Bytom"
 }
 ```
 
@@ -623,7 +623,7 @@ Input file with all properties:
 
 ```json
 {
-   "somePropName": "ADDRESS|cityPropName=cityKeyName,streetPropName=streetKeyName,postcodePropName=postcodeKeyName,voivodeshipPropName=voivodeshipKeyName,countyPropName=countyKeyName"
+  "somePropName": "ADDRESS|cityPropName=cityKeyName,streetPropName=streetKeyName,postcodePropName=postcodeKeyName,voivodeshipPropName=voivodeshipKeyName,countyPropName=countyKeyName"
 }
 ```
 
@@ -631,16 +631,19 @@ Input file with all properties:
 
 ```json
 {
-   "somePropName": {
-      "cityKeyName": "Bydgoszcz",
-      "streetKeyName": "Młyńska 167",
-      "postcodeKeyName": "85-226",
-      "voivodeshipKeyName": "Kujawsko-pomorskie",
-      "countyKeyName": "Bydgoszcz"
-   }
+  "somePropName": {
+    "cityKeyName": "Bydgoszcz",
+    "streetKeyName": "Młyńska 167",
+    "postcodeKeyName": "85-226",
+    "voivodeshipKeyName": "Kujawsko-pomorskie",
+    "countyKeyName": "Bydgoszcz"
+  }
 }
 ```
-> :warning: **WARNING:** If you set the `ADDRESS` properties with empty strings like this `ADDRESS|cityPropName=,streetPropName=, postcodePropName=,voivodeshipPropName=,countyPropName=` then you'll get empty object (`{}`)
+
+> :warning: **WARNING:** If you set the `ADDRESS` properties with empty strings like
+> this `ADDRESS|cityPropName=,streetPropName=, postcodePropName=,voivodeshipPropName=,countyPropName=` then you'll get
+> empty object (`{}`)
 
 # GOTCHA
 

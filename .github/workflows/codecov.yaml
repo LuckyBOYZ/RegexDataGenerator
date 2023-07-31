@@ -1,8 +1,5 @@
 name: Deploy Test Coverage to Codecov
 on:
-  push:
-    branches:
-      - main
   workflow_dispatch:
 jobs:
   codecovTrigger:
