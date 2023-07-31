@@ -18,6 +18,10 @@ jobs:
           java-version: 17
       - name: Install dependencies and build application
         run: mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+      - name: Add permissions
+        run: |
+          chmod +rwx /home/runner/work/RegexDataGenerator/RegexDataGenerator/target/RegexDataGenerator-jar-with-dependencies.jar && \
+          chmod +rwx /bin
       - name: Rename jar with dependencies
         run: |
           mv /home/runner/work/RegexDataGenerator/RegexDataGenerator/target/RegexDataGenerator-jar-with-dependencies.jar \
