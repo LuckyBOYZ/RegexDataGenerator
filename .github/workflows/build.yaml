@@ -20,7 +20,7 @@ jobs:
         run: mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
       - name: Rename jar with dependencies
         run: |
-          mv /home/runner/work/RegexDataGenerator/RegexDataGenerator/target/RegexDataGenerator-jar-with-dependencies.jar |
+          mv /home/runner/work/RegexDataGenerator/RegexDataGenerator/target/RegexDataGenerator-jar-with-dependencies.jar \
           /bin/RegexDataGenerator.jar
       - name: Commit and push jar file
         uses: actions-x/commit@v6
