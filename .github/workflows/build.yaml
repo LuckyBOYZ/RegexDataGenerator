@@ -19,14 +19,11 @@ jobs:
       - name: Install dependencies and build application
         run: mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
       - name: Add permissions
-        run: |
-          chmod +rwx /home/runner/work/RegexDataGenerator/RegexDataGenerator/target/RegexDataGenerator-jar-with-dependencies.jar
-      - name: Rename jar with dependencies
-        run: |
-          mv /home/runner/work/RegexDataGenerator/RegexDataGenerator/target/RegexDataGenerator-jar-with-dependencies.jar \
-          /bin/RegexDataGenerator.jar
+        run: chmod +rwx ./target/RegexDataGenerator-jar-with-dependencies.jar
+      - name: Move jar file to bin directory
+        run: mv ./target/RegexDataGenerator-jar-with-dependencies.jar ./bin/RegexDataGenerator.jar
       - name: Commit and push jar file
         uses: actions-x/commit@v6
         with:
           branch: main
-          files: /bin/RegexDataGenerator.jar
+          email: '${{github.actor}}@users.noreply.github.com'
