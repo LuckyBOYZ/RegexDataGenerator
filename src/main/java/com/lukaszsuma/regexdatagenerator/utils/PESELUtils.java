@@ -50,8 +50,15 @@ public class PESELUtils {
         }
         addComputedValue(monthNum, sb);
 
-        int dayNum = RANDOM.nextInt(canBeAsBornAfter2000 && onlyAdults ?
-                LocalDateTime.now().getDayOfMonth() : 1, dayRange + 1);
+        int currentDaysOfMonth = LocalDateTime.now().getDayOfMonth();
+        int outerBoundOfDays = dayRange + 1;
+        int dayNum;
+        if (currentDaysOfMonth == outerBoundOfDays) {
+            dayNum = currentDaysOfMonth;
+        } else {
+            dayNum = RANDOM.nextInt(canBeAsBornAfter2000 && onlyAdults ?
+                    currentDaysOfMonth : 1, outerBoundOfDays);
+        }
         addComputedValue(dayNum, sb);
 
         int serialNumberWithoutSex = RANDOM.nextInt(1000);

@@ -1,0 +1,23 @@
+name: Build And Push Jar To Repository
+on:
+  workflow_run:
+    workflows: [Deploy Test Coverage to Codecov]
+    types:
+      - completed
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install dependencies and build application
+        run: mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+      - name: Rename jar with dependencies
+        run: |
+          mv target/RegexDataGenerator-jar-with-dependencies.jar |
+          /bin/RegexDataGenerator.jar
+      - name: Commit and push jar file
+        uses: actions-x/commit@v6
+        with:
+          branch: main
+          files: /bin/RegexDataGenerator.jar
