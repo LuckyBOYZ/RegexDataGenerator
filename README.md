@@ -32,8 +32,8 @@ To run this application you have to install `java 17` on your machine.
 
 At the moment I didn't prepare any `Dockerfile` or API so the only one way for using it is run it on your local machine
 by command <br>
-`java -jar RegexDataGenerator.jar <ARGUMENTS>`. The latest version of application is put into `bin` directory. There are few
-arguments which you can add to command to customize how the application must work (but you don't need):
+`java -jar RegexDataGenerator.jar <ARGUMENTS>`. The latest version of application is put into `bin` directory. There are
+few arguments which you can add to command to customize how the application must work (but you don't need):
 
 |       **ARGUMENT NAME**       |                                                                        **DESCRIPTION**                                                                        |                   **VALUES**                    | **DEFAULT VALUE** |
 |:-----------------------------:|:-------------------------------------------------------------------------------------------------------------------------------------------------------------:|:-----------------------------------------------:|:-----------------:|
@@ -179,7 +179,7 @@ Here are all `Special Input Data` values and theirs configuration:
 | **PROPERTY NAME** |         **DESCRIPTION**         |          **POSSIBLE VALUE**          |
 |:-----------------:|:-------------------------------:|:------------------------------------:|
 |    **startAt**    |    First letter of the name     | every letter (a-z), case insensitive |
-|    **female**     | Does a name must be for female? |             true, false              |
+|    **female**     | Does a name must be for female? |          `true` or `false`           |
 
 **Example:**
 
@@ -240,7 +240,7 @@ Input startAt but female with `true` value:
 | **PROPERTY NAME** |          **DESCRIPTION**           |          **POSSIBLE VALUE**          |
 |:-----------------:|:----------------------------------:|:------------------------------------:|
 |    **startAt**    |    First letter of the surname     | every letter (a-z), case insensitive |
-|    **female**     | Does a surname must be for female? |             true, false              |
+|    **female**     | Does a surname must be for female? |          `true` or `false`           |
 
 **Example:**
 
@@ -346,8 +346,8 @@ Input file with incorrect values:
 |:-----------------:|:-------------------------------------------------------------------:|:----------------------------------:|
 |    **country**    |             Country from table with available countries             |      Available Country Table       |
 |   **bankName**    |                Bank name from table with bank names                 | Bank Name Table for chosen country |
-|   **formatted**   | Does iban have to be splitted by space between every 4th character? |            true, false             |
-|  **withLetters**  |          Does iban must contain letters at the beginning?           |            true, false             |
+|   **formatted**   | Does iban have to be splitted by space between every 4th character? |         `true` or `false`          |
+|  **withLetters**  |          Does iban must contain letters at the beginning?           |         `true` or `false`          |
 
 _AVAILABLE COUNTRY TABLE_
 
