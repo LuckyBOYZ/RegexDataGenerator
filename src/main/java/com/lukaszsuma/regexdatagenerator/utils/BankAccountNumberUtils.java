@@ -1,14 +1,21 @@
 package com.lukaszsuma.regexdatagenerator.utils;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.util.Random;
 
 public class BankAccountNumberUtils {
 
+    private static final Logger logger = LogManager.getLogger(BankAccountNumberUtils.class);
     private static final Random RANDOM = new Random();
     private static final StringBuilder SB = new StringBuilder();
 
     public static String generateBankAccountNumber(String country, String bankName, boolean formatted,
                                                    boolean withLetters, int defaultIndexForBankName) {
+        logger.debug("generateBankAccountNumber");
+        logger.debug("Method parameters: country={}, bankName={}, formatted={}, withLetters={}, defaultIndexForBankName={}",
+                country, bankName, formatted, withLetters, defaultIndexForBankName);
         String bankId = PolandBankId.values()[defaultIndexForBankName].getId();
         if (bankName != null && !bankName.isBlank()) {
             try {
@@ -63,10 +70,12 @@ public class BankAccountNumberUtils {
 
         String result = SB.toString().trim();
         SB.delete(0, SB.length());
+        logger.debug("Generated bank account number: {}", result);
         return result;
     }
 
     private static boolean isCountryValid(String countryLetters) {
+        logger.debug("isCountryValid");
         boolean isValid = false;
         if (countryLetters != null && !countryLetters.isBlank() && countryLetters.length() == 2) {
             try {
@@ -79,6 +88,7 @@ public class BankAccountNumberUtils {
     }
 
     private static int generateControlNumber(String[] arrOfNums) {
+        logger.debug("generateControlNumber");
         int sumControlNumber = Integer.parseInt(arrOfNums[0]) * 7 +
                 Integer.parseInt(arrOfNums[1]) +
                 Integer.parseInt(arrOfNums[2]) * 3 +

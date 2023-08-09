@@ -34,9 +34,11 @@
         <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
         <jacoco-maven-plugin.version>0.8.10</jacoco-maven-plugin.version>
         <maven-jar-plugin.version>3.3.0</maven-jar-plugin.version>
+        <log4j2.version>2.20.0</log4j2.version>
     </properties>
 
     <dependencies>
+        <!-- CORE -->
         <dependency>
             <groupId>com.github.curious-odd-man</groupId>
             <artifactId>rgxgen</artifactId>
@@ -46,6 +48,16 @@
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
             <version>${jackson-databind.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>${log4j2.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>${log4j2.version}</version>
         </dependency>
 
         <!-- TEST -->

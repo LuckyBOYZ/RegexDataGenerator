@@ -43,15 +43,6 @@ public class RegexDataGeneratorTest {
     }
 
     @Test
-    void aabc() throws IOException {
-        //given
-        String inputFileName = "abc.json";
-        // when
-        Map<String, String> resultFromFile = (Map<String, String>) generateResultByFileName(inputFileName);
-        // then
-    }
-
-    @Test
     void shouldCreateResultFileInTheSameDirectoryWithDefaultValuesForEverySpecialInputData() throws IOException {
         //given
         String inputFileName = "allSpecialInputDataTest.json";

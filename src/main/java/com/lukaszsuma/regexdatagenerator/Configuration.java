@@ -1,16 +1,20 @@
 package com.lukaszsuma.regexdatagenerator;
 
 import com.lukaszsuma.regexdatagenerator.utils.StringSeparator;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.*;
 
 @SuppressWarnings("rawtypes")
 class Configuration {
 
+    private static final Logger logger = LogManager.getLogger(Configuration.class);
     private final Map<String, Object> configMap;
     private String prefixValue = ConfigurationPropertiesNames.PREFIX_AND_SUFFIX_FOR_SPECIAL_NAMES.getDefaultValue();
 
     public Configuration(String... appArgs) {
+        logger.debug("constructor");
         this.configMap = new HashMap<>(ConfigurationPropertiesNames.values().length);
         for (ConfigurationPropertiesNames property : ConfigurationPropertiesNames.values()) {
             Class valueType = property.getTypeOfValue();
@@ -77,9 +81,13 @@ class Configuration {
                 this.configMap.computeIfPresent(property.getPropertyName(), (k, v) -> this.prefixValue + value + this.prefixValue);
             }
         }
+
+        logger.info("Configuration is done. Current values:");
+        this.configMap.forEach((k,v) -> logger.info("Property '{}' with value {} ", k, v));
     }
 
     private Object getValueByPropertyName(String propertyName) {
+        logger.debug("getValueByPropertyName");
         return this.configMap.entrySet().stream()
                 .filter(e -> e.getKey().equals(propertyName))
                 .findFirst()
@@ -89,16 +97,19 @@ class Configuration {
     }
 
     public String getStringValueByPropertyName(String propertyName) {
+        logger.debug("getStringValueByPropertyName");
         Object value = getValueByPropertyName(propertyName);
         return (String) value;
     }
 
     public int getIntegerValueByPropertyName(String propertyName) {
+        logger.debug("getIntegerValueByPropertyName");
         Object value = getValueByPropertyName(propertyName);
         return (int) value;
     }
 
     public boolean getBooleanValueByPropertyName(String propertyName) {
+        logger.debug("getBooleanValueByPropertyName");
         Object value = getValueByPropertyName(propertyName);
         return (boolean) value;
     }

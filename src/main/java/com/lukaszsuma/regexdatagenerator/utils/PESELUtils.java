@@ -1,5 +1,8 @@
 package com.lukaszsuma.regexdatagenerator.utils;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
@@ -7,6 +10,7 @@ import java.util.Random;
 
 public class PESELUtils {
 
+    private static final Logger logger = LogManager.getLogger(PESELUtils.class);
     private static final Random RANDOM = new Random();
     private static final Map<Integer, Integer> DAYS_PER_MONTH = new HashMap<>(12, 1f);
     private static final int[] FEMALE_NUMS = {0, 2, 4, 6, 8};
@@ -27,6 +31,9 @@ public class PESELUtils {
     }
 
     public static String generateRandomPESEL(boolean canBeAsBornAfter2000, boolean isFemale, boolean onlyAdults) {
+        logger.debug("generateRandomPESEL");
+        logger.debug("Method parameters: canBeAsBornAfter2000={}, isFemale={}, onlyAdults={}", canBeAsBornAfter2000,
+                isFemale, onlyAdults);
         StringBuilder sb = new StringBuilder();
 
         int yearNum = generateYearByConditions(canBeAsBornAfter2000, onlyAdults);
@@ -80,21 +87,25 @@ public class PESELUtils {
         String[] arrOfNums = sb.toString().split(StringSeparator.EMPTY_STRING);
         int controlNumber = computeControlNumber(arrOfNums);
         sb.append(controlNumber);
+        logger.debug("Generated PESEL: {}", sb);
         return sb.toString();
     }
 
     private static int generateYearByConditions(boolean canBeAsBornAfter2000, boolean onlyAdults) {
+        logger.debug("generateYearByConditions");
         int twoLastDigitsOfCurrentYear = getLastDigitsOfCurrentYear();
         int endIndex = canBeAsBornAfter2000 ? onlyAdults ? twoLastDigitsOfCurrentYear - 17 : twoLastDigitsOfCurrentYear : 100;
         return RANDOM.nextInt(0, endIndex);
     }
 
     private static int getLastDigitsOfCurrentYear() {
+        logger.debug("getLastDigitsOfCurrentYear");
         int currentYear = LocalDateTime.now().getYear();
         return Integer.parseInt(String.valueOf(currentYear).substring(2));
     }
 
     private static void addComputedValue(int num, StringBuilder sb) {
+        logger.debug("addComputedValue");
         if (num < 10) {
             sb.append("0").append(num);
         } else {
@@ -103,6 +114,7 @@ public class PESELUtils {
     }
 
     private static int computeControlNumber(String[] arrOfNums) {
+        logger.debug("computeControlNumber");
         String sumControlNumber = String.valueOf(Integer.parseInt(arrOfNums[0]) +
                 Integer.parseInt(arrOfNums[1]) * 3 +
                 Integer.parseInt(arrOfNums[2]) * 7 +

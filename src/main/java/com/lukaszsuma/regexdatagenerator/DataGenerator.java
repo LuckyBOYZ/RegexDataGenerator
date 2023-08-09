@@ -4,10 +4,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.curiousoddman.rgxgen.RgxGen;
 import com.lukaszsuma.regexdatagenerator.utils.StringSeparator;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.SimpleDateFormat;
@@ -18,8 +19,8 @@ import java.util.regex.Pattern;
 @SuppressWarnings({"unchecked", "rawtypes", "UnusedReturnValue"})
 class DataGenerator {
 
-    private static final Path JAR_START_DIR = FileSystems.getDefault()
-            .getPath(StringSeparator.EMPTY_STRING).toAbsolutePath();
+    private static final Logger logger = LogManager.getLogger(DataGenerator.class);
+    private static final Path JAR_START_DIR = Path.of(System.getProperty("user.dir"));
     public static final String DEFAULT_KEY_NAME_FOR_ONLY_ARRAY_OF_STRINGS = "array";
     private final Configuration configuration;
     private final ObjectMapper objectMapper;
@@ -31,6 +32,7 @@ class DataGenerator {
     private final boolean isFormattedResult;
 
     public DataGenerator(Configuration configuration, ObjectMapper objectMapper) {
+        logger.debug("constructor");
         this.configuration = configuration;
         String separator = configuration.getStringValueByPropertyName(
                 ConfigurationPropertiesNames.SPECIAL_INPUT_DATA_SEPARATOR.getPropertyName());
@@ -42,6 +44,8 @@ class DataGenerator {
     }
 
     public List<Map<String, Object>> generateData() throws IOException {
+        logger.debug("generateData");
+        logger.debug("The application is ran under {} path", JAR_START_DIR);
         String str = Files.readString(JAR_START_DIR.resolve(getFileName()));
         Object parsedJson = objectMapper.readValue(str, Object.class);
         if (parsedJson instanceof List<?> list) {
@@ -76,6 +80,7 @@ class DataGenerator {
     }
 
     public void createResult() throws IOException {
+        logger.debug("createResult");
         String fileName = getFileName();
         fileName = fileName.replace(".json", "_result.json");
         File file = JAR_START_DIR.resolve(fileName).toFile();
@@ -99,10 +104,11 @@ class DataGenerator {
         } else {
             this.objectMapper.writeValue(file, resultToWrite);
         }
-        System.out.printf("Result file '%s' was created under path %s", fileName, JAR_START_DIR);
+        logger.info("The result file has been created under path {}", JAR_START_DIR.resolve(file.getName()));
     }
 
     private String generateNewResultFilename(String currentNameWithoutExtension) {
+        logger.debug("generateNewResultFilename");
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMddHHmmssSSS");
         String format = simpleDateFormat.format(new Date());
         return currentNameWithoutExtension.concat(StringSeparator.UNDERSCORE.concat(format).concat(".json"));
@@ -111,6 +117,7 @@ class DataGenerator {
     private Map<String, Object> generateObjectBasedOnRegexMap(
             Map<String, Object> parsedObjectMap, Map<String, Object> regexMap, AtomicInteger id)
             throws JsonProcessingException {
+        logger.debug("generateObjectBasedOnRegexMap");
         Map<String, Object> result = new HashMap<>();
         RgxGen rgxGen;
         for (Map.Entry<String, Object> entry : parsedObjectMap.entrySet()) {
@@ -143,6 +150,7 @@ class DataGenerator {
     }
 
     private boolean isSpecialInputData(String value) {
+        logger.debug("isSpecialInputData");
         boolean isSpecialInputData = false;
         List<String> listOfAvailableInputData = getListOfAvailableInputData();
         for (String element : listOfAvailableInputData) {
@@ -155,10 +163,12 @@ class DataGenerator {
     }
 
     private String getFileName() {
+        logger.debug("getFileName");
         return this.configuration.getStringValueByPropertyName(ConfigurationPropertiesNames.JSON_FILE_NAME.getPropertyName());
     }
 
     private int getIterationNumberFromParsedList(List<?> list) {
+        logger.debug("getIterationNumberFromParsedList");
         int number = getDefaultIterationNumberFromConfiguration();
         if (list.size() > 1) {
             try {
@@ -170,6 +180,7 @@ class DataGenerator {
     }
 
     private int getIterationNumberFromParsedObject(Map<String, Object> objectMap) {
+        logger.debug("getIterationNumberFromParsedObject");
         Object value = objectMap.get(this.configuration
                 .getStringValueByPropertyName(ConfigurationPropertiesNames.ITERATION_FIELD_NAME.getPropertyName()));
         if (value == null) {
@@ -184,6 +195,7 @@ class DataGenerator {
     }
 
     private List<String> generateListOfStringsBasedOnRegexMap(List<?> list, Map<String, Object> regexMap, String key, String value) {
+        logger.debug("generateListOfStringsBasedOnRegexMap");
         List<String> arr = new ArrayList<>();
         RgxGen rgxGen = getRgxGenFromRegexMap(regexMap, key, value);
         int numberOfElements = getIterationNumberFromParsedList(list);
@@ -194,6 +206,7 @@ class DataGenerator {
     }
 
     private RgxGen getRgxGenFromRegexMap(Map<String, Object> regexMap, String key, String value) {
+        logger.info("getRgxGenFromRegexMap");
         RgxGen rgxGen = (RgxGen) regexMap.get(key);
         if (rgxGen == null) {
             rgxGen = new RgxGen(value);
@@ -203,6 +216,7 @@ class DataGenerator {
     }
 
     private Map<String, Object> getInnerRegexMapFromRegexMap(Map<String, Object> regexMap, String key) {
+        logger.debug("getInnerRegexMapFromRegexMap");
         Map<String, Object> innerRegexMap = (Map<String, Object>) regexMap.get(key);
         if (innerRegexMap == null) {
             innerRegexMap = new HashMap<>();
@@ -213,6 +227,7 @@ class DataGenerator {
 
     private List<Map<String, Object>> generateListOfObjectsBasedOnRegexMap(
             Map<String, Object> regexMap, Map<String, Object> parsedObject, String key) throws JsonProcessingException {
+        logger.debug("generateListOfObjectsBasedOnRegexMap");
         List<Map<String, Object>> arr = new ArrayList<>();
         Map<String, Object> innerRegexMap = getInnerRegexMapFromRegexMap(regexMap, key);
         int iterationNumber = getIterationNumberFromParsedObject(parsedObject);
@@ -224,10 +239,12 @@ class DataGenerator {
     }
 
     private Integer getDefaultIterationNumberFromConfiguration() {
+        logger.debug("getDefaultIterationNumberFromConfiguration");
         return this.configuration.getIntegerValueByPropertyName(ConfigurationPropertiesNames.DEFAULT_ITERATION_NUMBER.getPropertyName());
     }
 
     private List<String> getListOfAvailableInputData() {
+        logger.debug("getListOfAvailableInputData");
         return Arrays.stream(SpecialInputData.values())
                 .map(SpecialInputData::name)
                 .toList();
@@ -235,6 +252,7 @@ class DataGenerator {
 
     private boolean handleSpecialInput(String key, String rawValue, Map<String, Object> result, AtomicInteger id)
             throws JsonProcessingException {
+        logger.debug("handleSpecialInput");
         boolean isSpecialInputData = isSpecialInputData(rawValue);
         if (!isSpecialInputData) {
             return false;

@@ -4,6 +4,8 @@ import com.lukaszsuma.regexdatagenerator.utils.BankAccountNumberUtils;
 import com.lukaszsuma.regexdatagenerator.utils.PESELUtils;
 import com.lukaszsuma.regexdatagenerator.utils.PolandBankId;
 import com.lukaszsuma.regexdatagenerator.utils.StringSeparator;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -22,18 +24,21 @@ enum SpecialInputData {
     NAME(List.of("startAt", "female")) {
         @Override
         public Function<String, Optional<String>> generateData() {
+            logger.debug("NAME generateData");
             return generateNameOrSurname(true);
         }
     },
     SURNAME(List.of("startAt", "female")) {
         @Override
         public Function<String, Optional<String>> generateData() {
+            logger.debug("SURNAME generateData");
             return generateNameOrSurname(false);
         }
     },
     PESEL(List.of("bornAfter2000", "female", "onlyAdults")) {
         @Override
         public Function<String, Optional<String>> generateData() {
+            logger.debug("PESEL generateData");
             return (rawValue) -> {
                 String[] conditions = EMPTY_ARRAY;
                 if (rawValue.contains(specialInputDataSeparator)) {
@@ -53,6 +58,7 @@ enum SpecialInputData {
     IBAN(List.of("country", "bankName", "formatted", "withLetters")) {
         @Override
         public Function<String, Optional<String>> generateData() {
+            logger.debug("IBAN generateData");
             return (rawValue) -> {
                 String[] conditions = EMPTY_ARRAY;
                 if (rawValue.contains(specialInputDataSeparator)) {
@@ -75,46 +81,54 @@ enum SpecialInputData {
     ID(Collections.emptyList()) {
         @Override
         public Function<String, Optional<String>> generateData() {
+            logger.debug("ID generateData");
             return (rawVal) -> Optional.of(StringSeparator.EMPTY_STRING);
         }
     },
     POSTCODE(Collections.emptyList()) {
         @Override
         public Function<String, Optional<String>> generateData() {
+            logger.debug("POSTCODE generateData");
             return (rawValue) -> getValueFromAddress(rawValue, POSTCODE);
         }
     },
     STREET(Collections.emptyList()) {
         @Override
         public Function<String, Optional<String>> generateData() {
+            logger.debug("STREET generateData");
             return (rawValue) -> getValueFromAddress(rawValue, STREET);
         }
     },
     CITY(List.of("startAt")) {
         @Override
         public Function<String, Optional<String>> generateData() {
+            logger.debug("CITY generateData");
             return (rawValue) -> getValueFromAddress(rawValue, CITY);
         }
     },
     VOIVODESHIP(Collections.emptyList()) {
         @Override
         public Function<String, Optional<String>> generateData() {
+            logger.debug("VOIVODESHIP generateData");
             return (rawValue) -> getValueFromAddress(rawValue, VOIVODESHIP);
         }
     },
     COUNTY(Collections.emptyList()) {
         @Override
         public Function<String, Optional<String>> generateData() {
+            logger.debug("COUNTY generateData");
             return (rawValue) -> getValueFromAddress(rawValue, COUNTY);
         }
     },
     ADDRESS(Arrays.asList("cityPropName", "streetPropName", "postcodePropName", "voivodeshipPropName", "countyPropName")) {
         @Override
         public Function<String, Optional<String>> generateData() {
+            logger.debug("ADDRESS generateData");
             return (rawValue) -> getValueFromAddress(rawValue, ADDRESS);
         }
     };
 
+    private static final Logger logger = LogManager.getLogger(SpecialInputData.class);
     private static final Random RANDOM = new Random();
     private static final String[] EMPTY_ARRAY = new String[]{};
     private static final String DEFAULT_MAN_NAME = "Jan";
@@ -131,6 +145,7 @@ enum SpecialInputData {
     }
 
     public static void setSpecialInputDataSeparator(String separator) {
+        logger.debug("setSpecialInputDataSeparator");
         specialInputDataSeparator = separator;
         specialInputDataSeparatorRegex = Pattern.quote(separator);
     }
@@ -138,6 +153,7 @@ enum SpecialInputData {
     public abstract Function<String, Optional<String>> generateData();
 
     private static Function<String, Optional<String>> generateNameOrSurname(boolean isName) {
+        logger.debug("generateNameOrSurname");
         return (rawValue) -> {
             String[] conditions = EMPTY_ARRAY;
             if (rawValue.contains(specialInputDataSeparator)) {
@@ -171,12 +187,14 @@ enum SpecialInputData {
                                 }
                         )));
             } catch (IOException e) {
+                logger.error("Problem with reading data from file", e);
                 throw new RuntimeException(e);
             }
         };
     }
 
     private static Map<String, String> getMapOfParamsFromConditions(String[] conditionsFromUser, List<String> conditionsList) {
+        logger.debug("getMapOfParamsFromConditions");
         return Stream.of(conditionsFromUser)
                 .map(el -> el.split(StringSeparator.EQUALS))
                 .collect(Collectors.toMap(el -> el[0], el -> el[1], (oldOne, newOne) -> oldOne))
@@ -187,6 +205,7 @@ enum SpecialInputData {
     }
 
     private static String[] getConditionsFromRawValue(String rawValue) {
+        logger.debug("getConditionsFromRawValue");
         String[] split = rawValue.split(specialInputDataSeparatorRegex, 2);
         String[] result = split[1].split(StringSeparator.COMMA);
         for (String el : result) {
@@ -198,6 +217,7 @@ enum SpecialInputData {
     }
 
     private static Optional<String> getValueFromAddress(String rawValue, SpecialInputData specialInputData) {
+        logger.debug("getValueFromAddress");
         String[] conditions = EMPTY_ARRAY;
         if (rawValue.contains(specialInputDataSeparator)) {
             conditions = getConditionsFromRawValue(rawValue);
@@ -252,6 +272,7 @@ enum SpecialInputData {
                 return Optional.of(split[index]);
             }
         } catch (IOException e) {
+            logger.error("Problem with reading data from file", e);
             throw new RuntimeException(e);
         }
     }
