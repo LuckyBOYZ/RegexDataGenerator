@@ -73,7 +73,7 @@ Arguments for docker are placed in _AVAILABLE ARGUMENTS FOR APPLICATION_ table i
 For using those arguments please add `-e` to `docker run...` command e.g.:<br>
 `docker run --name <YOUR_CONTAINER_NAME> -it -e ITERATION_FIELD_NAME=it -v <DIRECTORY_WITH_JSON_FILE>:/app/file <YOUR_IMAGE_NAME>`
 
-> :warning: **WARNING:** Please be aware that `<DIRECTORY_WITH_JSON_FILE>` **ALWAYS** refers to **DIRECTORY** in docker command, not to file.
+> :warning: **WARNING:** Please be aware that `<DIRECTORY_WITH_JSON_FILE>` in docker command **ALWAYS** refers to **DIRECTORY**, not to the file.
 > If you use the path like `/usr/some/direcotry/myJson.json` then the application will throw an error.
 
 # How To Use
