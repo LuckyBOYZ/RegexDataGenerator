@@ -32,8 +32,7 @@ To run this application you have to install `java 17` on your machine if you wan
 install `docker` if you want to run in that way.
 
 > :notebook_with_decorative_cover: **PLEASE NOTE:** Before using this application first of all you **have to**
-> prepare `file.json`<br>
-> It is described in section [How To Use](https://github.com/LuckyBOYZ/RegexDataGenerator#how-to-use)
+> prepare `file.json`. It is described in section [How To Use](https://github.com/LuckyBOYZ/RegexDataGenerator#how-to-use)
 
 # How To Run
 
@@ -79,8 +78,8 @@ For using those arguments please add `-e` to `docker run...` command e.g.:<br>
 
 # How To Use
 
-For using `RegexDataGenerator` you have to prepare specific json file and place it in the same
-directory where you have an `jar` file or where you create `volume` for docker. This is an example:
+For using `RegexDataGenerator` you have to prepare specific `json` file and place it in the same
+directory where you have an `jar` file or where you create `volume` for docker. This is an example of content of json file:
 
 ```json
 [
@@ -111,32 +110,30 @@ directory where you have an `jar` file or where you create `volume` for docker. 
 
 ```
 
-Apart of `$iteration$` every properties keys are up to you (this property will be explained later). <br>
-The value for those properties can be typical regex, or you can
-use [Special Input Data](https://github.com/LuckyBOYZ/RegexDataGenerator#special-input-data) name. <br>
-You can use either `array` and `object` as a root in config file. <br>
+Apart of `$iteration$` key, every property key is up to you (`$iteration$` property will be explained later). <br>
+The value for those properties can be a classic regular expression, or you can
+use [Special Input Data](https://github.com/LuckyBOYZ/RegexDataGenerator#special-input-data) name. You can use either `array` and `object` as a root in config file. <br>
 Below is an overview with the most important information about creating configuration for every data type:
 
 ### string
 
-You can use regular expression, some hardcoded value (e.g. `abcd`) or `Special Input Data` name (please check **table of
-contents**)
+You can use regular expression, some hardcoded value (e.g. `abcd`) or [Special Input Data](https://github.com/LuckyBOYZ/RegexDataGenerator#special-input-data) name.
 
 ### object
 
-The name for every property is up to you apart of `$iteration$`. This property tells application how many objects must
+The name for every property is up to you apart of `$iteration$`. This property tells the application how many objects must
 be created, and it works **ONLY** if the object is inside of array.
 
 ### array
 
-Array requires 1 element (string or object) but can be used second optional element - how many elements application must
-create (value must be the number). If the second element is not a number the default value for iteration (10) will be
+Array requires 1 element (string or object) but can be used a second optional element - how many elements the application has to
+create. A value for second parameter **HAS TO** be a number. If the second element is not a number the default value for iteration (10) will be
 used.
 String and object must be created in the same way as it is described above.
 
 # Special Input Data
 
-You can use special values to create some random data but without regular expression. <br>
+You can use special values for creating some a random data but without regular expression. <br>
 Here you have an example of file:
 
 ```json
@@ -182,17 +179,17 @@ and this is an example result:
 ]
 ```
 
-There are 2 ways to use special values:
+There are 2 ways for using special values:
 
 1. use only name of special value (e.g. `SURNAME`)
-2. use name of special value with parameters. If some special input data has parameters, then after special name **MUST
-   ** be used pipe -> `|`. You can use only some parameters instead of all of them.
+2. use name of special value with parameters (if any). If some special input data has parameters, then after special 
+name **HAS TO** be used a value for `specialInputDataSeparator` argument (default is a pipe -> `|`). You don't have to 
+use all parameters for Special Input Data.
 
-> :warning: **WARNING:** Please be aware that using `|` without any property after this will cause that this value will
+> :warning: **WARNING:** Please be aware that using `specialInputDataSeparator` value without any property after this will cause that this value will
 > be omitted in the result!
-> Here are all `Special Input Data` values and theirs configuration:
 
-> :warning: **WARNING:** When you're using properties with `Special Input Data` you **MUST** use them like _key_=_value_
+> :warning: **WARNING:** When you're using properties with `Special Input Data` you **HAVE TO** use them as _key_=_value_
 > and every property must be seperated by comma (`,`) from another one like this
 > _key1_=_value1_,_key2_=_value2_ <br>
 > You can't use empty string as a kay or value because property will be omitted in the result.
