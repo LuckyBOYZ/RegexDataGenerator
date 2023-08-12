@@ -8,8 +8,8 @@
 1. [Description](https://github.com/LuckyBOYZ/RegexDataGenerator#description) <br>
 2. [Requirements](https://github.com/LuckyBOYZ/RegexDataGenerator#requirements) <br>
 3. [How To Run](https://github.com/LuckyBOYZ/RegexDataGenerator#how-to-run) <br>
-   1. [Running by using java](https://github.com/LuckyBOYZ/RegexDataGenerator#running-by-using-java)
-   2. [Running by using docker](https://github.com/LuckyBOYZ/RegexDataGenerator#running-by-using-docker)
+    1. [Running by using java](https://github.com/LuckyBOYZ/RegexDataGenerator#running-by-using-java)
+    2. [Running by using docker](https://github.com/LuckyBOYZ/RegexDataGenerator#running-by-using-docker)
 4. [How To Use](https://github.com/LuckyBOYZ/RegexDataGenerator#how-to-use) <br>
 5. [Special Input Data](https://github.com/LuckyBOYZ/RegexDataGenerator#special-input-data) <br>
 6. [TODO](https://github.com/LuckyBOYZ/RegexDataGenerator#todo) <br>
@@ -19,8 +19,8 @@
 
 This application lets you save a time on creating dummy data for example when you want to use `json-server`
 to create API for your front-end application. <br>
-In short: RegexDataGenerator is using regular expressions to generate json file based on regular expression or by
-special property value to generate random real data (like PESEL or polish names).
+In short: RegexDataGenerator is generating json file based on json file with regular expressions or with
+special properties to generate random real data (like PESEL or polish names).
 
 > :notebook_with_decorative_cover: **WORTH TO MENTION:** every available syntax for regular expressions you can
 > check [here](https://github.com/curious-odd-man/RgxGen#supported-syntax)
@@ -28,36 +28,54 @@ special property value to generate random real data (like PESEL or polish names)
 
 # Requirements
 
-To run this application you have to install `java 17` on your machine or install `docker` if you want to run in that way.<br>
+To run this application you have to install `java 17` on your machine if you want to use `jar` file directly or
+install `docker` if you want to run in that way.
 
-> :notebook_with_decorative_cover: **PLEASE NOTE:** Before using this application first of all you **have to** prepare `file.json`<br>
+> :notebook_with_decorative_cover: **PLEASE NOTE:** Before using this application first of all you **have to**
+> prepare `file.json`<br>
 > It is described in section [How To Use](https://github.com/LuckyBOYZ/RegexDataGenerator#how-to-use)
 
 # How To Run
 
+_AVAILABLE ARGUMENTS FOR APPLICATION_
+
+|   **JAR ARGUMENT NAME**   | **DOCKER ARGUMENT ENV NAME** |                                                                        **DESCRIPTION**                                                                        |                   **VALUES**                    | **DEFAULT VALUE** |
+|:-------------------------:|:----------------------------:|:-------------------------------------------------------------------------------------------------------------------------------------------------------------:|:-----------------------------------------------:|:-----------------:|
+|    iterationFieldName     |     ITERATION_FIELD_NAME     |                 name of 'how many objects have to be created in array' key property in json. This prop is **only** used for objects in array.                 |        every valid name for key in json         |     iteration     |
+|      iterationNumber      |       ITERATION_NUMBER       |                                                            value for `iterationFieldName` argument                                                            |            every number more than 0             |        10         |
+|       jsonFileName        |        JSON_FILE_NAME        | name of input file - it can be path but file **HAS TO** be inside the same folder as application (e.g. dummy/test.jar and file is under dummy/test/file.json) | every valid path to file with `.json` extension |     file.json     |
+|      prefixAndSuffix      |      PREFIX_AND_SUFFIX       |     character which is used before and after special keys. At the moment this property is used only for creating `iterationFieldName` as a key in object      |                 every character                 |         $         |
+| specialInputDataSeparator | SPECIAL_INPUT_DATA_SEPARATOR |                                               separator between `SpecialInputData` name and properties for this                                               |                 every character                 |        \|         |
+|     isFormattedResult     |     IS_FORMATTED_RESULT      |                                               whether the result must be formatted (multiline and indentations)                                               |                `true` or `false`                |      `false`      |
+
 ## Running by using java
 
 For using the application you have to run command `java -jar RegexDataGenerator.jar <ARGUMENTS>`.<br>
-The latest version of application is placed into `bin` directory. There are few arguments which you can add to command to customize how the application must work (but you don't have to):
-
-|       **ARGUMENT NAME**       |                                                                        **DESCRIPTION**                                                                        |                   **VALUES**                    | **DEFAULT VALUE** |
-|:-----------------------------:|:-------------------------------------------------------------------------------------------------------------------------------------------------------------:|:-----------------------------------------------:|:-----------------:|
-|    **iterationFieldName**     |                 name of 'how many objects have to be created in array' key property in json. This prop is **only** used for objects in array.                 |        every valid name for key in json         |     iteration     |
-|      **iterationNumber**      |                                                            value for `iterationFieldName` argument                                                            |            every number more than 0             |        10         |
-|       **jsonFileName**        | name of input file - it can be path but file **HAS TO** be inside the same folder as application (e.g. dummy/test.jar and file is under dummy/test/file.json) | every valid path to file with `.json` extension |     file.json     |
-|      **prefixAndSuffix**      |     character which is used before and after special keys. At the moment this property is used only for creating `iterationFieldName` as a key in object      |                 every character                 |         $         |
-| **specialInputDataSeparator** |                                               separator between `SpecialInputData` name and properties for this                                               |                 every character                 |        \|         |
-|     **isFormattedResult**     |                                               whether the result must be formatted (multiline and indentations)                                               |                `true` or `false`                |      `false`      |
+The latest version of application is placed into `bin` directory. There are few arguments which you can add to command
+to customize how the application must work (but you don't have to). Those arguments are placed in _AVAILABLE ARGUMENTS FOR APPLICATION_
+table (please use names from `JAR ARGUMENT NAME` column).
 
 Those arguments **HAVE TO** be seperated by `=`
-e.g. `java -jar RegexDataGenerator.jar jsonFileName=test.json iterationFieldName=it` <br>
+e.g. `java -jar RegexDataGenerator.jar jsonFileName=test.json iterationFieldName=it`.
 The result will be always in the same directory as the application is run.
+
+> :warning: **WARNING:** If you use `jsonFileName` for `java` command then it will refer to **FILE**, not to **DIRECTORY**<br>
+> but it can refer to deeper directory relative to current path e.g. if you have `jar` file under `/usr/my/path/app.jar` path<br>
+> then you can place you json file under `/usr/my/path/additional/dir/file.json` path. To recap: `json.file` has to be<br>
+> in the same directory or in directory which is relative to directory with `jar` file.
 
 ## Running by using docker
 
 For using docker you have to create an image by command `docker build -t <YOUR_IMAGE_NAME>`. After that you have to<br>
 run it by command<br>
-`docker run --name <YOUR_CONTAINER_NAME> -it -v <DIRECTORY_WITH_JSON_FILE>:/app/file <YOUR_IMAGE_NAME>`
+`docker run --name <YOUR_CONTAINER_NAME> -it -v <DIRECTORY_WITH_JSON_FILE>:/app/file <YOUR_IMAGE_NAME>`<br>
+You can customize the application in the same way as it mentioned in [Running by using java](https://github.com/LuckyBOYZ/RegexDataGenerator#running-by-using-java) section.<br>
+Arguments for docker are placed in _AVAILABLE ARGUMENTS FOR APPLICATION_ table in `DOCKER ARGUMENT ENV NAME` column.<br>
+For using those arguments please add `-e` to `docker run...` command e.g.:<br>
+`docker run --name <YOUR_CONTAINER_NAME> -it -e ITERATION_FIELD_NAME=it -v <DIRECTORY_WITH_JSON_FILE>:/app/file <YOUR_IMAGE_NAME>`
+
+> :warning: **WARNING:** Please be aware that `<DIRECTORY_WITH_JSON_FILE>` **ALWAYS** refers to **DIRECTORY** in docker command, not to file.
+> If you use the path like `/usr/some/direcotry/myJson.json` then the application will throw an error.
 
 # How To Use
 
@@ -66,29 +84,29 @@ directory where you have an `jar` file or where you create `volume` for docker. 
 
 ```json
 [
-   {
-      "$iteration$": 7,
-      "threeDigits": "\\d{3}",
-      "sixLettersLowercase": "[a-z]{6}",
-      "arrayWithThreeStrings": [
-         "\\w{1,5}",
-         3
-      ],
-      "objectWithTwoProperties": {
-         "someUppercaseTwoLetters": "[A-Z]{2}",
-         "arrayWithLowercaseThreeLettersAndOneNumber": [
-            "[a-z]{3}\\d",
-            2
-         ]
-      },
-      "arrayOfTwoObjects": [
-         {
-            "$iteration$": 2,
-            "name": "name[A-C]{3}",
-            "surname": "surname[D-F]{2}"
-         }
+  {
+    "$iteration$": 7,
+    "threeDigits": "\\d{3}",
+    "sixLettersLowercase": "[a-z]{6}",
+    "arrayWithThreeStrings": [
+      "\\w{1,5}",
+      3
+    ],
+    "objectWithTwoProperties": {
+      "someUppercaseTwoLetters": "[A-Z]{2}",
+      "arrayWithLowercaseThreeLettersAndOneNumber": [
+        "[a-z]{3}\\d",
+        2
       ]
-   }
+    },
+    "arrayOfTwoObjects": [
+      {
+        "$iteration$": 2,
+        "name": "name[A-C]{3}",
+        "surname": "surname[D-F]{2}"
+      }
+    ]
+  }
 ]
 
 ```
@@ -123,19 +141,19 @@ Here you have an example of file:
 
 ```json
 [
-   {
-      "$iteration$": 1,
-      "name": "NAME",
-      "surname": "SURNAME",
-      "pesel": "PESEL",
-      "iban": "IBAN",
-      "id": "ID",
-      "city": "CITY",
-      "street": "STREET",
-      "postcode": "POSTCODE",
-      "voivodeship": "VOIVODESHIP",
-      "address": "ADDRESS"
-   }
+  {
+    "$iteration$": 1,
+    "name": "NAME",
+    "surname": "SURNAME",
+    "pesel": "PESEL",
+    "iban": "IBAN",
+    "id": "ID",
+    "city": "CITY",
+    "street": "STREET",
+    "postcode": "POSTCODE",
+    "voivodeship": "VOIVODESHIP",
+    "address": "ADDRESS"
+  }
 ]
 ```
 
@@ -143,24 +161,24 @@ and this is an example result:
 
 ```json
 [
-   {
-      "address": {
-         "city": "Radom",
-         "street": "Czarna 169",
-         "postcode": "26-606",
-         "voivodeship": "Mazowieckie",
-         "county": "Radom"
-      },
-      "city": "Racibórz",
-      "surname": "Świtała",
-      "street": "Barska 70",
-      "iban": "48168026071333993994432069",
-      "name": "Stefan",
+  {
+    "address": {
+      "city": "Radom",
+      "street": "Czarna 169",
       "postcode": "26-606",
-      "voivodeship": "Łódzkie",
-      "id": 1,
-      "pesel": "94033121676"
-   }
+      "voivodeship": "Mazowieckie",
+      "county": "Radom"
+    },
+    "city": "Racibórz",
+    "surname": "Świtała",
+    "street": "Barska 70",
+    "iban": "48168026071333993994432069",
+    "name": "Stefan",
+    "postcode": "26-606",
+    "voivodeship": "Łódzkie",
+    "id": 1,
+    "pesel": "94033121676"
+  }
 ]
 ```
 
@@ -198,7 +216,7 @@ Input file with correct values:
 
 ```json
 {
-   "somePropName": "NAME|startAt=a,female=true"
+  "somePropName": "NAME|startAt=a,female=true"
 }
 ```
 
@@ -206,7 +224,7 @@ Input file with correct values:
 
 ```json
 {
-   "somePropName": "Alicja"
+  "somePropName": "Alicja"
 }
 ```
 
@@ -214,7 +232,7 @@ Input file with incorrect values:
 
 ```json
 {
-   "somePropName": "NAME|startAt=$,female=ABCD"
+  "somePropName": "NAME|startAt=$,female=ABCD"
 }
 ```
 
@@ -222,7 +240,7 @@ Input file with incorrect values:
 
 ```json
 {
-   "somePropName": "Jan"
+  "somePropName": "Jan"
 }
 ```
 
@@ -230,7 +248,7 @@ Input startAt but female with `true` value:
 
 ```json
 {
-   "somePropName": "NAME|startAt=$,female=true"
+  "somePropName": "NAME|startAt=$,female=true"
 }
 ```
 
@@ -238,7 +256,7 @@ Input startAt but female with `true` value:
 
 ```json
 {
-   "somePropName": "Janina"
+  "somePropName": "Janina"
 }
 ```
 
@@ -259,7 +277,7 @@ Input file with correct values:
 
 ```json
 {
-   "somePropName": "SURNAME|startAt=a,female=true"
+  "somePropName": "SURNAME|startAt=a,female=true"
 }
 ```
 
@@ -267,7 +285,7 @@ Input file with correct values:
 
 ```json
 {
-   "somePropName": "Adamczak"
+  "somePropName": "Adamczak"
 }
 ```
 
@@ -275,7 +293,7 @@ Input file with incorrect values:
 
 ```json
 {
-   "somePropName": "SURNAME|startAt=$,female=ABCD"
+  "somePropName": "SURNAME|startAt=$,female=ABCD"
 }
 ```
 
@@ -283,7 +301,7 @@ Input file with incorrect values:
 
 ```json
 {
-   "somePropName": "Kowalski"
+  "somePropName": "Kowalski"
 }
 ```
 
@@ -291,7 +309,7 @@ Input startAt but female with `true` value:
 
 ```json
 {
-   "somePropName": "SURNAME|startAt=$,female=true"
+  "somePropName": "SURNAME|startAt=$,female=true"
 }
 ```
 
@@ -299,7 +317,7 @@ Input startAt but female with `true` value:
 
 ```json
 {
-   "somePropName": "Kowalska"
+  "somePropName": "Kowalska"
 }
 ```
 
@@ -320,7 +338,7 @@ Input file with correct values:
 
 ```json
 {
-   "somePropName": "PESEL|bornAfter2000=true,female=true,onlyAdults=true"
+  "somePropName": "PESEL|bornAfter2000=true,female=true,onlyAdults=true"
 }
 ```
 
@@ -328,7 +346,7 @@ Input file with correct values:
 
 ```json
 {
-   "somePropName": "05322838106"
+  "somePropName": "05322838106"
 }
 ```
 
@@ -336,7 +354,7 @@ Input file with incorrect values:
 
 ```json
 {
-   "somePropName": "PESEL|bornAfter2000=nope,female=truthy,onlyAdults=falsy"
+  "somePropName": "PESEL|bornAfter2000=nope,female=truthy,onlyAdults=falsy"
 }
 ```
 
@@ -344,7 +362,7 @@ Input file with incorrect values:
 
 ```json
 {
-   "somePropName": "13032584417"
+  "somePropName": "13032584417"
 }
 ```
 
@@ -407,7 +425,7 @@ Input file with correct values:
 
 ```json
 {
-   "somePropName": "IBAN|country=PL,bankName=BFF,formatted=true,withLetters=true"
+  "somePropName": "IBAN|country=PL,bankName=BFF,formatted=true,withLetters=true"
 }
 ```
 
@@ -415,7 +433,7 @@ Input file with correct values:
 
 ```json
 {
-   "somePropName": "PL78 2850 6487 8839 8059 4744 2334"
+  "somePropName": "PL78 2850 6487 8839 8059 4744 2334"
 }
 ```
 
@@ -423,7 +441,7 @@ Input file with incorrect values:
 
 ```json
 {
-   "somePropName": "IBAN|country=GB,bankName=UNKNOWN,formatted=abcd,withLetters=falsy"
+  "somePropName": "IBAN|country=GB,bankName=UNKNOWN,formatted=abcd,withLetters=falsy"
 }
 ```
 
@@ -431,7 +449,7 @@ Input file with incorrect values:
 
 ```json
 {
-   "somePropName": "83280023120240014208594594"
+  "somePropName": "83280023120240014208594594"
 }
 ```
 
@@ -448,10 +466,10 @@ Example input in file:
 
 ```json
 [
-   {
-      "$iteration$": 7,
-      "id": "ID"
-   }
+  {
+    "$iteration$": 7,
+    "id": "ID"
+  }
 ]
 ```
 
@@ -459,27 +477,27 @@ Result:
 
 ```json
 [
-   {
-      "id": 1
-   },
-   {
-      "id": 2
-   },
-   {
-      "id": 3
-   },
-   {
-      "id": 4
-   },
-   {
-      "id": 5
-   },
-   {
-      "id": 6
-   },
-   {
-      "id": 7
-   }
+  {
+    "id": 1
+  },
+  {
+    "id": 2
+  },
+  {
+    "id": 3
+  },
+  {
+    "id": 4
+  },
+  {
+    "id": 5
+  },
+  {
+    "id": 6
+  },
+  {
+    "id": 7
+  }
 ]
 ```
 
@@ -493,7 +511,7 @@ Example input file:
 
 ```json
 {
-   "somePropName": "POSTCODE"
+  "somePropName": "POSTCODE"
 }
 ```
 
@@ -501,7 +519,7 @@ Result:
 
 ```json
 {
-   "somePropName": "75-244"
+  "somePropName": "75-244"
 }
 ```
 
@@ -516,7 +534,7 @@ Example input file:
 
 ```json
 {
-   "somePropName": "STREET"
+  "somePropName": "STREET"
 }
 ```
 
@@ -524,7 +542,7 @@ Result:
 
 ```json
 {
-   "somePropName": "Przyjaźni 5"
+  "somePropName": "Przyjaźni 5"
 }
 ```
 
@@ -542,7 +560,7 @@ Input file with correct values:
 
 ```json
 {
-   "somePropName": "CITY|startAt=a"
+  "somePropName": "CITY|startAt=a"
 }
 ```
 
@@ -550,7 +568,7 @@ Input file with correct values:
 
 ```json
 {
-   "somePropName": "Aleksandrów Kujawski"
+  "somePropName": "Aleksandrów Kujawski"
 }
 ```
 
@@ -558,7 +576,7 @@ Input file with incorrect values:
 
 ```json
 {
-   "somePropName": "CITY|startAt=$"
+  "somePropName": "CITY|startAt=$"
 }
 ```
 
@@ -566,7 +584,7 @@ Input file with incorrect values:
 
 ```json
 {
-   "somePropName": "Warszawa"
+  "somePropName": "Warszawa"
 }
 ```
 
@@ -581,7 +599,7 @@ Example input file:
 
 ```json
 {
-   "somePropName": "VOIVODESHIP"
+  "somePropName": "VOIVODESHIP"
 }
 ```
 
@@ -589,7 +607,7 @@ Result:
 
 ```json
 {
-   "somePropName": "Mazowieckie"
+  "somePropName": "Mazowieckie"
 }
 ```
 
@@ -603,7 +621,7 @@ Example input file:
 
 ```json
 {
-   "somePropName": "COUNTY"
+  "somePropName": "COUNTY"
 }
 ```
 
@@ -611,7 +629,7 @@ Result:
 
 ```json
 {
-   "somePropName": "Bytom"
+  "somePropName": "Bytom"
 }
 ```
 
@@ -634,7 +652,7 @@ Input file with all properties:
 
 ```json
 {
-   "somePropName": "ADDRESS|cityPropName=cityKeyName,streetPropName=streetKeyName,postcodePropName=postcodeKeyName,voivodeshipPropName=voivodeshipKeyName,countyPropName=countyKeyName"
+  "somePropName": "ADDRESS|cityPropName=cityKeyName,streetPropName=streetKeyName,postcodePropName=postcodeKeyName,voivodeshipPropName=voivodeshipKeyName,countyPropName=countyKeyName"
 }
 ```
 
@@ -642,13 +660,13 @@ Input file with all properties:
 
 ```json
 {
-   "somePropName": {
-      "cityKeyName": "Bydgoszcz",
-      "streetKeyName": "Młyńska 167",
-      "postcodeKeyName": "85-226",
-      "voivodeshipKeyName": "Kujawsko-pomorskie",
-      "countyKeyName": "Bydgoszcz"
-   }
+  "somePropName": {
+    "cityKeyName": "Bydgoszcz",
+    "streetKeyName": "Młyńska 167",
+    "postcodeKeyName": "85-226",
+    "voivodeshipKeyName": "Kujawsko-pomorskie",
+    "countyKeyName": "Bydgoszcz"
+  }
 }
 ```
 
