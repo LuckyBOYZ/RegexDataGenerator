@@ -17,10 +17,11 @@
 
 # Description
 
-This application lets you save a time on creating dummy data for example when you want to use `json-server`
+This application lets you save a time when creating dummy data for example when you want to use `json-server`
 to create API for your front-end application. <br>
-In short: RegexDataGenerator is generating json file based on json file with regular expressions or with
-special properties to generate random real data (like PESEL or polish names).
+In short: RegexDataGenerator generates json file based on another input json configuration file with regular expressions
+or with
+special properties to generate random real data (such as PESEL or polish names).
 
 > :notebook_with_decorative_cover: **WORTH TO MENTION:** every available syntax for regular expressions you can
 > check [here](https://github.com/curious-odd-man/RgxGen#supported-syntax)
@@ -32,7 +33,8 @@ To run this application you have to install `java 17` on your machine if you wan
 install `docker` if you want to run in that way.
 
 > :notebook_with_decorative_cover: **PLEASE NOTE:** Before using this application first of all you **have to**
-> prepare `file.json`. It is described in section [How To Use](https://github.com/LuckyBOYZ/RegexDataGenerator#how-to-use)
+> prepare `json` configuration file. It is described in
+> section [How To Use](https://github.com/LuckyBOYZ/RegexDataGenerator#how-to-use)
 
 # How To Run
 
@@ -43,43 +45,52 @@ _AVAILABLE ARGUMENTS FOR APPLICATION_
 |    iterationFieldName     |     ITERATION_FIELD_NAME     |                 name of 'how many objects have to be created in array' key property in json. This prop is **only** used for objects in array.                 |        every valid name for key in json         |     iteration     |
 |      iterationNumber      |       ITERATION_NUMBER       |                                                            value for `iterationFieldName` argument                                                            |            every number more than 0             |        10         |
 |       jsonFileName        |        JSON_FILE_NAME        | name of input file - it can be path but file **HAS TO** be inside the same folder as application (e.g. dummy/test.jar and file is under dummy/test/file.json) | every valid path to file with `.json` extension |     file.json     |
-|      prefixAndSuffix      |      PREFIX_AND_SUFFIX       |     character which is used before and after special keys. At the moment this property is used only for creating `iterationFieldName` as a key in object      |                 every character                 |         $         |
+|      prefixAndSuffix      |      PREFIX_AND_SUFFIX       |      character that is used before and after special keys. At the moment this property is used only for creating `iterationFieldName` as a key in object      |                 every character                 |         $         |
 | specialInputDataSeparator | SPECIAL_INPUT_DATA_SEPARATOR |                                               separator between `SpecialInputData` name and properties for this                                               |                 every character                 |        \|         |
 |     isFormattedResult     |     IS_FORMATTED_RESULT      |                                               whether the result must be formatted (multiline and indentations)                                               |                `true` or `false`                |      `false`      |
 
 ## Running by using java
 
-For using the application you have to run command `java -jar RegexDataGenerator.jar <ARGUMENTS>`.<br>
-The latest version of application is placed into `bin` directory. There are few arguments which you can add to command
-to customize how the application must work (but you don't have to). Those arguments are placed in _AVAILABLE ARGUMENTS FOR APPLICATION_
-table (please use names from `JAR ARGUMENT NAME` column).
+To use the application by using `jar` file, execute the command `java -jar RegexDataGenerator.jar <ARGUMENTS>`.<br>
+The latest version of application is placed into `bin` directory. There are few arguments that you can add to command
+to customize how the application must work (but it is not mandatory, if you don't use them then the application will use
+default values).
+Those arguments are placed in _AVAILABLE ARGUMENTS FOR APPLICATION_ table (please use names from `JAR ARGUMENT NAME`
+column).
 
 Those arguments **HAVE TO** be seperated by `=`
 e.g. `java -jar RegexDataGenerator.jar jsonFileName=test.json iterationFieldName=it`.
 The result will be always in the same directory as the application is run.
 
-> :warning: **WARNING:** If you use `jsonFileName` for `java` command then it will refer to **FILE**, not to **DIRECTORY**<br>
-> but it can refer to deeper directory relative to current path e.g. if you have `jar` file under `/usr/my/path/app.jar` path<br>
-> then you can place you json file under `/usr/my/path/additional/dir/file.json` path. To recap: `json.file` has to be<br>
-> in the same directory or in directory which is relative to directory with `jar` file.
+> :warning: **WARNING:** If you use `jsonFileName` for `java` command then it will refer to **FILE**, not to **DIRECTORY
+**<br>
+> but it can refer to deeper directory relative to current path e.g. if you have `jar` file under `/usr/my/path/app.jar`
+> path<br>
+> then you can place you json file under `/usr/my/path/additional/dir/file.json` path. To recap: `json.file` has to
+> be<br>
+> in the same directory or in directory that is relative to directory with `jar` file.
 
 ## Running by using docker
 
-For using docker you have to create an image by command `docker build -t <YOUR_IMAGE_NAME>`. After that you have to<br>
+For using docker you need to create an image by command `docker build -t <YOUR_IMAGE_NAME>`. After that you need to<br>
 run it by command<br>
 `docker run --name <YOUR_CONTAINER_NAME> -it -v <DIRECTORY_WITH_JSON_FILE>:/app/file <YOUR_IMAGE_NAME>`<br>
-You can customize the application in the same way as it mentioned in [Running by using java](https://github.com/LuckyBOYZ/RegexDataGenerator#running-by-using-java) section.<br>
+You can customize the application in the same way as it mentioned
+in [Running by using java](https://github.com/LuckyBOYZ/RegexDataGenerator#running-by-using-java) section.<br>
 Arguments for docker are placed in _AVAILABLE ARGUMENTS FOR APPLICATION_ table in `DOCKER ARGUMENT ENV NAME` column.<br>
 For using those arguments please add `-e` to `docker run...` command e.g.:<br>
 `docker run --name <YOUR_CONTAINER_NAME> -it -e ITERATION_FIELD_NAME=it -v <DIRECTORY_WITH_JSON_FILE>:/app/file <YOUR_IMAGE_NAME>`
 
-> :warning: **WARNING:** Please be aware that `<DIRECTORY_WITH_JSON_FILE>` in docker command **ALWAYS** refers to **DIRECTORY**, not to the file.
+> :warning: **WARNING:** Please be aware that `<DIRECTORY_WITH_JSON_FILE>` in docker command **ALWAYS** refers to *
+*DIRECTORY**, not to the file.
 > If you use the path like `/usr/some/direcotry/myJson.json` then the application will throw an error.
 
 # How To Use
 
-For using `RegexDataGenerator` you have to prepare specific `json` file and place it in the same
-directory where you have an `jar` file or where you create `volume` for docker. This is an example of content of json file:
+The mandatory thing to use `RegexDataGenerator` application is preparing specific `json` configuration file and place it
+in the same
+directory where you have an `jar` file or where you create `volume` for docker. This is an example of content of json
+file:
 
 ```json
 [
@@ -112,22 +123,27 @@ directory where you have an `jar` file or where you create `volume` for docker. 
 
 Apart of `$iteration$` key, every property key is up to you (`$iteration$` property will be explained later). <br>
 The value for those properties can be a classic regular expression, or you can
-use [Special Input Data](https://github.com/LuckyBOYZ/RegexDataGenerator#special-input-data) name. You can use either `array` and `object` as a root in config file. <br>
+use [Special Input Data](https://github.com/LuckyBOYZ/RegexDataGenerator#special-input-data) name. You can use
+either `array` and `object` as a root in config file. <br>
 Below is an overview with the most important information about creating configuration for every data type:
 
 ### string
 
-You can use regular expression, some hardcoded value (e.g. `abcd`) or [Special Input Data](https://github.com/LuckyBOYZ/RegexDataGenerator#special-input-data) name.
+You can use regular expression, some hardcoded value (e.g. `abcd`)
+or [Special Input Data](https://github.com/LuckyBOYZ/RegexDataGenerator#special-input-data) name.
 
 ### object
 
-The name for every property is up to you apart of `$iteration$`. This property tells the application how many objects must
+The name for every property is up to you apart of `$iteration$`. This property tells the application how many objects
+must
 be created, and it works **ONLY** if the object is inside of array.
 
 ### array
 
-Array requires 1 element (string or object) but can be used a second optional element - how many elements the application has to
-create. A value for second parameter **HAS TO** be a number. If the second element is not a number the default value for iteration (10) will be
+Array requires 1 element (string or object) but can be used a second optional element - how many elements the
+application has to
+create. A value for second parameter **HAS TO** be a number. If the second element is not a number the default value for
+iteration (10) will be
 used.
 String and object must be created in the same way as it is described above.
 
@@ -182,17 +198,20 @@ and this is an example result:
 There are 2 ways for using special values:
 
 1. use only name of special value (e.g. `SURNAME`)
-2. use name of special value with parameters (if any). If some special input data has parameters, then after special 
-name **HAS TO** be used a value for `specialInputDataSeparator` argument (default is a pipe -> `|`). You don't have to 
-use all parameters for Special Input Data.
+2. use name of special value with parameters (if any). If some special input data has parameters, then after special
+   name **HAS TO** be used a value for `specialInputDataSeparator` argument (default is a pipe -> `|`). Using all
+   parameters is not
+   obligated, you can use only those, which you need.
 
-> :warning: **WARNING:** Please be aware that using `specialInputDataSeparator` value without any property after this will cause that this value will
+> :warning: **WARNING:** Please be aware that using `specialInputDataSeparator` value without any property after this
+> will cause that this value will
 > be omitted in the result!
 
-> :warning: **WARNING:** When you're using properties with `Special Input Data` you **HAVE TO** use them as _key_=_value_
+> :warning: **WARNING:** When you're using properties with `Special Input Data` you **HAVE TO** use them as _key_=
+_value_
 > and every property must be seperated by comma (`,`) from another one like this
 > _key1_=_value1_,_key2_=_value2_ <br>
-> You can't use empty string as a kay or value because property will be omitted in the result.
+> You can't use empty string as a key or value because property will be omitted in the result.
 
 
 Here are all `Special Input Data` values and theirs configuration:
@@ -241,7 +260,7 @@ Input file with incorrect values:
 }
 ```
 
-Input startAt but female with `true` value:
+Input startAt with incorrect value but female with `true` value:
 
 ```json
 {
@@ -302,7 +321,7 @@ Input file with incorrect values:
 }
 ```
 
-Input startAt but female with `true` value:
+Input startAt with incorrect value but female with `true` value:
 
 ```json
 {
@@ -320,7 +339,8 @@ Input startAt but female with `true` value:
 
 ### PESEL
 
-> :notebook_with_decorative_cover: **Description:** It generates PESEL number. PESEL is like an id for every person in
+> :notebook_with_decorative_cover: **Description:** It generates PESEL number. PESEL is like an ID number for every
+> person in
 > Poland.
 
 | **PROPERTY NAME** |                    **DESCRIPTION**                     | **POSSIBLE VALUE** |
@@ -368,12 +388,12 @@ Input file with incorrect values:
 > :notebook_with_decorative_cover: **Description:** It generates valid IBAN number BUT as a default the application
 > doesn't generate the letters at the beginning of number and without spaces (please check properties below)
 
-| **PROPERTY NAME** |                           **DESCRIPTION**                           |         **POSSIBLE VALUE**         |
-|:-----------------:|:-------------------------------------------------------------------:|:----------------------------------:|
-|    **country**    |             Country from table with available countries             |      Available Country Table       |
-|   **bankName**    |                Bank name from table with bank names                 | Bank Name Table for chosen country |
-|   **formatted**   | Does iban have to be splitted by space between every 4th character? |         `true` or `false`          |
-|  **withLetters**  |          Does iban must contain letters at the beginning?           |         `true` or `false`          |
+| **PROPERTY NAME** |                             **DESCRIPTION**                              |         **POSSIBLE VALUE**         |
+|:-----------------:|:------------------------------------------------------------------------:|:----------------------------------:|
+|    **country**    |               Country from table with available countries                |      Available Country Table       |
+|   **bankName**    |                   Bank name from table with bank names                   | Bank Name Table for chosen country |
+|   **formatted**   | Does iban have to split the number by space between every 4th character? |         `true` or `false`          |
+|  **withLetters**  |             Does iban must contain letters at the beginning?             |         `true` or `false`          |
 
 _AVAILABLE COUNTRY TABLE_
 
@@ -456,7 +476,8 @@ NO PROPERTIES
 
 > :notebook_with_decorative_cover: **Description:** This special input data is only for generating ids when you have
 > object inside of array. <br>
-> Is really useful if you want to have some unique value for every project. It will always return values 1, 2, 3 and so
+> It is really useful if you want to have some unique value for every project. It will always return values 1, 2, 3 and
+> so
 > on.
 
 Example input in file:
