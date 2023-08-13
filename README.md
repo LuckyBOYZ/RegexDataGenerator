@@ -5,13 +5,13 @@
 
 # Table of contents
 
-1. [Description](https://github.com/LuckyBOYZ/RegexDataGenerator#description) <br>
-2. [Requirements](https://github.com/LuckyBOYZ/RegexDataGenerator#requirements) <br>
-3. [How To Run](https://github.com/LuckyBOYZ/RegexDataGenerator#how-to-run) <br>
+1. [Description](https://github.com/LuckyBOYZ/RegexDataGenerator#description)
+2. [Requirements](https://github.com/LuckyBOYZ/RegexDataGenerator#requirements)
+3. [How To Run](https://github.com/LuckyBOYZ/RegexDataGenerator#how-to-run)
     1. [Running by using java](https://github.com/LuckyBOYZ/RegexDataGenerator#running-by-using-java)
     2. [Running by using docker](https://github.com/LuckyBOYZ/RegexDataGenerator#running-by-using-docker)
-4. [How To Use](https://github.com/LuckyBOYZ/RegexDataGenerator#how-to-use) <br>
-5. [Special Input Data](https://github.com/LuckyBOYZ/RegexDataGenerator#special-input-data) <br>
+4. [How To Use](https://github.com/LuckyBOYZ/RegexDataGenerator#how-to-use)
+5. [Special Input Data](https://github.com/LuckyBOYZ/RegexDataGenerator#special-input-data)
    1. [NAME](https://github.com/LuckyBOYZ/RegexDataGenerator#name)
    2. [SURNAME](https://github.com/LuckyBOYZ/RegexDataGenerator#surname)
    3. [PESEL](https://github.com/LuckyBOYZ/RegexDataGenerator#pesel)
@@ -23,7 +23,7 @@
    9. [VOIVODESHIP](https://github.com/LuckyBOYZ/RegexDataGenerator#voivodeship)
    10. [COUNTY](https://github.com/LuckyBOYZ/RegexDataGenerator#county)
    11. [ADDRESS](https://github.com/LuckyBOYZ/RegexDataGenerator#address)
-6. [TODO](https://github.com/LuckyBOYZ/RegexDataGenerator#todo) <br>
+6. [TODO](https://github.com/LuckyBOYZ/RegexDataGenerator#todo)
 7. [GOTCHA](https://github.com/LuckyBOYZ/RegexDataGenerator#gotcha)
 
 # Description
