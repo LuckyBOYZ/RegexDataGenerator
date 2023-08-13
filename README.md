@@ -66,18 +66,26 @@ The result will be always in the same directory as the application is run.
 **<br>
 > but it can refer to deeper directory relative to current path e.g. if you have `jar` file under `/usr/my/path/app.jar`
 > path<br>
-> then you can place you json file under `/usr/my/path/additional/dir/file.json` path. To recap: `json.file` has to
+> then you can place you json file under `/usr/my/path/additional/dir/file.json` path. To recap: `file.json` has to
 > be<br>
 > in the same directory or in directory that is relative to directory with `jar` file.
+
+> :warning: **WARNING:** Please check whether your json configuration file has the same name as the file name in `jsonFileName`
+> property. If those names are different e.g. locally you have `file.json` but in property you have `test.json` then
+> the application will throw an error.
 
 ## Running by using docker
 
 For using docker you need to create an image by command `docker build -t <YOUR_IMAGE_NAME>`. After that you need to<br>
 run it by command<br>
 `docker run --name <YOUR_CONTAINER_NAME> -it -v <DIRECTORY_WITH_JSON_FILE>:/app/file <YOUR_IMAGE_NAME>`<br>
-You can customize the application in the same way as it mentioned
-in [Running by using java](https://github.com/LuckyBOYZ/RegexDataGenerator#running-by-using-java) section.<br>
+You can customize the application in the same way as it mentioned in [Running by using java](https://github.com/LuckyBOYZ/RegexDataGenerator#running-by-using-java) section.<br>
 Arguments for docker are placed in _AVAILABLE ARGUMENTS FOR APPLICATION_ table in `DOCKER ARGUMENT ENV NAME` column.<br>
+
+> :notebook_with_decorative_cover: **TIP:** you can use `env.list` file instead of writing a couple of env flags in docker command
+> (`docker run ... -e <ARGUMENT_WITH_VALUE> -e <SECPND_ARGUMENT_WITH_VALUE> ...`). To use `env.list` file please use the flag and value in
+> docker run command like this `docker run --env-file env.list ...` and change those properties, which you need.
+
 For using those arguments please add `-e` to `docker run...` command e.g.:<br>
 `docker run --name <YOUR_CONTAINER_NAME> -it -e ITERATION_FIELD_NAME=it -v <DIRECTORY_WITH_JSON_FILE>:/app/file <YOUR_IMAGE_NAME>`
 
