@@ -12,6 +12,17 @@
     2. [Running by using docker](https://github.com/LuckyBOYZ/RegexDataGenerator#running-by-using-docker)
 4. [How To Use](https://github.com/LuckyBOYZ/RegexDataGenerator#how-to-use) <br>
 5. [Special Input Data](https://github.com/LuckyBOYZ/RegexDataGenerator#special-input-data) <br>
+   1. [NAME](https://github.com/LuckyBOYZ/RegexDataGenerator#name)
+   2. [SURNAME](https://github.com/LuckyBOYZ/RegexDataGenerator#surname)
+   3. [PESEL](https://github.com/LuckyBOYZ/RegexDataGenerator#pesel)
+   4. [IBAN](https://github.com/LuckyBOYZ/RegexDataGenerator#iban)
+   5. [ID](https://github.com/LuckyBOYZ/RegexDataGenerator#id)
+   6. [POSTCODE](https://github.com/LuckyBOYZ/RegexDataGenerator#postcode)
+   7. [STREET](https://github.com/LuckyBOYZ/RegexDataGenerator#street)
+   8. [CITY](https://github.com/LuckyBOYZ/RegexDataGenerator#city)
+   9. [VOIVODESHIP](https://github.com/LuckyBOYZ/RegexDataGenerator#voivodeship)
+   10. [COUNTY](https://github.com/LuckyBOYZ/RegexDataGenerator#county)
+   11. [ADDRESS](https://github.com/LuckyBOYZ/RegexDataGenerator#address)
 6. [TODO](https://github.com/LuckyBOYZ/RegexDataGenerator#todo) <br>
 7. [GOTCHA](https://github.com/LuckyBOYZ/RegexDataGenerator#gotcha)
 
